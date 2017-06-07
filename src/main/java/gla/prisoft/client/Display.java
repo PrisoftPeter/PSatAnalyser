@@ -162,7 +162,7 @@ public class Display extends JFrame {
 				try {					
 					window = new Display(null, false);
 					window.setVisible(true);
-					window.setTitle("PSat: Privacy Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
+					window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -286,7 +286,7 @@ public class Display extends JFrame {
 							forcenewsession = true;
 							window = new Display(null, false);
 							window.setVisible(true);
-							window.setTitle("PSat: Privacy Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
+							window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
 							Display.updatePathsList();
 							loadingsession = false;
 
@@ -343,7 +343,7 @@ public class Display extends JFrame {
 							try {
 								window = new Display(selectedSession, false);
 								window.setVisible(true);
-								window.setTitle("PSat: Privacy Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
+								window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
 								Display.updatePathsList();
 								loadingsession = false;
 								
@@ -923,7 +923,7 @@ public class Display extends JFrame {
 										window.setVisible(false);								
 										window = new Display(tsessionid, true);
 										window.setVisible(true);
-										window.setTitle("PSat: Privacy Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
+										window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
 										Display.updatePathsList();
 									} catch (Exception e) {
 										e.printStackTrace();
