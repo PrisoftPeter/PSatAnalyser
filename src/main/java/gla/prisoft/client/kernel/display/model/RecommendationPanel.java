@@ -132,7 +132,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 			}        	
         });        
         
-        jLabel2.setText("Current privacy goal(v'):"+String.format("%.2f", Display.instance.currentPrivacyGoal.get(Display.instance.currentPath)));
+        jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f", Display.instance.currentPrivacyGoal.get(Display.instance.currentPath)));
         jLabel3.setText("#iterations="+Display.noiterations+" |"+detRecomputeText());
         jLabel4.setText("Original privacy goal(v):"+String.format("%.2f", Display.instance.originalPrivacyGoal.get(Display.instance.currentPath)));
         jLabel6.setText("α convergence search for pr:");

@@ -2012,7 +2012,7 @@ public class Display extends JFrame {
 	    JLabel decisioncategory_l = new JLabel("Decision Category Limit:");
         
 //	    String decisioncategories[] = {"cat6","cat5", "cat4", "cat3", "cat2", "cat1"};
-	    String decisioncategories[] = {"cat3", "cat2", "cat1"};
+	    String decisioncategories[] = {"cat3[NO]", "cat2[MAYBE]", "cat1[YES]"};
 	    final JComboBox<String> decisioncategories_cb = new JComboBox<String>(decisioncategories);
 	    
 //	    if(RecommendationPanel.limit ==1){
@@ -2045,13 +2045,13 @@ public class Display extends JFrame {
 	    decisioncategories_cb.addItemListener(new ItemListener() {
 	        public void itemStateChanged(ItemEvent itemEvent) {
 	        	String cat = (String)decisioncategories_cb.getSelectedItem();
-	        	if(cat.equals("cat1")){
+	        	if(cat.equals("cat1[YES]")){
 	        		RecommendationPanel.limit=1;
 	            }
-	            else if(cat.equals("cat2")){
+	            else if(cat.equals("cat2[MAYBE]")){
 	        		RecommendationPanel.limit=2;
 	            }
-	            else if(cat.equals("cat3")){
+	            else if(cat.equals("cat3[NO]")){
 	        		RecommendationPanel.limit=3;
 	            }
 //	            else if(cat.equals("cat4")){
