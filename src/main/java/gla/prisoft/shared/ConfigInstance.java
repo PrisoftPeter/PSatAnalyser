@@ -119,6 +119,8 @@ public class ConfigInstance implements Serializable{
 	
 	//iflow analysis
 	public HashMap<String, Double> maxPathSats;	
+	
+	public String desiredCommonKnowledgeDesc;
 
 //	//server specific variables
 //	public ServerSatSerializer serverSatSerializer;

@@ -13,6 +13,8 @@ public class Agent implements Serializable{
 
 	private AssertionInstance [] assertionInstances;
 	private double desiredEntropy;
+	private double desiredCommonKnowledge;
+	
 	private AssertionAspect[] aspects;
 	private KnowledgeLevel[] knowledgeLevels;
 	private double globalPrivacyGoal_v;
@@ -856,5 +858,13 @@ public class Agent implements Serializable{
 
 	public void setDesiredEntropy(double desiredEntropy) {
 		this.desiredEntropy = desiredEntropy;
+	}
+	
+	public double getDesiredCommonKnowledge() {
+		return desiredCommonKnowledge;
+	}
+
+	public void setDesiredCommonKnowledge(double desiredCommonKnowledge) {
+		this.desiredCommonKnowledge = desiredCommonKnowledge;
 	}
 }

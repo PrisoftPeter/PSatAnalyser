@@ -89,7 +89,7 @@ public class FeasibilityView extends javax.swing.JPanel {
             }
         };
         String tableheader[] = null;
-		if(!instance.isModeEntropy){
+		if(!instance.isModeEntropy && !instance.isModeCommonKnowledge){
         	tableheader = new String [] {	
         			"<html>Path</html>",
         			"<html>Flow</html>", 
@@ -131,7 +131,7 @@ public class FeasibilityView extends javax.swing.JPanel {
 //        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
 //        leftRenderer.setHorizontalAlignment( JLabel.LEFT );  
     	jTable1.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-        if(instance.isModeEntropy){
+        if(instance.isModeEntropy || instance.isModeCommonKnowledge){
         	jTable1.getColumnModel().getColumn(5).setCellRenderer( centerRenderer );
         	jTable1.getColumnModel().getColumn(6).setCellRenderer( centerRenderer );
         	jTable1.getColumnModel().getColumn(7).setCellRenderer( centerRenderer );
@@ -226,14 +226,24 @@ public class FeasibilityView extends javax.swing.JPanel {
 		
     	if(ptr.getRowType() == RowType.MF){    		
 //    		prdesc = ptr.getRequirementHtmlFullDesc()+", COST Tradeoff:"+String.format("%.2f", Display.instance.costTradeoff);
-    		prdesc = ptr.getRequirementHtmlFullDesc();
+    		prdesc = "pr:";
+    		if(instance.isModeCommonKnowledge){
+    			String ckdescs [] = ptr.getRequirementHtmlFullDesc().split(" Actual");
+    			prdesc = prdesc+ ckdescs[0];
+    			prdesc = prdesc+"]";
+    		}
+    		else{
+        		prdesc = prdesc+ ptr.getRequirementHtmlFullDesc();
+    		}
+    		prdesc= prdesc.replace("<html>", " ");
+    		prdesc= prdesc.replace("<body>", " ");
     		prdesc= prdesc.replace("</html>", " ");
     		prdesc= prdesc.replace("</body>", " ");
-    		prdesc = prdesc+"</body></html>";		
+    		prdesc = "<html><body>"+prdesc+"</body></html>";		
     		reqDescLabel.setText(prdesc);
     		reqDesc = ptr.getRequirementHtmlFullDesc();
     		path = ptr.getPath();
-    		if(!instance.isModeEntropy){
+    		if(!instance.isModeEntropy && !instance.isModeCommonKnowledge){
     			dtm.addRow(new Object[] { 	
             			ptr.getPath(),
             			ptr.getFlowColumn(), 
