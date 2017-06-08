@@ -2094,7 +2094,7 @@ public class Display extends JFrame {
 //	    Object[] message = {label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
 //				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
 //				"","", label2, "Max. # of objects on a path",maxPathLength_cb,tradeoff_l,tradeofftf};	
-	    Object[] message = {label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
+	    Object[] message = {label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
 				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
 				"","", label2, "Max. # of objects on a path",maxPathLength_cb,decisioncategory_l,decisioncategories_cb};	
 	    

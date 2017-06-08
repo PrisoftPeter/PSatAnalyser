@@ -226,11 +226,15 @@ public class ServerSatSerializer implements Serializable{
 		if(instance.isModeEntropy){
 			ptr_row.setRequirementHtmlFullDesc("<html><body>"+instance.desiredEntropyDesc+"</body></html>");
 		}
+		else if(instance.isModeCommonKnowledge){
+			ptr_row.setRequirementHtmlFullDesc("<html><body>"+instance.desiredCommonKnowledgeDesc+"</body></html>");
+		}			
+			
 		else{
 			ptr_row.setRequirementHtmlFullDesc("<html><body>"+getRequirementHtmlFullDesc()+"</body></html>");			
 		}
 		
-		if(!instance.isModeEntropy){			
+		if(!instance.isModeEntropy && !instance.isModeCommonKnowledge){			
 			if(su_sat ==-1){
 				ptr_row.setSuSatColumn("<html><body style=background-color:white;>"+subjectName+":sat(pr)=na</body></html>");
 			}

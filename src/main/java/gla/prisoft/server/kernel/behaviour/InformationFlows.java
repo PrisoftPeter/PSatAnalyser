@@ -446,6 +446,7 @@ public class InformationFlows {
 				
 				successfulSubs = new String[0];
 				successfulSubsCount = 0;
+				currentCommonKnowledge = 0;
 				sumlocalsat = 0;
 				countlocalsat = 0;
 				double pathSat = 0; //local pathsat (involves a single path)
@@ -593,7 +594,7 @@ public class InformationFlows {
 						
 						double collectiveGoalValue = suggestCollectiveGoalValue( instance,  su,  s, r,instance.subjectName, senderName, recipientName); //v						
 						double benefit = 0;
-						if(pathSat == -1){
+						if(pathSat == -1 ||collectiveGoalValue==0){ //when goal=0, feasibility is determined based on only cost
 							benefit =1;
 						}
 						else{
@@ -640,7 +641,7 @@ public class InformationFlows {
                     	double actualCommonKnowledge = currentCommonKnowledge/ countlocalsat;
                     	double desiredCollectiveCommonKnowledge = 1; //TODO: change to make 1 dynamic by specifying ck as pr for each object and iterate through for collective value
                     	if(instance.greaterThanOrEqualTo){
-							if(actualCommonKnowledge  == desiredCollectiveCommonKnowledge){ 
+							if(actualCommonKnowledge  >= desiredCollectiveCommonKnowledge){ 
 								pathSat = 1;
 							}
 							else{
@@ -682,6 +683,7 @@ public class InformationFlows {
 							sinstance.serverSatSerializer.requirementHtmlDesc = sinstance.serverSatSerializer.requirementHtmlDesc +desc;	
 							sinstance.serverSatSerializer.requirementRawDesc = sinstance.serverSatSerializer.requirementRawDesc + desc;							
 						}			
+						instance.desiredCommonKnowledgeDesc = desc;
 						
 						String alphaProtocol = "&#945;<sub>"+alpha+"</sub>=["+protocolDesc+"]";
 						sinstance.serverSatSerializer.updateProtocolHtmlFullDesc(alphaProtocol);
@@ -695,7 +697,7 @@ public class InformationFlows {
 						double collectiveGoalValue = suggestCollectiveGoalValue( instance,  su,  s, r,instance.subjectName, senderName, recipientName); //v						
 						
 						double benefit = 0;
-						if(pathSat == -1){
+						if(pathSat == -1 ||collectiveGoalValue==0){ //when goal=0, feasibility is determined based on only cost
 							benefit =1;
 						}
 						else{
@@ -902,7 +904,7 @@ public class InformationFlows {
 						double collectiveGoalValue = suggestCollectiveGoalValue( instance,  su,  s, r,instance.subjectName, senderName, recipientName); //v
 						
 						double benefit = 0;
-						if(pathSat == -1){
+						if(pathSat == -1 ||collectiveGoalValue==0){ //when goal=0, feasibility is determined based on only cost
 							benefit =1;
 						}
 						else{
@@ -1065,6 +1067,17 @@ public class InformationFlows {
 				vlocalgoals.add(sender.getGlobalPrivacyGoal_v());			
 			}
 			if(recipient.getDesiredEntropy() >0){
+				vlocalgoals.add(recipient.getGlobalPrivacyGoal_v());
+			}
+		}
+		else if(instance.isModeCommonKnowledge){
+			if(subject.getDesiredCommonKnowledge() >0){
+				vlocalgoals.add(subject.getGlobalPrivacyGoal_v());
+			}
+			if(sender.getDesiredCommonKnowledge() >0){
+				vlocalgoals.add(sender.getGlobalPrivacyGoal_v());			
+			}
+			if(recipient.getDesiredCommonKnowledge() >0){
 				vlocalgoals.add(recipient.getGlobalPrivacyGoal_v());
 			}
 		}
