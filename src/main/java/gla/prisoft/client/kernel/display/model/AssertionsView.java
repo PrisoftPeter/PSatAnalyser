@@ -748,6 +748,14 @@ public class AssertionsView extends Container {
 			oopanel.setBackground(Color.white);
 			lpanel.setBackground(Color.white);
 		}
+		else if(Display.instance.isModeCommonKnowledge){
+			if(Display.instance.is_aspect_run){
+				// aspects knowledge constructs
+			}
+			else{
+				//instances knowledge constructs
+			}
+		}
 
 
 		int k=0;

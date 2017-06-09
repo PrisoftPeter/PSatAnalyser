@@ -1576,7 +1576,7 @@ public class Display extends JFrame {
 	private RecommendationPanel recommendationPanel;
 	public void createLayeredDecisionBarViewPage(LayeredBarChart layeredbarchart){		
 		if(iframeDecisionBarView == null ||iframeDecisionBarView.isClosed()){
-			iframeDecisionBarView = new InternalFrame("Path Protocol Feasibiity Rankings",1170, 590,true,true,true,true,8,4);
+			iframeDecisionBarView = new InternalFrame("pr convergence outcome",1170, 590,true,true,true,true,8,4);
 			jdpDesktop.add(iframeDecisionBarView);	
 		}	
 		iframeDecisionBarView.repaint();

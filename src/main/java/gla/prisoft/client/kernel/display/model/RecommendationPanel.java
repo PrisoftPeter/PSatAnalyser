@@ -57,7 +57,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+//        jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         
         if(limit ==DecisionCategory.CAT1){
@@ -135,7 +135,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
         jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f", Display.instance.currentPrivacyGoal.get(Display.instance.currentPath)));
         jLabel3.setText("#iterations="+Display.noiterations+" |"+detRecomputeText());
         jLabel4.setText("Original privacy goal(v):"+String.format("%.2f", Display.instance.originalPrivacyGoal.get(Display.instance.currentPath)));
-        jLabel6.setText("α convergence search for pr:");
+//        jLabel6.setText("α convergence search for pr:");
         
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -158,7 +158,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
                         .addComponent(jButton1)
                         .addGap(24, 24, 24))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
+//                        .addComponent(jLabel6)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -167,7 +167,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel6)
+//                .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -207,41 +207,13 @@ public class RecommendationPanel extends javax.swing.JPanel {
 		}
     	
     }
-    private void iterate(){
-//		if(Display.instance.costTradeoff < 0.01){
-//			Display.instance.costTradeoff = 1;
-//			double newgoalvalue = Display.instance.currentPrivacyGoal.get(Display.instance.currentPath) - 0.1;
-//			InformationFlows.resetGlobalGoalForAllPathAgents(Display.instance, Display.instance.currentPath, newgoalvalue);
-//		}
-//		else{
-//			Display.instance.costTradeoff = Display.instance.costTradeoff - 0.1;
-//		}
-//		
-//		if(Display.instance.currentPrivacyGoal.get(Display.instance.currentPath) <=0.01 && Display.instance.costTradeoff<=0.01){
-////			String text = detRecomputeText();
-////			jButton1.setText(text+" convergence on v-ω failed");
-//			jButton1.setText("convergence on v-ω failed");
-//			jButton1.setBackground(new Color(232,93,57));
-////			jButton1.setEnabled(false);
-//		}
-//		else{
-//			Display.window.runSatAnalysis();
-//		}
-    	
+    private void iterate(){    	
     	Display.instance.costTradeoff = 1;
 		double newgoalvalue = Display.instance.currentPrivacyGoal.get(Display.instance.currentPath) - 0.05;
 		InformationFlows.resetGlobalGoalForAllPathAgents(Display.instance, Display.instance.currentPath, newgoalvalue);
 		
-		if(Display.instance.currentPrivacyGoal.get(Display.instance.currentPath) <=0.01){
-//			String text = detRecomputeText();
-//			jButton1.setText(text+" convergence on v-ω failed");
-			jButton1.setText("convergence failed");
-			jButton1.setBackground(new Color(232,93,57));
-//			jButton1.setEnabled(false);
-		}
-		else{
-			Display.window.runSatAnalysis();
-		}
+		Display.window.runSatAnalysis();
+
 			
     }
     
@@ -252,72 +224,72 @@ public class RecommendationPanel extends javax.swing.JPanel {
     	if(!checkerrunning){
     		checkerrunning = true;
     		
-    		checkThread = new Thread() {
-    			public void run() {
-    				boolean counting = false;
-    				while(true && !this.isInterrupted()){
-    					if(ufin || counting){
-    						boolean nanfound = false;
-				        	for(Recommendation rec:recs){    		
-				        		if(rec.recommendedprotocols.contains("?")){
-				        			nanfound = true;
-				        			break;
-				        		}
-				        	}
-				        	if(!pause){
-				        		if(nanfound){
+    		if(Display.instance.currentPrivacyGoal.get(Display.instance.currentPath) <=0.05){
+				jButton1.setText("convergence failed");
+				jButton1.setForeground(Color.BLACK);
+				jButton1.setBackground(new Color(232,93,57));
+		        jLabel3.setText("#iterations="+Display.noiterations+"| Convergence cannot be achieved with selected disclosure protocols");
+		        jLabel2.setText("Optimal privacy goal(v'):"+Double.NaN);
+			}
+    		else{
+        		checkThread = new Thread() {
+        			public void run() {
+        				boolean counting = false;
+        				while(true && !this.isInterrupted()){
+        					if(ufin || counting){
+        						boolean nanfound = false;
+    				        	for(Recommendation rec:recs){    		
+    				        		if(rec.recommendedprotocols.contains("?")){
+    				        			nanfound = true;
+    				        			break;
+    				        		}
+    				        	}
+    				        	if(!pause){
+    				        		if(nanfound){
+    				        			jButton1.setText("iterate "+counter+" [parse]");
+    				        			jButton1.setForeground(Color.RED);
+    				        			jButton1.setBackground(jLabel1.getBackground());
+    				        			jButton1.setEnabled(true);
+    				        			
+    				        			if(counter <=0 && !Display.instance.runningTraining && ufin){
+    				        				Display.noiterations = Display.noiterations+1;
+    				        				iterate();	
+    				        				counter = 10;
+    				        				counting = false;
+    				        			}
+    				        			else{
+    				        				counting = true;
+    				        			}
+    			        				counter = counter -1;			        				
+    				        		}
+    				        		else{
+    				        			jButton1.setText("converged");
+    				        	        jLabel3.setText("#iterations="+Display.noiterations);
 
-//				        			String text = detRecomputeText();
-//				        			jButton1.setText(text+" in "+counter+" [parse]");
-				        			jButton1.setText("iterate "+counter+" [parse]");
-				        			jButton1.setForeground(Color.RED);
-				        			jButton1.setBackground(jLabel1.getBackground());
-				        			jButton1.setEnabled(true);
-				        			
-				        			if(counter <=0 && !Display.instance.runningTraining && ufin){
-				        				Display.noiterations = Display.noiterations+1;
-				        				iterate();	
-				        				counter = 10;
-				        				counting = false;
-				        			}
-				        			else{
-				        				counting = true;
-				        			}
-			        				counter = counter -1;			        				
-				        		}
-				        		else{
-//				        			String text = detRecomputeText();
-//				        			jButton1.setText(text+" converged");
-				        			jButton1.setText("converged");
-				        	        jLabel3.setText("#iterations="+Display.noiterations);
-
-				        			jButton1.setBackground(new Color(81,193,11));
-				        			//jButton1.setEnabled(false);
-				        		}
-				        	}
-				        	else{
-//				        		String text = detRecomputeText();
-//			        			jButton1.setText(text+"iterate "+counter+" [start]");
-			        			jButton1.setText("iterate "+counter+" [start]");
-			        			jButton1.setForeground(Color.RED.brighter().brighter());
-				        	}
-			        		
-			        		if(!counting){
-				            	ufin = false;			        			
-			        		}
-			        	}
-    					
-        				try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-    				}    				
-    			}
-    		};
-    		checkThread.start();     		
-    	}    	
-    	
+    				        			jButton1.setBackground(new Color(81,193,11));
+    				        		}
+    				        	}
+    				        	else{
+    			        			jButton1.setText("iterate "+counter+" [start]");
+    			        			jButton1.setForeground(Color.RED.brighter().brighter());
+    				        	}
+    			        		
+    			        		if(!counting){
+    				            	ufin = false;			        			
+    			        		}
+    			        	}
+        					
+            				try {
+    							Thread.sleep(1000);
+    						} catch (InterruptedException e1) {
+    							e1.printStackTrace();
+    						}
+        				}    				
+        			}
+        		};
+        		checkThread.start(); 
+    		}    		    		
+    	}    
     }
     
  
@@ -588,7 +560,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel6;
+//    private javax.swing.JLabel jLabel6;
 //    private javax.swing.JComboBox<String> jComboBox1;
     public static int limit = 3;
 	private LayeredBarChart associatedChart;
