@@ -345,7 +345,8 @@ public class RecommendationPanel extends javax.swing.JPanel {
 					for(PSatTableResult ptr:flow.cat1Ptrs){
 						recommendedprotocols.add(ptr.getProtocolColumn());
 					}
-					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT1));
+					double cat1dof = (double)flow.cat1Ptrs.size()/(double)Display.instance.evaluatedProtocols.length;
+					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT1)+"("+Display.RoundTo2Decimals(cat1dof)+")");
 				}				
 			}
 			if(limit>=2){
@@ -353,7 +354,8 @@ public class RecommendationPanel extends javax.swing.JPanel {
 					for(PSatTableResult ptr:flow.cat2Ptrs){
 						recommendedprotocols.add(ptr.getProtocolColumn());
 					}
-					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT2));
+					double cat2dof = (double)flow.cat2Ptrs.size()/(double)Display.instance.evaluatedProtocols.length;
+					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT2)+"("+Display.RoundTo2Decimals(cat2dof)+")");
 				}				
 			}
 			if(limit>=3){
@@ -361,7 +363,8 @@ public class RecommendationPanel extends javax.swing.JPanel {
 					for(PSatTableResult ptr:flow.cat3Ptrs){
 						recommendedprotocols.add(ptr.getProtocolColumn());
 					}
-					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT3));
+					double cat3dof = (double)flow.cat3Ptrs.size()/(double)Display.instance.evaluatedProtocols.length;
+					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT3)+"("+Display.RoundTo2Decimals(cat3dof)+")");
 				}				
 			}
 //			if(limit>=4){

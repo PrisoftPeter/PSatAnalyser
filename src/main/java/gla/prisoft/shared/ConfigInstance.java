@@ -67,6 +67,8 @@ public class ConfigInstance implements Serializable{
 	public double costTradeoff = 1.0;
 	public HashMap<String, Double> currentPrivacyGoal = new HashMap<String, Double>();
 	public HashMap<String, Double> originalPrivacyGoal =new HashMap<String, Double>();
+	
+	public HashMap<String, Integer> maxPossiblePathKnowledgeSubsContainer =new HashMap<String, Integer>();
 	public int categoryLimit;
 	
 	public static DecimalFormat df = new DecimalFormat(".###");

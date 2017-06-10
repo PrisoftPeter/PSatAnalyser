@@ -268,101 +268,121 @@ public class InformationFlows {
 
 
 	private int getMaxNoOfPossibleKnowledgeSubstutitions(String [] tempPathAgents, ServerConfigInstance sinstance,ConfigInstance instance){
-		String sessionid = sinstance.sessionid;
-
-		for (Map.Entry<Integer, Integer> entry : instance.PossibleKnowledgeSubstutitions.entrySet()) {
-		    Integer key = entry.getKey();
-		    
-		    if(key.intValue() == tempPathAgents.length){
-		    	return entry.getValue();
-		    }		    
-		}
-		
-		//MaxNoOfPossibleKnowledgeSubstutitions not known
-		instance.learningMaxSubs = true;
-
-		Properties ppties = new Properties();
-		ppties.setProperty("instanceproperty", "learningMaxSubs");
-		ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", "", ppties, instance.learningMaxSubs);
-		
-		ClientServerBroker.messageEvent("updateLogPage", "calculating max path knowledge transformations..."+"₦"+false, null,null);
-		
-		String evaluationProtocols [] = ServerProtocolFactory.getProtocolSuite(sessionid);
-		
-		//clean  evaluationProtocols
-		String temp [] = new String[0];
-		for(String s:evaluationProtocols){
-			if(s == null){
-				continue;
-			}
-			boolean contained = false;
-			for(String s2: temp){
-				if(s.equals(s2)){
-					contained = true;
-					break;
-				}
-			}
-			if(!contained){
-				String temp1 [] = new String[temp.length +1];
-				for(int i=0;i<temp.length;i++){
-					temp1[i] = temp[i];
-				}
-				temp1[temp.length] = s;
-				temp = temp1;
-			}
-		}
-		evaluationProtocols = temp;
-					
 		int maxSuccessfulPathSubsCount = 0;
+		boolean found =false;
 		
-		for(String protocolDesc:evaluationProtocols){
+		String pp = "";
+	    for(String p: pathAgents){
+	    	pp = pp+ p;
+	    }
+		for (Map.Entry<String, Integer> entry : instance.maxPossiblePathKnowledgeSubsContainer.entrySet()) {
+		    String key = entry.getKey();					    
+		    if(key.equals(pp)){
+		    	maxSuccessfulPathSubsCount = entry.getValue();
+		    	found = true;
+		    	break;
+		    }
+		}
+		if(!found){
+			String sessionid = sinstance.sessionid;
 
-			successfulSubsLearning = new String[0];
-			successfulSubsCountLearning = 0;
-				
-			String pd[] = protocolDesc.split(" \\(");
+			for (Map.Entry<Integer, Integer> entry : instance.PossibleKnowledgeSubstutitions.entrySet()) {
+			    Integer key = entry.getKey();
+			    
+			    if(key.intValue() == tempPathAgents.length){
+			    	return entry.getValue();
+			    }		    
+			}
 			
-			protocolDesc = pd[1];
-			protocolDesc = protocolDesc.replace(")", "");
-							
-			String protocol[] = protocolDesc.split(",");
+			//MaxNoOfPossibleKnowledgeSubstutitions not known
+			instance.learningMaxSubs = true;
+
+			Properties ppties = new Properties();
+			ppties.setProperty("instanceproperty", "learningMaxSubs");
+			ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", "", ppties, instance.learningMaxSubs);
 			
-			for(int k=0;k<tempPathAgents.length-1;k++){
-				
-				ConfigInstance instancez = Config.deserialiseConfigInstance(sessionid);
-				
-				if(instancez.stop){
-					break;
+			ClientServerBroker.messageEvent("updateLogPage", "calculating max path knowledge transformations..."+"₦"+false, null,null);
+			
+			String evaluationProtocols [] = ServerProtocolFactory.getProtocolSuite(sessionid);
+			
+			//clean  evaluationProtocols
+			String temp [] = new String[0];
+			for(String s:evaluationProtocols){
+				if(s == null){
+					continue;
 				}
+				boolean contained = false;
+				for(String s2: temp){
+					if(s.equals(s2)){
+						contained = true;
+						break;
+					}
+				}
+				if(!contained){
+					String temp1 [] = new String[temp.length +1];
+					for(int i=0;i<temp.length;i++){
+						temp1[i] = temp[i];
+					}
+					temp1[temp.length] = s;
+					temp = temp1;
+				}
+			}
+			evaluationProtocols = temp;
+						
+			
+			for(String protocolDesc:evaluationProtocols){
+
+				successfulSubsLearning = new String[0];
+				successfulSubsCountLearning = 0;
+					
+				String pd[] = protocolDesc.split(" \\(");
 				
-				String senderName = tempPathAgents[k];
-				String recipientName = tempPathAgents[k+1];
+				protocolDesc = pd[1];
+				protocolDesc = protocolDesc.replace(")", "");
 								
-				message = ServerAgentFactory.getAgent(instance.subjectName, sinstance).getPersonalAttributes()[0];
-				execute(instance.subjectName, senderName, recipientName, message, protocol, sessionid, sinstance, instance);
-
-				if(successfulSubsCountLearning > maxSuccessfulPathSubsCount){
-					maxSuccessfulPathSubsCount = successfulSubsCountLearning;
-				}
-			}	
-			
-			for(int k=0;k<tempPathAgents.length;k++){
-				ServerMemoryFactory.restoreMemoryFromClone(tempPathAgents[k], instance.subjectName, sessionid);	
-			}
-			
-			for(int k=0;k<tempPathAgents.length;k++){
-				ServerMemoryFactory.createMemoryClone(tempPathAgents[k], instance.subjectName, sessionid);	
-			}
+				String protocol[] = protocolDesc.split(",");
 				
+				for(int k=0;k<tempPathAgents.length-1;k++){
+					
+					ConfigInstance instancez = Config.deserialiseConfigInstance(sessionid);
+					
+					if(instancez.stop){
+						break;
+					}
+					
+					String senderName = tempPathAgents[k];
+					String recipientName = tempPathAgents[k+1];
+									
+					message = ServerAgentFactory.getAgent(instance.subjectName, sinstance).getPersonalAttributes()[0];
+					execute(instance.subjectName, senderName, recipientName, message, protocol, sessionid, sinstance, instance);
+
+					if(successfulSubsCountLearning > maxSuccessfulPathSubsCount){
+						maxSuccessfulPathSubsCount = successfulSubsCountLearning;
+					}
+				}	
+				
+				for(int k=0;k<tempPathAgents.length;k++){
+					ServerMemoryFactory.restoreMemoryFromClone(tempPathAgents[k], instance.subjectName, sessionid);	
+				}
+				
+				for(int k=0;k<tempPathAgents.length;k++){
+					ServerMemoryFactory.createMemoryClone(tempPathAgents[k], instance.subjectName, sessionid);	
+				}
+					
+			}
+			
+			instance.PossibleKnowledgeSubstutitions.put(tempPathAgents.length, maxSuccessfulPathSubsCount);
+			
+			
+			instance.learningMaxSubs = false;
+			Properties ppties1 = new Properties();
+			ppties1.setProperty("instanceproperty", "learningMaxSubs");
+			ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties1, instance.learningMaxSubs);
+
+			instance.maxPossiblePathKnowledgeSubsContainer.put(pp, maxSuccessfulPathSubsCount);
 		}
 		
-		instance.PossibleKnowledgeSubstutitions.put(tempPathAgents.length, maxSuccessfulPathSubsCount);
 		
-		
-		instance.learningMaxSubs = false;
-		Properties ppties1 = new Properties();
-		ppties1.setProperty("instanceproperty", "learningMaxSubs");
-		ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties1, instance.learningMaxSubs);
 
 		return maxSuccessfulPathSubsCount;
 	}
@@ -441,7 +461,8 @@ public class InformationFlows {
 				
 				int maxPossiblePathKnowledgeSubs  =0;
 				if(instance.isModeEntropy){
-					maxPossiblePathKnowledgeSubs = getMaxNoOfPossibleKnowledgeSubstutitions(pathAgents, sinstance,instance);
+					maxPossiblePathKnowledgeSubs = getMaxNoOfPossibleKnowledgeSubstutitions(pathAgents, sinstance,instance);	
+
 				}
 				
 				successfulSubs = new String[0];
