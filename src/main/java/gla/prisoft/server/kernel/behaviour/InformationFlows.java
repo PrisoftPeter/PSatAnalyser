@@ -1173,7 +1173,7 @@ public class InformationFlows {
 					AssertionInstance[] assertionInstance1 = a.getAssertionInstances();
 					if(assertionInstance1 !=null){
 						for(AssertionInstance ap:assertionInstance1){
-							a.updateAssertionInstance(ap.getAssertion(),newgoalvalue);
+							a.updateAssertionInstance(ap.getAssertion(),newgoalvalue,Display.instance.isModeCommonKnowledge);
 						}
 					}
 					if(assertionInstance1.length >0){

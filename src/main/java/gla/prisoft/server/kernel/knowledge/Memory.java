@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 import org.apache.commons.io.FileUtils;
 
+import gla.prisoft.client.Display;
 import gla.prisoft.client.session.ClientServerBroker;
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.behaviour.InformationFlows;
@@ -144,12 +145,17 @@ public class Memory implements Serializable{
 		Agent agent1 = pair[0];
 		Agent agent2 = pair[1];
 		
+		if(Display.instance.isModeCommonKnowledge){
+			addToAssertionsStore(new K0(tempAttribute));
+		}
+		
 		addToMemoryStore(new K1(self, tempAttribute));
 		addToAssertionsStore(new K1a(self, tempAttribute));
 		addToAssertionsStore(new K1(self, tempAttribute));
 		
 		if(!self.getAgentName().equals(agent1.getAgentName())){
 			addToMemoryStore(new K23(self, agent1,tempAttribute));
+			
 			addToAssertionsStore(new K23a(self, agent1, tempAttribute));
 			addToAssertionsStore(new K23(self, agent1, tempAttribute));	
 			

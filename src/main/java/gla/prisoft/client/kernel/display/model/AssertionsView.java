@@ -1000,12 +1000,12 @@ public class AssertionsView extends Container {
 							zoneAgents[i] = an;
 							i = i+1;        
 						}
-						AssertionAspect aspect = new AssertionAspect(agentName, aspectTypeHtml, zoneAgents,Display.instance.knowledgeBase,goal_v);
+						AssertionAspect aspect = new AssertionAspect(agentName, aspectTypeHtml, zoneAgents,Display.instance.knowledgeBase,goal_v, Display.instance.isModeCommonKnowledge);
 						agent.updateAspect(aspect);
 						
 					}
 					else{
-						agent.updateAssertionInstance(assertionDesc, goal_v);	
+						agent.updateAssertionInstance(assertionDesc, goal_v, Display.instance.isModeCommonKnowledge);	
 					}					
 					
 					PSatClient.netAddAgent(agent);
@@ -1029,7 +1029,7 @@ public class AssertionsView extends Container {
 					String assertionDesc = (String)rowData.get(2);
 					
 					if(b){
-						agent.addAssertionInstance(assertionDesc, goal_v);
+						agent.addAssertionInstance(assertionDesc, goal_v, Display.instance.isModeCommonKnowledge);
 					}
 					else{
 						agent.removeAssertionInstance(assertionDesc);
@@ -1049,7 +1049,7 @@ public class AssertionsView extends Container {
 						i = i+1;        
 					}
 
-					AssertionAspect aspect = new AssertionAspect(agentName, aspectTypeHtml, zoneAgents,Display.instance.knowledgeBase,goal_v);
+					AssertionAspect aspect = new AssertionAspect(agentName, aspectTypeHtml, zoneAgents,Display.instance.knowledgeBase,goal_v, Display.instance.isModeCommonKnowledge);
 
 					if(b){
 						agent.addAspect(aspect);

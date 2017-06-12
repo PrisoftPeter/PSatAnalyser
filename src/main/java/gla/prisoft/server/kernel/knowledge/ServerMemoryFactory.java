@@ -544,10 +544,6 @@ public class ServerMemoryFactory {
 		}
 	}
 	
-//TODO: move to client side memory
-//	public static void privacyRequirementInstances(String agentName){
-//		Display.updateAssertionsPage(agentName, "privacy requirement Instances");
-//	}
 //	
 	public static boolean privacyRequirementAspects(String agentName,ServerConfigInstance sinstance, ConfigInstance instance){
 		return fillAssertionAspectsStore(agentName, sinstance, instance);

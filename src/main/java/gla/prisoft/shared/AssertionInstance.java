@@ -6,10 +6,12 @@ public class AssertionInstance implements Serializable{
 	private static final long serialVersionUID = 172147074299623098L;
 	private String assertion;
 	private double goalv; //desired level of assertion satisfaction
+	private boolean isCommonKnowledgeAssertion;
 	
-	public AssertionInstance(String assertion, double goalv){
+	public AssertionInstance(String assertion, double goalv,boolean isCommonKnowledgeAssertion){
 		this.setAssertion(assertion);
 		this.setGoalv(goalv);
+		this.setCommonKnowledgeAssertion(isCommonKnowledgeAssertion);
 	}
 	
 	public double getGoalv() {
@@ -30,5 +32,12 @@ public class AssertionInstance implements Serializable{
 		this.assertion = assertion;
 	}
 
+	public boolean isCommonKnowledgeAssertion() {
+		return isCommonKnowledgeAssertion;
+	}
+
+	public void setCommonKnowledgeAssertion(boolean isCommonKnowledgeAssertion) {
+		this.isCommonKnowledgeAssertion = isCommonKnowledgeAssertion;
+	}
 	
 }

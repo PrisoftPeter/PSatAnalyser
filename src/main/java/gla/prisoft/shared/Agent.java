@@ -194,7 +194,7 @@ public class Agent implements Serializable{
 		this.assertionInstances = new AssertionInstance[0];
 	}
 	
-	public void updateAssertionInstance(String world_text, double goalv){
+	public void updateAssertionInstance(String world_text, double goalv, boolean iscommonknowledgeassertion){
 		assertionInstances = ArrayCleaner.clean(assertionInstances);
 		boolean exist = false;
 		for(AssertionInstance w_s: assertionInstances){
@@ -209,6 +209,7 @@ public class Agent implements Serializable{
 			for(int i=0;i<assertionInstances.length;i++){
 				if(assertionInstances[i].getAssertion().equals(world_text)){
 					assertionInstances[i].setGoalv(goalv);
+					assertionInstances[i].setCommonKnowledgeAssertion(iscommonknowledgeassertion);
 				}
 				temp[i] = assertionInstances[i];
 			}
@@ -216,7 +217,7 @@ public class Agent implements Serializable{
 		}		
 	}
 
-	public void addAssertionInstance(String world_text, double goalv){
+	public void addAssertionInstance(String world_text, double goalv, boolean iscommonknowledgeassertion){
 		assertionInstances = ArrayCleaner.clean(assertionInstances);
 		boolean exist = false;
 		for(AssertionInstance w_s: assertionInstances){
@@ -231,6 +232,7 @@ public class Agent implements Serializable{
 			for(int i=0;i<assertionInstances.length;i++){
 				if(assertionInstances[i].getAssertion().equals(world_text)){
 					assertionInstances[i].setGoalv(goalv);
+					assertionInstances[i].setCommonKnowledgeAssertion(iscommonknowledgeassertion);
 				}
 				temp[i] = assertionInstances[i];
 			}
@@ -241,7 +243,7 @@ public class Agent implements Serializable{
 			for(int i=0;i<assertionInstances.length;i++){
 				temp[i] = assertionInstances[i];
 			}
-			temp[assertionInstances.length] = new AssertionInstance(world_text, goalv);		
+			temp[assertionInstances.length] = new AssertionInstance(world_text, goalv,iscommonknowledgeassertion);		
 			assertionInstances = temp;	
 		}		
 	}

@@ -218,6 +218,7 @@ public class ServerAssertionsFactory implements Serializable{
 					World w = (World) in.readObject();
 					
 					if(instance.is_aspect_run){
+
 						if(w instanceof K1){
 							w = new K1(self, h);
 							aspectType = w.htmlType;
@@ -326,6 +327,7 @@ public class ServerAssertionsFactory implements Serializable{
 							w = new K42b(self, agent1, agent2, h);	
 							aspectType = w.htmlType;
 						}	
+						
 					}
 					
 					boolean checked = false;
@@ -350,7 +352,7 @@ public class ServerAssertionsFactory implements Serializable{
 								i = i+1;		        			
 							}   
 							goal_v = self.getAspectVGoal(agentName, atype, instance.knowledgeBase);
-			        		AssertionAspect anew = new AssertionAspect(agentName, atype, zoneAgents,instance.knowledgeBase, goal_v);
+			        		AssertionAspect anew = new AssertionAspect(agentName, atype, zoneAgents,instance.knowledgeBase, goal_v, instance.isModeCommonKnowledge);
 			        		
 			        		self.addAspect(anew);
 			        		ServerAgentFactory.writeAgent(self, sinstance);
