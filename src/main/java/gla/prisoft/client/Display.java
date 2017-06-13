@@ -82,10 +82,12 @@ import gla.prisoft.client.kernel.display.util.EppsteinPowerLawSettings;
 import gla.prisoft.client.kernel.display.util.KleinbergSmallWorldSettings;
 import gla.prisoft.client.kernel.display.util.PreferentialAttachmentSettings;
 import gla.prisoft.client.session.ClientConfig;
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.Agent;
+import gla.prisoft.shared.CollectiveMode;
 import gla.prisoft.shared.CombinationStrategy;
-import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.NetworkType;
+import gla.prisoft.shared.CollectiveStrategy;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -130,9 +132,7 @@ public class Display extends JFrame {
 	JDesktopPane jdpDesktop;
 	static int openFrameCount = 0;
 
-    public static ConfigInstance instance;
-	
-	public static ClientKNetworkGraph ckgraph;
+    public static ClientKNetworkGraph ckgraph;
 	
 	public static String hostname;
 	public static boolean loadingsession;
@@ -162,7 +162,7 @@ public class Display extends JFrame {
 				try {					
 					window = new Display(null, false);
 					window.setVisible(true);
-					window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
+					window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+PSatAPI.instance.sessionid+")");								
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -269,7 +269,7 @@ public class Display extends JFrame {
 		menuNewSession.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				//check server if generating memory store
-				if(instance.is_generating_memory_store){
+				if(PSatAPI.instance.is_generating_memory_store){
 				    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 
 					return;
@@ -286,7 +286,7 @@ public class Display extends JFrame {
 							forcenewsession = true;
 							window = new Display(null, false);
 							window.setVisible(true);
-							window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
+							window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+PSatAPI.instance.sessionid+")");								
 							Display.updatePathsList();
 							loadingsession = false;
 
@@ -322,7 +322,7 @@ public class Display extends JFrame {
 			final JMenuItem menu_sessions = new JMenuItem(session,datastoreNatIcon);
 			menu_sessions.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
-					if(instance.is_generating_memory_store){
+					if(PSatAPI.instance.is_generating_memory_store){
 					    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 
 						return;
@@ -333,9 +333,9 @@ public class Display extends JFrame {
 					window.setVisible(false);
 					Display.ckgraph = null;
 					loadingsession = true;
-					instance = PSatClient.netGetSession(selectedSession);
-					instance.runningTraining = false;
-					instance.stop = false;
+					PSatAPI.instance = PSatClient.netGetSession(selectedSession);
+					PSatAPI.instance.runningTraining = false;
+					PSatAPI.instance.stop = false;
 					PSatClient.netSerialiseConfigInstance();
 
 					EventQueue.invokeLater(new Runnable() {
@@ -343,7 +343,7 @@ public class Display extends JFrame {
 							try {
 								window = new Display(selectedSession, false);
 								window.setVisible(true);
-								window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
+								window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+PSatAPI.instance.sessionid+")");								
 								Display.updatePathsList();
 								loadingsession = false;
 								
@@ -372,7 +372,7 @@ public class Display extends JFrame {
 		menuItemppties.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				//check server if generating memory store
-				if(instance.is_generating_memory_store){
+				if(PSatAPI.instance.is_generating_memory_store){
 				    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 
 					return;
@@ -437,7 +437,7 @@ public class Display extends JFrame {
 				//selected_source_config_path = null;
 				
 //				datastore_file_path = DatastoreChooser.show("Save datastore as", false);
-				instance.networkType = NetworkType.CUSTOM;
+				PSatAPI.instance.networkType = NetworkType.CUSTOM;
 								
 				PSatClient.netSerialiseConfigInstance();
 				ckgraph.createNetworkFromGmlOrGraphML();
@@ -462,7 +462,7 @@ public class Display extends JFrame {
 				//selected_source_config_path = null;
 				
 //				datastore_file_path = DatastoreChooser.show("Save datastore as", false);
-				instance.networkType = NetworkType.RANDOM;
+				PSatAPI.instance.networkType = NetworkType.RANDOM;
 				
 				PSatClient.netSerialiseConfigInstance();
 //				ckgraph.createRandomGraph();
@@ -486,7 +486,7 @@ public class Display extends JFrame {
 				//selected_source_config_path = null;
 				
 //				datastore_file_path = DatastoreChooser.show("Save datastore as", false);
-				instance.networkType = NetworkType.BARABASIALBERT;
+				PSatAPI.instance.networkType = NetworkType.BARABASIALBERT;
 				
 				PreferentialAttachmentSettings.configure();
 				PSatClient.netAutoGenAgents();
@@ -511,7 +511,7 @@ public class Display extends JFrame {
 				//selected_source_config_path = null;
 				
 //				datastore_file_path = DatastoreChooser.show("Save datastore as", false);
-				instance.networkType = NetworkType.KLEINBERGSMALLWORLD;
+				PSatAPI.instance.networkType = NetworkType.KLEINBERGSMALLWORLD;
 								
 				KleinbergSmallWorldSettings.configure();
 				PSatClient.netAutoGenAgents();				
@@ -535,7 +535,7 @@ public class Display extends JFrame {
 				//selected_source_config_path = null;
 				
 				//datastore_file_path = DatastoreChooser.show("Save datastore as", false);
-				instance.networkType = NetworkType.EPPESTEINPOWERLAW;
+				PSatAPI.instance.networkType = NetworkType.EPPESTEINPOWERLAW;
 								
 				EppsteinPowerLawSettings.configure();
 				PSatClient.netAutoGenAgents();
@@ -556,7 +556,7 @@ public class Display extends JFrame {
 				//selected_source_config_path = null;
 				
 //				datastore_file_path = DatastoreChooser.show("Save datastore as", false);
-				instance.networkType = NetworkType.NODESONLY;
+				PSatAPI.instance.networkType = NetworkType.NODESONLY;
 
 				PSatClient.netSerialiseConfigInstance();
 				PSatClient.netAutoGenAgents();				
@@ -580,7 +580,7 @@ public class Display extends JFrame {
 				//selected_source_config_path = null;
 				
 //				datastore_file_path = DatastoreChooser.show("Save datastore as", false);
-				instance.networkType = NetworkType.SEQUENTIAL;
+				PSatAPI.instance.networkType = NetworkType.SEQUENTIAL;
 								
 				PSatClient.netSerialiseConfigInstance();
 				PSatClient.netAutoGenAgents();		
@@ -630,31 +630,31 @@ public class Display extends JFrame {
 		startTrainMaxAnalysisButton.setToolTipText(info1);
 		
 
-		if(instance.sourceAgentName ==null || instance.targetAgentName == null){
+		if(PSatAPI.instance.sourceAgentName ==null || PSatAPI.instance.targetAgentName == null){
 			startTrainMaxAnalysisButton.setEnabled(false);
 		}
 		
 		startTrainMaxAnalysisButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				if(instance.runningTraining){
+				if(PSatAPI.instance.runningTraining){
 					String message = "Analysis is still running, are you sure you want to stop!";
 					int option = JOptionPane.showConfirmDialog(iframeNet, message, "Stop", JOptionPane.YES_NO_OPTION);
 		    	    
 				    if (option == JOptionPane.YES_OPTION){
-				    	instance.stop = true;
+				    	PSatAPI.instance.stop = true;
 				    	PSatClient.netSerialiseConfigInstance();
-				    	Display.instance.costTradeoff = 1;
+				    	PSatAPI.instance.costTradeoff = 1;
 				    	startTrainMaxAnalysisButton.setIcon(startIcon);
 				    }
 				}
 				else{
 					startTrainMaxAnalysisButton.setIcon(stopNormalIcon);
 					Display.noiterations=1;
-			    	Display.instance.costTradeoff = 1;
+			    	PSatAPI.instance.costTradeoff = 1;
 
 					runSatAnalysis();
 					
-			    	instance.stop = false;
+			    	PSatAPI.instance.stop = false;
 			    	PSatClient.netSerialiseConfigInstance();
 				}
 			}			
@@ -696,11 +696,11 @@ public class Display extends JFrame {
 	
 	
 	public void runSatAnalysis(){		
-		if(instance.is_generating_memory_store){
+		if(PSatAPI.instance.is_generating_memory_store){
 		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 		    return;
 		}
-		if(instance.evaluatedProtocols == null ||instance.evaluatedProtocols.length==0){
+		if(PSatAPI.instance.evaluatedProtocols == null ||PSatAPI.instance.evaluatedProtocols.length==0){
 			JOptionPane.showMessageDialog(Display.iframeNet, "You need to select one or more disclosure protocol...",  "Disclosure Protocol", JOptionPane.NO_OPTION);
 		    return;
 		}
@@ -709,11 +709,11 @@ public class Display extends JFrame {
 				
 		Thread queryThread = new Thread() {
 			public void run() {					
-				instance.noPaths = instance.selectedAgentPaths.size();
-				instance.isTraining = true;
-				instance.currentPrivacyGoal = new HashMap<String, Double>();
-				if(instance.originalPrivacyGoal == null){
-					instance.originalPrivacyGoal = new HashMap<String, Double>();							
+				PSatAPI.instance.noPaths = PSatAPI.instance.selectedAgentPaths.size();
+				PSatAPI.instance.isTraining = true;
+				PSatAPI.instance.currentPrivacyGoal = new HashMap<String, Double>();
+				if(PSatAPI.instance.originalPrivacyGoal == null){
+					PSatAPI.instance.originalPrivacyGoal = new HashMap<String, Double>();							
 				}
 				
 				PSatClient.netSerialiseConfigInstance();
@@ -724,13 +724,13 @@ public class Display extends JFrame {
 					iframeDecisionBarView.setVisible(false);
 				}
 				if(feasibilityView == null){
-					feasibilityView = new FeasibilityView(instance);
+					feasibilityView = new FeasibilityView(PSatAPI.instance);
 					createFeasibilityViewPage();
 				}
 				else{
 					iframeFeasibilityView.remove(feasibilityView);
 					iframeFeasibilityView.setVisible(false);
-					feasibilityView = new FeasibilityView(instance);
+					feasibilityView = new FeasibilityView(PSatAPI.instance);
 					createFeasibilityViewPage();		        			
 				}
 				                			
@@ -769,7 +769,7 @@ public class Display extends JFrame {
 				listbox.addListSelectionListener(new ListSelectionListener(){
 
 					public void valueChanged(ListSelectionEvent e) {
-						if(instance.is_generating_memory_store){
+						if(PSatAPI.instance.is_generating_memory_store){
 						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 		        			return;
 		        		}
@@ -778,10 +778,10 @@ public class Display extends JFrame {
 						for(String s:ll){
 							saps.add(s);
 						}
-						instance.selectedAgentPaths = saps;
+						PSatAPI.instance.selectedAgentPaths = saps;
 						PSatClient.netSerialiseConfigInstance();
 
-			            if(instance.selectedAgentPaths.size() >0){
+			            if(PSatAPI.instance.selectedAgentPaths.size() >0){
 			            	ClientKNetworkGraph.resetColoredLinks();
 							ClientKNetworkGraph.resetColoredNodes();
 							
@@ -864,8 +864,8 @@ public class Display extends JFrame {
 		    
 		    if(sessionid == null){
 		    	if(forcenewsession){
-		    		instance = PSatClient.netGenNewSession();
-					sessions.add(instance.sessionid);
+		    		PSatAPI.instance = PSatClient.netGenNewSession();
+					sessions.add(PSatAPI.instance.sessionid);
 					ClientConfig.serialiseSessionIds(sessions);
 					PSatClient.netSerialiseConfigInstance();
 
@@ -906,16 +906,16 @@ public class Display extends JFrame {
 				   
 				   if(sessionoption==1){
 					   if(newsession_cb.isSelected() ||(sessions.size() == 0)){
-						   instance = PSatClient.netGenNewSession();
-						   sessions.add(instance.sessionid);
+						   PSatAPI.instance = PSatClient.netGenNewSession();
+						   sessions.add(PSatAPI.instance.sessionid);
 						   ClientConfig.serialiseSessionIds(sessions);
 						   PSatClient.netSerialiseConfigInstance();
 					   }
 					   else{
 						   final String tsessionid = String.valueOf(sessionslist_cb.getSelectedItem());
-						   instance = PSatClient.netGetSession(tsessionid);
-						   instance.runningTraining = false;
-						   instance.stop = false;
+						   PSatAPI.instance = PSatClient.netGetSession(tsessionid);
+						   PSatAPI.instance.runningTraining = false;
+						   PSatAPI.instance.stop = false;
 							
 							EventQueue.invokeLater(new Runnable() {
 								public void run() {
@@ -923,7 +923,7 @@ public class Display extends JFrame {
 										window.setVisible(false);								
 										window = new Display(tsessionid, true);
 										window.setVisible(true);
-										window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+instance.sessionid+")");								
+										window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+PSatAPI.instance.sessionid+")");								
 										Display.updatePathsList();
 									} catch (Exception e) {
 										e.printStackTrace();
@@ -938,7 +938,7 @@ public class Display extends JFrame {
 		    	}		    		
 		    }
 		    else{
-				  instance = PSatClient.netGetSession(sessionid);
+				  PSatAPI.instance = PSatClient.netGetSession(sessionid);
 		    }
 		    
 		   loadingsession = false;
@@ -953,8 +953,8 @@ public class Display extends JFrame {
 		//misc
 //		protocolSuite = PathsInGraph.loadProtocolSuite();
 		PSatClient.netDeserialiseProcessPossibleWorldsPathToFile(sessionid);
-		if(instance.processedPossibleWorldsPaths == null){
-			instance.processedPossibleWorldsPaths = new String[0];	
+		if(PSatAPI.instance.processedPossibleWorldsPaths == null){
+			PSatAPI.instance.processedPossibleWorldsPaths = new String[0];	
 			PSatClient.netSerialiseConfigInstance();
 		}		
 
@@ -988,7 +988,7 @@ public class Display extends JFrame {
         		
         	}
   			else{
-  				tempPaths = instance.processedPossibleWorldsPaths;
+  				tempPaths = PSatAPI.instance.processedPossibleWorldsPaths;
   			}
 			
             JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -1047,7 +1047,7 @@ public class Display extends JFrame {
 					}
 	      		}
 	      		
-	      		instance.completness = 0;
+	      		PSatAPI.instance.completness = 0;
 	      		PSatClient.netSerialiseConfigInstance();
 	          }
 	    });	
@@ -1222,7 +1222,7 @@ public class Display extends JFrame {
 	public static ClientAssertionsFactory afactory;
 	public static AssertionsView ksView;
 	public static void updateAssertionsPage(final String agentName,  final String command){
-		if(Display.instance.is_generating_memory_store){
+		if(PSatAPI.instance.is_generating_memory_store){
 		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 			return;
 		}
@@ -1304,7 +1304,7 @@ public class Display extends JFrame {
 		
 	public static void updateNetworkPage(){
 		
-		if(instance.is_generating_memory_store){
+		if(PSatAPI.instance.is_generating_memory_store){
 		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 			return;
 		}
@@ -1337,7 +1337,7 @@ public class Display extends JFrame {
 	public static void updateNetworkNode(){
 		Display.isTresholdSlider = false;
 
-		if(instance.is_generating_memory_store){
+		if(PSatAPI.instance.is_generating_memory_store){
 		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 			return;
 		}
@@ -1382,42 +1382,42 @@ public class Display extends JFrame {
 //		if(instance.is_aspect_run){
 			Properties sequencesourcetarget = PSatClient.netFindSequenceSourceandTarget();
 			
-			Display.instance.is_new_principal = true;
-			Display.instance.is_new_target = true;
+			PSatAPI.instance.is_new_principal = true;
+			PSatAPI.instance.is_new_target = true;
 			
-			Display.instance.listPathsData = new String[0];
+			PSatAPI.instance.listPathsData = new String[0];
 			Display.pathsListModel.removeAllElements();
-			Display.instance.selectedAgentPaths = null;
+			PSatAPI.instance.selectedAgentPaths = null;
 			Display.prPanel.removeAll();
 						
-			Display.instance.sourceAgentName = sequencesourcetarget.getProperty("source");
-			Display.instance.subjectName = sequencesourcetarget.getProperty("source");
-			Display.instance.selfAgentName = sequencesourcetarget.getProperty("source");
-			Display.instance.targetAgentName = sequencesourcetarget.getProperty("target");
+			PSatAPI.instance.sourceAgentName = sequencesourcetarget.getProperty("source");
+			PSatAPI.instance.subjectName = sequencesourcetarget.getProperty("source");
+			PSatAPI.instance.selfAgentName = sequencesourcetarget.getProperty("source");
+			PSatAPI.instance.targetAgentName = sequencesourcetarget.getProperty("target");
 						
 			PSatClient.netSerialiseConfigInstance();
 			
 			Thread queryThread = new Thread() {
 				public void run() {
-					if(Display.instance.is_dynamic_memory_store){
+					if(PSatAPI.instance.is_dynamic_memory_store){
 						//Do nothing, memory stores will be generated based Display.listPathsData
 					}
 					else{
 						int noagents = PSatClient.netGetNoAgents();
 						boolean valuesSet = Display.configPercentagePossibleWorldsAndNoAgentsRangeDisplay();
 						if(!valuesSet){
-						Display.instance. maxNoOfknowAgents = noagents-1;
-						Display.instance.minNoOfknowAgents = noagents-1;
-						Display.instance.noOfKnownAgentsGenerator = new Random();
+						PSatAPI.instance. maxNoOfknowAgents = noagents-1;
+						PSatAPI.instance.minNoOfknowAgents = noagents-1;
+						PSatAPI.instance.noOfKnownAgentsGenerator = new Random();
 					}
-					Display.instance.noMemoryStores = 0;	
+					PSatAPI.instance.noMemoryStores = 0;	
 					PSatClient.netSerialiseConfigInstance();
 					PSatClient.netNewMemoryStore();	
 					}
 					
 					//generate paths list
-					if(Display.instance.targetAgentName !=null && Display.instance.targetAgentName.length() !=0){
-						if(Display.instance.sourceAgentName !=null && Display.instance.sourceAgentName.length() !=0){
+					if(PSatAPI.instance.targetAgentName !=null && PSatAPI.instance.targetAgentName.length() !=0){
+						if(PSatAPI.instance.sourceAgentName !=null && PSatAPI.instance.sourceAgentName.length() !=0){
 							Display.updatePathsList();										
 						}
 					}
@@ -1432,26 +1432,26 @@ public class Display extends JFrame {
 	}
 	public static void updatePathsList(){
 		
-		if(instance.is_generating_memory_store){
+		if(PSatAPI.instance.is_generating_memory_store){
 		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
 
 			return;
 		}
-		if(instance.is_aspect_run){
-			instance.listPathsData = PSatClient.netFindKNearestneighbours();
-			instance.selectedAgentPaths = new ArrayList<String>();
-			for(String s:instance.listPathsData){
-				instance.selectedAgentPaths.add(s);
+		if(PSatAPI.instance.is_aspect_run){
+			PSatAPI.instance.listPathsData = PSatClient.netFindKNearestneighbours();
+			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
+			for(String s:PSatAPI.instance.listPathsData){
+				PSatAPI.instance.selectedAgentPaths.add(s);
 			}
 		}
 		else{
-			instance.listPathsData = PSatClient.netGetPaths(); 
-			instance.selectedAgentPaths = new ArrayList<String>();
-			for(String s:instance.listPathsData){
-				instance.selectedAgentPaths.add(s);
+			PSatAPI.instance.listPathsData = PSatClient.netGetPaths(); 
+			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
+			for(String s:PSatAPI.instance.listPathsData){
+				PSatAPI.instance.selectedAgentPaths.add(s);
 			}
 		}	
-		if(instance.listPathsData.length == 0){
+		if(PSatAPI.instance.listPathsData.length == 0){
 			Display.updateLogPage("no path matching setup distance of source from target(s)", true);
 		}
 
@@ -1464,11 +1464,11 @@ public class Display extends JFrame {
         		//selectedAgentPaths = new ArrayList<String>();	
             	
         		ArrayList<String> al = new ArrayList<String>();
-            	for (String path: instance.listPathsData) {
+            	for (String path: PSatAPI.instance.listPathsData) {
                 	pathsListModel.addElement(path);
                 	al.add(path);
                 }
-            	instance.selectedAgentPaths = al;
+            	PSatAPI.instance.selectedAgentPaths = al;
             	PSatClient.netSerialiseConfigInstance();
             	
 				listbox.setBackground(Color.WHITE);
@@ -1478,11 +1478,11 @@ public class Display extends JFrame {
 				
 				Thread queryThread = new Thread() {
 					public void run() {
-						if(instance.is_dynamic_memory_store && (instance.is_new_principal || instance.is_new_target)){
+						if(PSatAPI.instance.is_dynamic_memory_store && (PSatAPI.instance.is_new_principal || PSatAPI.instance.is_new_target)){
 							Thread queryThreadx = new Thread() {
 								public void run() {
 									PSatClient.netNewMemoryStore();	//for dynamic memory store generation
-									instance.old_k = instance.k;
+									PSatAPI.instance.old_k = PSatAPI.instance.k;
 									PSatClient.netSerialiseConfigInstance();
 									Display.updateProgressComponent(100, "");
 
@@ -1497,18 +1497,18 @@ public class Display extends JFrame {
 									PSatClient.netNewMemoryStore();	//for dynamic memory store generation
 									PopupGraphMousePlugin.isrequirements = false;	
 									
-									instance.old_k = instance.k;
+									PSatAPI.instance.old_k = PSatAPI.instance.k;
 									PSatClient.netSerialiseConfigInstance();
 								}
 							};
 							queryThreadx.start();
 																
 						}
-						else if(instance.k != instance.old_k){
+						else if(PSatAPI.instance.k != PSatAPI.instance.old_k){
 							Thread queryThreadx = new Thread() {
 								public void run() {
 									PSatClient.netNewMemoryStore();	//for dynamic memory store generation
-									instance.old_k = instance.k;
+									PSatAPI.instance.old_k = PSatAPI.instance.k;
 									PSatClient.netSerialiseConfigInstance();
 								}
 							};
@@ -1516,13 +1516,13 @@ public class Display extends JFrame {
 							
 						}
 						
-						if(!instance.is_aspect_run){
-							if(instance.sourceAgentName !=null && instance.targetAgentName != null){
+						if(!PSatAPI.instance.is_aspect_run){
+							if(PSatAPI.instance.sourceAgentName !=null && PSatAPI.instance.targetAgentName != null){
 								activateRun(true);	
 							}	
 						}
 						else{
-							if(instance.selfAgentName !=null && instance.k >0){
+							if(PSatAPI.instance.selfAgentName !=null && PSatAPI.instance.k >0){
 								Display.activateRun(true);	
 							}
 						}
@@ -1560,7 +1560,7 @@ public class Display extends JFrame {
 //		iframePlots.add(barChart);	
 		iframeFeasibilityView.add(feasibilityView);	
 		
-		if(!instance.externalViewMode){
+		if(!PSatAPI.instance.externalViewMode){
 			iframeFeasibilityView.setVisible(true);
 			try {
 				iframeFeasibilityView.setSelected(true);
@@ -1598,7 +1598,7 @@ public class Display extends JFrame {
 		panel1.setBackground(Color.WHITE);
 		panel1.add(layeredbarchart);
 		
-		if(!instance.externalViewMode){
+		if(!PSatAPI.instance.externalViewMode){
 			iframeDecisionBarView.setVisible(true);
 			try {
 				iframeDecisionBarView.setSelected(true);
@@ -1628,7 +1628,7 @@ public class Display extends JFrame {
 		JLabel label0 = new JLabel("Log Mode:");
 		label0.setForeground(new Color(54,133,47));
 		final JCheckBox ktransformCheckbox= new JCheckBox("Log object knowledge transformations");
-		if(instance.log_knowledge_transformation){
+		if(PSatAPI.instance.log_knowledge_transformation){
 			ktransformCheckbox.setSelected(true);
 		}
 		else{
@@ -1637,10 +1637,10 @@ public class Display extends JFrame {
 		ktransformCheckbox.addActionListener(new ActionListener() {
 	          public void actionPerformed(ActionEvent arg0) {
 	        	if(ktransformCheckbox.isSelected()){
-	        		instance.log_knowledge_transformation = true;
+	        		PSatAPI.instance.log_knowledge_transformation = true;
 	  	    	}	
 	  	    	else{
-	  	    		instance.log_knowledge_transformation = false;
+	  	    		PSatAPI.instance.log_knowledge_transformation = false;
 	  	    	}
 	        	PSatClient.netSerialiseConfigInstance();
 	          }          
@@ -1648,7 +1648,7 @@ public class Display extends JFrame {
 		
 	    
 	    final JCheckBox agentKStateCheckbox= new JCheckBox("Log object knowledge state");
-	    if(instance.log_agent_knowledge_state){
+	    if(PSatAPI.instance.log_agent_knowledge_state){
 	    	agentKStateCheckbox.setSelected(true);
 	    }
 	    else{
@@ -1657,10 +1657,10 @@ public class Display extends JFrame {
 	    agentKStateCheckbox.addActionListener(new ActionListener() {
 	          public void actionPerformed(ActionEvent arg0) {
 	        	if(agentKStateCheckbox.isSelected()){
-	        		instance.log_agent_knowledge_state = true;
+	        		PSatAPI.instance.log_agent_knowledge_state = true;
 	  	    	}	
 	  	    	else{
-	  	    		instance.log_agent_knowledge_state = false;
+	  	    		PSatAPI.instance.log_agent_knowledge_state = false;
 	  	    	}
     	    	PSatClient.netSerialiseConfigInstance();
 
@@ -1675,15 +1675,15 @@ public class Display extends JFrame {
 	    instance_rb.addActionListener(new ActionListener() {	    	 
 
 	    	public void actionPerformed(ActionEvent event) {
-	        	instance.is_aspect_run = false;
-	        	instance.listPathsData = new String[0];
+	        	PSatAPI.instance.is_aspect_run = false;
+	        	PSatAPI.instance.listPathsData = new String[0];
 				Display.pathsListModel.removeAllElements();
-				instance.selectedAgentPaths = null;
+				PSatAPI.instance.selectedAgentPaths = null;
 				Display.prPanel.removeAll();
-				instance.sourceAgentName = null;
-				instance.subjectName = null;
-				instance.selfAgentName = null;
-				instance.targetAgentName =null;
+				PSatAPI.instance.sourceAgentName = null;
+				PSatAPI.instance.subjectName = null;
+				PSatAPI.instance.selfAgentName = null;
+				PSatAPI.instance.targetAgentName =null;
 				PSatClient.netSerialiseConfigInstance();
 				
 				Display.updatePathsList();
@@ -1697,15 +1697,15 @@ public class Display extends JFrame {
         aspects_rb.addActionListener(new ActionListener() {	    	 
 
 	        public void actionPerformed(ActionEvent event) {
-	        	instance.is_aspect_run = true;
-	        	instance.listPathsData = new String[0];
+	        	PSatAPI.instance.is_aspect_run = true;
+	        	PSatAPI.instance.listPathsData = new String[0];
 				Display.pathsListModel.removeAllElements();
-				instance.selectedAgentPaths = null;
+				PSatAPI.instance.selectedAgentPaths = null;
 				Display.prPanel.removeAll();
-				instance.sourceAgentName = null;
-				instance.subjectName = null;
-				instance.selfAgentName = null;
-				instance.targetAgentName =null;
+				PSatAPI.instance.sourceAgentName = null;
+				PSatAPI.instance.subjectName = null;
+				PSatAPI.instance.selfAgentName = null;
+				PSatAPI.instance.targetAgentName =null;
 				PSatClient.netSerialiseConfigInstance();
 
 				Display.updatePathsList();
@@ -1714,7 +1714,7 @@ public class Display extends JFrame {
 				
 	        }
 	    });
-        if(instance.is_aspect_run){
+        if(PSatAPI.instance.is_aspect_run){
         	aspects_rb.setSelected(true);
         }
         else{
@@ -1730,10 +1730,9 @@ public class Display extends JFrame {
 	    pick_rb.addActionListener(new ActionListener() {	    	 
 
 	    	public void actionPerformed(ActionEvent event) {
-	        	instance.isModePick = true;
-	        	instance.isModeUncertainty = false;
-	        	instance.isModeEntropy = false;
-	        	instance.isModeCommonKnowledge = false;
+	        	PSatAPI.instance.isModePick = true;
+	        	PSatAPI.instance.isModeUncertainty = false;
+	        	PSatAPI.instance.isModeEntropy = false;
 				PSatClient.netSerialiseConfigInstance();
 
 	        }
@@ -1743,10 +1742,9 @@ public class Display extends JFrame {
         uncertainty_rb.addActionListener(new ActionListener() {	    	 
 
         	public void actionPerformed(ActionEvent event) {
-	        	instance.isModePick = false;
-	        	instance.isModeUncertainty = true;
-	        	instance.isModeEntropy = false;
-	        	instance.isModeCommonKnowledge = false;
+	        	PSatAPI.instance.isModePick = false;
+	        	PSatAPI.instance.isModeUncertainty = true;
+	        	PSatAPI.instance.isModeEntropy = false;
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
@@ -1755,62 +1753,148 @@ public class Display extends JFrame {
         entropy_rb.addActionListener(new ActionListener() {	    	 
 
         	public void actionPerformed(ActionEvent event) {
-	        	instance.isModePick = false;
-	        	instance.isModeUncertainty = false;
-	        	instance.isModeEntropy = true;
-	        	instance.isModeCommonKnowledge = false;
-				PSatClient.netSerialiseConfigInstance();
-	        }
-	    });
-        JRadioButton ck_rb = new JRadioButton("Regulate common knowledge");
-        
-        ck_rb.addActionListener(new ActionListener() {	    	 
-
-        	public void actionPerformed(ActionEvent event) {
-	        	instance.isModePick = false;
-	        	instance.isModeUncertainty = false;
-	        	instance.isModeEntropy = false;
-	        	instance.isModeCommonKnowledge = true;
+	        	PSatAPI.instance.isModePick = false;
+	        	PSatAPI.instance.isModeUncertainty = false;
+	        	PSatAPI.instance.isModeEntropy = true;
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
         
-        if(instance.isModePick){
+        
+        if(PSatAPI.instance.isModePick){
         	pick_rb.setSelected(true);
         	uncertainty_rb.setSelected(false);
         	entropy_rb.setSelected(false);
-        	ck_rb.setSelected(false);
         }
-        else if(instance.isModeUncertainty){
+        else if(PSatAPI.instance.isModeUncertainty){
         	pick_rb.setSelected(false);
         	uncertainty_rb.setSelected(true);
         	entropy_rb.setSelected(false);
-        	ck_rb.setSelected(false);
         }
-        else if(instance.isModeEntropy){
+        else if(PSatAPI.instance.isModeEntropy){
         	pick_rb.setSelected(false);
         	uncertainty_rb.setSelected(false);
         	entropy_rb.setSelected(true);
-        	ck_rb.setSelected(false);
-        }
-        else if(instance.isModeCommonKnowledge){
-        	pick_rb.setSelected(false);
-        	uncertainty_rb.setSelected(false);
-        	entropy_rb.setSelected(false);
-        	ck_rb.setSelected(true);
         }
         else{
         	pick_rb.setSelected(true);
         	uncertainty_rb.setSelected(false);
         	entropy_rb.setSelected(false);
-        	ck_rb.setSelected(false);
         }
         ButtonGroup pick_g_rb = new ButtonGroup();
         pick_g_rb.add(pick_rb);
         pick_g_rb.add(uncertainty_rb);
         pick_g_rb.add(entropy_rb);
-        pick_g_rb.add(ck_rb); 
                 
+        JLabel labelcollective = new JLabel("Collective Pr setting");
+        JRadioButton nonek_rb = new JRadioButton("<html>None</html>");        
+        nonek_rb.addActionListener(new ActionListener() {	
+        	public void actionPerformed(ActionEvent event) {
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
+				PSatClient.netSerialiseConfigInstance();
+	        }
+	    });        
+        JRadioButton ck_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.CG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.CG)+"</html>");        
+        ck_rb.addActionListener(new ActionListener() {	
+        	public void actionPerformed(ActionEvent event) {
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.CG;
+				PSatClient.netSerialiseConfigInstance();
+	        }
+	    });
+        JRadioButton egk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.EG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.EG)+"</html>");        
+        egk_rb.addActionListener(new ActionListener() {	
+        	public void actionPerformed(ActionEvent event) {
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.EG;
+				PSatClient.netSerialiseConfigInstance();
+	        }
+	    });
+        JRadioButton sgk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.SG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.SG)+"</html>");        
+        sgk_rb.addActionListener(new ActionListener() {	
+        	public void actionPerformed(ActionEvent event) {
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.SG;
+				PSatClient.netSerialiseConfigInstance();
+	        }
+	    });
+        JRadioButton bpk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.BP)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.BP)+"</html>");        
+        bpk_rb.addActionListener(new ActionListener() {	
+        	public void actionPerformed(ActionEvent event) {
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.BP;
+				PSatClient.netSerialiseConfigInstance();
+	        }
+	    });
+        JRadioButton dgk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.DG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.DG)+"</html>");        
+        dgk_rb.addActionListener(new ActionListener() {	
+        	public void actionPerformed(ActionEvent event) {
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.DG;
+				PSatClient.netSerialiseConfigInstance();
+	        }
+	    });
+        if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.NONE){
+        	nonek_rb.setSelected(true);
+        	ck_rb.setSelected(false);
+        	egk_rb.setSelected(false);
+        	sgk_rb.setSelected(false);
+        	bpk_rb.setSelected(false);
+        	dgk_rb.setSelected(false);
+        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
+        	nonek_rb.setSelected(false);
+        	ck_rb.setSelected(true);
+        	egk_rb.setSelected(false);
+        	sgk_rb.setSelected(false);
+        	bpk_rb.setSelected(false);
+        	dgk_rb.setSelected(false);
+        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EG){
+        	nonek_rb.setSelected(false);
+        	ck_rb.setSelected(false);
+        	egk_rb.setSelected(true);
+        	sgk_rb.setSelected(false);
+        	bpk_rb.setSelected(false);
+        	dgk_rb.setSelected(false);
+        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.SG){
+        	nonek_rb.setSelected(false);
+        	ck_rb.setSelected(false);
+        	egk_rb.setSelected(false);
+        	sgk_rb.setSelected(true);
+        	bpk_rb.setSelected(false);
+        	dgk_rb.setSelected(false);
+        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.BP){
+        	nonek_rb.setSelected(false);
+        	ck_rb.setSelected(false);
+        	egk_rb.setSelected(false);
+        	sgk_rb.setSelected(false);
+        	bpk_rb.setSelected(true);
+        	dgk_rb.setSelected(false);
+        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.DG){
+        	nonek_rb.setSelected(false);
+        	ck_rb.setSelected(false);
+        	egk_rb.setSelected(false);
+        	sgk_rb.setSelected(false);
+        	bpk_rb.setSelected(false);
+        	dgk_rb.setSelected(true);
+        }
+        else{
+        	nonek_rb.setSelected(true);
+        	ck_rb.setSelected(false);
+        	egk_rb.setSelected(false);
+        	sgk_rb.setSelected(false);
+        	bpk_rb.setSelected(false);
+        	dgk_rb.setSelected(false);
+        }
+        
+        ButtonGroup cok_rb = new ButtonGroup();
+        cok_rb.add(nonek_rb);
+        cok_rb.add(ck_rb);
+        cok_rb.add(egk_rb);
+        cok_rb.add(sgk_rb);
+        cok_rb.add(bpk_rb);
+        cok_rb.add(dgk_rb);
+        
+        
         JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
         JSeparator sep2 = new JSeparator(SwingConstants.HORIZONTAL);
 //        JSeparator sep3 = new JSeparator(SwingConstants.HORIZONTAL);
@@ -1822,15 +1906,15 @@ public class Display extends JFrame {
 	    Integer maxPathLengths[] = {1,2,3,4,5,6,7,8,9};
 	    final JComboBox<Integer> maxPathLength_cb = new JComboBox<Integer>(maxPathLengths);
 	    for(int i=0;i<maxPathLengths.length;i++){
-	    	if(maxPathLengths[i] == instance.max_analysis_path_length){
+	    	if(maxPathLengths[i] == PSatAPI.instance.max_analysis_path_length){
 	    		maxPathLength_cb.setSelectedIndex(i);		
 	    	}
 	    }	    
 	    maxPathLength_cb.addItemListener(new ItemListener() {
 	        public void itemStateChanged(ItemEvent itemEvent) {
-	        	instance.max_analysis_path_length = (Integer)maxPathLength_cb.getSelectedItem();
-	        	instance.no_agents = instance.max_analysis_path_length;//remove to distinguish bw no of agents and path length
-	        	instance.k = instance.max_analysis_path_length;//remove to distinguish bw no of agents and path length
+	        	PSatAPI.instance.max_analysis_path_length = (Integer)maxPathLength_cb.getSelectedItem();
+	        	PSatAPI.instance.no_agents = PSatAPI.instance.max_analysis_path_length;//remove to distinguish bw no of agents and path length
+	        	PSatAPI.instance.k = PSatAPI.instance.max_analysis_path_length;//remove to distinguish bw no of agents and path length
 	        	PSatClient.netSerialiseConfigInstance();
 	          }
 	        });
@@ -1838,13 +1922,13 @@ public class Display extends JFrame {
 	    Integer maxNo_path_Analysis[] = {2,3,5,10,20,30,40,50,50,70,80,90,100,120,140,160,200};
 	    final JComboBox<Integer> max_No_path_Analysis_cb = new JComboBox<Integer>(maxNo_path_Analysis);
 	    for(int i=0;i<maxNo_path_Analysis.length;i++){
-	    	if(maxNo_path_Analysis[i] == instance.max_no_analysis_paths){
+	    	if(maxNo_path_Analysis[i] == PSatAPI.instance.max_no_analysis_paths){
 	    		max_No_path_Analysis_cb.setSelectedIndex(i);		
 	    	}
 	    }
 	    max_No_path_Analysis_cb.addItemListener(new ItemListener() {
 	        public void itemStateChanged(ItemEvent itemEvent) {
-	        	instance.max_no_analysis_paths = (Integer)max_No_path_Analysis_cb.getSelectedItem();
+	        	PSatAPI.instance.max_no_analysis_paths = (Integer)max_No_path_Analysis_cb.getSelectedItem();
 	        	PSatClient.netSerialiseConfigInstance();
 
 	          }
@@ -1853,20 +1937,20 @@ public class Display extends JFrame {
 	    Double sat_tresholds[] = {0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0};
 	    final JComboBox<Double> satTreshold_cb = new JComboBox<Double>(sat_tresholds);
 	    for(int i=0;i<sat_tresholds.length;i++){
-	    	if(sat_tresholds[i] == instance.sat_treshold){
+	    	if(sat_tresholds[i] == PSatAPI.instance.sat_treshold){
 	    		satTreshold_cb.setSelectedIndex(i);		
 	    	}
 	    }	    
 	    satTreshold_cb.addItemListener(new ItemListener() {
 	        public void itemStateChanged(ItemEvent itemEvent) {
-	        	instance.sat_treshold = (Double)satTreshold_cb.getSelectedItem();
+	        	PSatAPI.instance.sat_treshold = (Double)satTreshold_cb.getSelectedItem();
 	        	PSatClient.netSerialiseConfigInstance();
 
 	          }
 	        });
 	    
 	    final JCheckBox unlimitedps_cb= new JCheckBox("Complete path analysis");
-	    if(instance.unlimitedPathSatAnalysis){
+	    if(PSatAPI.instance.unlimitedPathSatAnalysis){
 	    	unlimitedps_cb.setSelected(true);
 	    	satTreshold_cb.setEnabled(false);
 	    }
@@ -1877,11 +1961,11 @@ public class Display extends JFrame {
 	    unlimitedps_cb.addActionListener(new ActionListener() {
 	          public void actionPerformed(ActionEvent arg0) {
 	        	if(unlimitedps_cb.isSelected()){
-	        		instance.unlimitedPathSatAnalysis = true;
+	        		PSatAPI.instance.unlimitedPathSatAnalysis = true;
 	        		satTreshold_cb.setEnabled(false);
 	  	    	}	
 	  	    	else{
-	  	    		instance.unlimitedPathSatAnalysis = false;
+	  	    		PSatAPI.instance.unlimitedPathSatAnalysis = false;
 	  	    		satTreshold_cb.setEnabled(true);
 	  	    	}
 	        	PSatClient.netSerialiseConfigInstance();
@@ -1895,7 +1979,7 @@ public class Display extends JFrame {
 	    JRadioButton minimum_rb = new JRadioButton("minimum uncertainty value");
 	    minimum_rb.addActionListener(new ActionListener() {	    	 
 	        public void actionPerformed(ActionEvent event) {
-	        	instance.combinationStrategy = CombinationStrategy.MINIMUM;
+	        	PSatAPI.instance.combinationStrategy = CombinationStrategy.MINIMUM;
 	        	PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
@@ -1904,7 +1988,7 @@ public class Display extends JFrame {
 	    maximum_rb.setSelected(true);
         maximum_rb.addActionListener(new ActionListener() {	    	 
 	        public void actionPerformed(ActionEvent event) {
-	        	instance.combinationStrategy = CombinationStrategy.MAXIMUM;
+	        	PSatAPI.instance.combinationStrategy = CombinationStrategy.MAXIMUM;
 	        	PSatClient.netSerialiseConfigInstance();
 
 	        }
@@ -1913,7 +1997,7 @@ public class Display extends JFrame {
         JRadioButton average_rb = new JRadioButton("average uncertainty value");        
         average_rb.addActionListener(new ActionListener() {	    	 
 	        public void actionPerformed(ActionEvent event) {
-	        	instance.combinationStrategy = CombinationStrategy.AVERAGE;
+	        	PSatAPI.instance.combinationStrategy = CombinationStrategy.AVERAGE;
 	        	PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
@@ -1928,7 +2012,7 @@ public class Display extends JFrame {
 	    label01.setForeground(new Color(54,133,47));
 		
 	    final JCheckBox networkMutationMode_cb= new JCheckBox("add/remove edges");
-	    if(instance.networkMutationMode){
+	    if(PSatAPI.instance.networkMutationMode){
 	    	networkMutationMode_cb.setSelected(true);
 	    }
 	    else{
@@ -1937,10 +2021,10 @@ public class Display extends JFrame {
 	    networkMutationMode_cb.addActionListener(new ActionListener() {
 	          public void actionPerformed(ActionEvent arg0) {
 	        	if(networkMutationMode_cb.isSelected()){
-	        		instance.networkMutationMode = true;	  	    		
+	        		PSatAPI.instance.networkMutationMode = true;	  	    		
 	  	    	}	
 	  	    	else{
-	  	    		instance.networkMutationMode = false;
+	  	    		PSatAPI.instance.networkMutationMode = false;
 	  	    	}
         		PSatClient.netSerialiseConfigInstance();
 
@@ -2094,11 +2178,21 @@ public class Display extends JFrame {
 //	    Object[] message = {label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
 //				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
 //				"","", label2, "Max. # of objects on a path",maxPathLength_cb,tradeoff_l,tradeofftf};	
-	    Object[] message = {label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
+	    Object[] message = {label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,labelcollective,nonek_rb,ck_rb,egk_rb,sgk_rb,bpk_rb,dgk_rb,
 				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
 				"","", label2, "Max. # of objects on a path",maxPathLength_cb,decisioncategory_l,decisioncategories_cb};	
 	    
 	    JOptionPane.showOptionDialog(iframeNet,message,"PSat configuration.", JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+	    
+	    
+	    
+	    cok_rb.add(ck_rb);
+        cok_rb.add(egk_rb);
+        cok_rb.add(sgk_rb);
+        cok_rb.add(bpk_rb);
+        cok_rb.add(dgk_rb);
+        
+	    
 	    
 //	   int option= JOptionPane.showOptionDialog(iframeNet,message,"PSat configuration.", JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION, null, new Object[]{"cancel", "ok"}, null);
 //	   if(option==0){
@@ -2145,7 +2239,7 @@ public class Display extends JFrame {
 	}
 	 
 	public static boolean configPercentagePossibleWorldsAndNoAgentsRangeDisplay(){
-		if(instance.sourceAgentName == null){
+		if(PSatAPI.instance.sourceAgentName == null){
 			Display.updateLogPage("source agent not selected", true);
 			return false;
 		}
@@ -2196,11 +2290,11 @@ public class Display extends JFrame {
 					return false;
 	        	}
 	        	else{
-	    	        instance.maxNoOfknowAgents = new Integer(maxNoOfknowAgents_s) ;
-	    	    	instance.minNoOfknowAgents = new Integer(minNoOfknowAgents_s);
-	    	    	instance.noOfKnownAgentsGenerator = new Random();
+	    	        PSatAPI.instance.maxNoOfknowAgents = new Integer(maxNoOfknowAgents_s) ;
+	    	    	PSatAPI.instance.minNoOfknowAgents = new Integer(minNoOfknowAgents_s);
+	    	    	PSatAPI.instance.noOfKnownAgentsGenerator = new Random();
 	    	    	if(propergateBelief.isSelected()){
-	    	    		instance.beliefReasoningActive = true;
+	    	    		PSatAPI.instance.beliefReasoningActive = true;
 	    	    		System.err.println("TODO: Belief propergation not yet implemented");
 	    	    	}	    	    		
 	    	    	PSatClient.netSerialiseConfigInstance();
@@ -2226,12 +2320,12 @@ public class Display extends JFrame {
 	
 	public static void reinitialise(){
 		//datastore_file_path = null;
-		instance.sourceAgentName = null;
-		instance.targetAgentName = null;
-		instance.selectedAgentPaths = null;
-		instance.listPathsData = new String[0];
+		PSatAPI.instance.sourceAgentName = null;
+		PSatAPI.instance.targetAgentName = null;
+		PSatAPI.instance.selectedAgentPaths = null;
+		PSatAPI.instance.listPathsData = new String[0];
 		pathsListModel.removeAllElements();
-		if(instance.sourceAgentName ==null || instance.targetAgentName == null){
+		if(PSatAPI.instance.sourceAgentName ==null || PSatAPI.instance.targetAgentName == null){
 			activateRun(false);	
 		}
 		PSatClient.netSerialiseConfigInstance();

@@ -31,6 +31,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 
 import gla.prisoft.client.Display;
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.DecisionCategory;
 import gla.prisoft.shared.PSatTableResult;
@@ -60,7 +61,7 @@ public class LayeredBarChart extends javax.swing.JPanel {
     	uniqueFlows = uniqueFlowso.toArray(uniqueFlows);
     	
     	double currentGoal = FeasibilityView.sumCollectiveGoal/FeasibilityView.collectiveGoalCount;
-    	Display.instance.currentPrivacyGoal.put(Display.instance.currentPath, currentGoal);
+    	PSatAPI.instance.currentPrivacyGoal.put(PSatAPI.instance.currentPath, currentGoal);
     	String goalv = String.format("%.2f", currentGoal);
     	
         String reqDesc = FeasibilityView.prdesc;
@@ -74,7 +75,7 @@ public class LayeredBarChart extends javax.swing.JPanel {
     	reqDesc = reqDesc.replace("<body>", "");
     	reqDesc = reqDesc.replace("</sub>", "_");
 
-        LayeredBarChart.createExportFile(Display.instance);
+        LayeredBarChart.createExportFile(PSatAPI.instance);
         
     	//sort ptrs
     	HashMap<String,ArrayList<PSatTableResult>> sortedptrs = new HashMap<String,ArrayList<PSatTableResult>>();
@@ -307,7 +308,7 @@ public class LayeredBarChart extends javax.swing.JPanel {
             			 + "<br/>";
             
 //            exportSummary(reqDesc,flow, goalv, Display.instance.costTradeoff,cat1p, cat2p, cat3p, cat4p, cat5p, cat6p);
-            exportSummary(reqDesc,flow, goalv, Display.instance.costTradeoff,cat1p, cat2p, cat3p);
+            exportSummary(reqDesc,flow, goalv, PSatAPI.instance.costTradeoff,cat1p, cat2p, cat3p);
                         
             ArrayList<PSatTableResult> cat1Ptrs = new ArrayList<PSatTableResult>();
             ArrayList<PSatTableResult> cat2Ptrs = new ArrayList<PSatTableResult>();

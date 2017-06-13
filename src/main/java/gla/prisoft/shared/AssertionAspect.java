@@ -9,14 +9,14 @@ public class AssertionAspect implements Serializable{
 	private String[] zoneAgents;
 	private KnowledgeBase knowledgeBase; //used for uncertainty/belief level reasoning
 	private double goalv; //desired level of aspect satisfaction
-	private boolean isCommonKnowledgeAssertion;
+	private CollectiveStrategy cs;
 	
-	public AssertionAspect(String selfAgentName, String aspectType, String[] zoneAgents, KnowledgeBase knowledgeBase, double goalv, boolean isCommonKnowledgeAssertion){
+	public AssertionAspect(String selfAgentName, String aspectType, String[] zoneAgents, KnowledgeBase knowledgeBase, double goalv, CollectiveStrategy cs){
 		this.selfAgentName = selfAgentName;
 		this.aspectType = aspectType;
 		this.zoneAgents = zoneAgents;
 		this.knowledgeBase = knowledgeBase;
-		this.isCommonKnowledgeAssertion = isCommonKnowledgeAssertion;
+		this.setCollectiveStrategy(cs);
 		this.setGoalv(goalv);
 	}
 	
@@ -44,12 +44,12 @@ public class AssertionAspect implements Serializable{
 		this.goalv = goalv;
 	}
 
-	public boolean isCommonKnowledgeAssertion() {
-		return isCommonKnowledgeAssertion;
+	public CollectiveStrategy getCollectiveStrategy() {
+		return cs;
 	}
 
-	public void setCommonKnowledgeAssertion(boolean isCommonKnowledgeAssertion) {
-		this.isCommonKnowledgeAssertion = isCommonKnowledgeAssertion;
+	public void setCollectiveStrategy(CollectiveStrategy cs) {
+		this.cs = cs;
 	}
 
 	

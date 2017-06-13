@@ -81,7 +81,7 @@ public class ConfigInstance implements Serializable{
 	public boolean isModePick = true;
 	public boolean isModeUncertainty = false;
 	public boolean isModeEntropy = false;
-	public boolean isModeCommonKnowledge = false;
+	public CollectiveStrategy collectiveStrategy = CollectiveStrategy.NONE ;
 	public boolean isMemoryStoreMode = false;
 	
 	public String desiredEntropyDesc;

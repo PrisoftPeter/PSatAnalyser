@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 
 import gla.prisoft.client.Display;
 import gla.prisoft.client.PSatClient;
+import gla.prisoft.server.PSatAPI;
 
 public class PreferentialAttachmentSettings {
 
@@ -34,7 +35,7 @@ public class PreferentialAttachmentSettings {
 		else{		
 			String tinput = noedgel_tf.getText();
 			if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-				Display.instance.numEdgesToAttach = new Integer(tinput);	
+				PSatAPI.instance.numEdgesToAttach = new Integer(tinput);	
 			}
 			else{
 				Display.updateLogPage("#number expected", true);
@@ -43,7 +44,7 @@ public class PreferentialAttachmentSettings {
 			
 			tinput = no_seeds_tf.getText();
 			if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-				Display.instance.init_no_seeds = new Integer(tinput);
+				PSatAPI.instance.init_no_seeds = new Integer(tinput);
 			}
 			else{
 				Display.updateLogPage("#number expected", true);
@@ -52,7 +53,7 @@ public class PreferentialAttachmentSettings {
 			
 			tinput = no_iterations_tf.getText();
 			if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-				Display.instance.no_iterations = new Integer(tinput);	
+				PSatAPI.instance.no_iterations = new Integer(tinput);	
 			}
 			else{
 				Display.updateLogPage("#number expected", true);

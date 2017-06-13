@@ -16,6 +16,8 @@ import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.AssertionAspect;
 import gla.prisoft.shared.AssertionInstance;
 import gla.prisoft.shared.Attribute;
+import gla.prisoft.shared.CollectiveMode;
+import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KnowledgeBase;
 import gla.prisoft.shared.kernel.knowledge.worlds.K1;
@@ -332,6 +334,7 @@ public class ServerAssertionsFactory implements Serializable{
 					
 					boolean checked = false;
 					double goal_v = -1;
+					CollectiveStrategy cs = instance.collectiveStrategy;
 					if(!instance.is_aspect_run){
 						for(AssertionInstance assertion: sinstance.agent.getAssertionInstances()){
 							if(assertion !=null && w.toHtmlString().equals(assertion.getAssertion())){
@@ -352,8 +355,8 @@ public class ServerAssertionsFactory implements Serializable{
 								i = i+1;		        			
 							}   
 							goal_v = self.getAspectVGoal(agentName, atype, instance.knowledgeBase);
-			        		AssertionAspect anew = new AssertionAspect(agentName, atype, zoneAgents,instance.knowledgeBase, goal_v, instance.isModeCommonKnowledge);
-			        		
+			        		AssertionAspect anew = new AssertionAspect(agentName, atype, zoneAgents,instance.knowledgeBase, goal_v, instance.collectiveStrategy);
+
 			        		self.addAspect(anew);
 			        		ServerAgentFactory.writeAgent(self, sinstance);
 			        		
@@ -379,6 +382,8 @@ public class ServerAssertionsFactory implements Serializable{
 							genericFormula = w.getGenericFormula("s", "su", "r");
 						}
 						
+						
+						
 						//update checked
 						if(checked){
 							meaning = "<html><font color='red'>"+meaning+"</font></html>";
@@ -388,7 +393,7 @@ public class ServerAssertionsFactory implements Serializable{
 							meaning = "<html>"+meaning+"</html>";
 							genericFormula= "<html>"+genericFormula+"</html>";
 						}
-						
+																		
 						if(goal_v == -1){
 							goal_v = self.getGlobalPrivacyGoal_v();
 						}
@@ -398,9 +403,11 @@ public class ServerAssertionsFactory implements Serializable{
 						rowproperties.setProperty("genericFormula", genericFormula);
 						rowproperties.setProperty("goalv", ""+goal_v);
 						rowproperties.setProperty("meaning", meaning);
+						rowproperties.setProperty("collectiveStrategy", CollectiveMode.getModeDesc(cs));
 					}
 					else{
 						String meaning = w.getMeaning();
+												
 						if(checked){
 							meaning = "<html><font color='red'>"+meaning+"</font></html>";
 						}
@@ -417,6 +424,8 @@ public class ServerAssertionsFactory implements Serializable{
 						rowproperties.setProperty("w", w.toHtmlString());
 						rowproperties.setProperty("goalv", ""+goal_v);
 						rowproperties.setProperty("meaning", meaning);
+						rowproperties.setProperty("collectiveStrategy", CollectiveMode.getModeDesc(cs));
+
 					}		
 					
 					Properties [] tempproperties = new Properties[properties.length +1];

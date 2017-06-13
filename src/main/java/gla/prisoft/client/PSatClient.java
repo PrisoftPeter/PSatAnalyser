@@ -8,6 +8,7 @@ import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KNode;
 import gla.prisoft.shared.kernel.knowledge.worlds.World;
 import gla.prisoft.client.session.ClientServerBroker;
+import gla.prisoft.server.PSatAPI;
 
 public class PSatClient {
 	
@@ -242,10 +243,10 @@ public class PSatClient {
 	
 	public static void netSerialiseConfigInstance(){
 
-		if(Display.instance.sessionid == null){
+		if(PSatAPI.instance.sessionid == null){
 			return;
 		}
-		ClientServerBroker.messageEvent("PSatClient.netSerialiseConfigInstance()",null,null,Display.instance);
+		ClientServerBroker.messageEvent("PSatClient.netSerialiseConfigInstance()",null,null,PSatAPI.instance);
 	}
 		
 	public static ConfigInstance dinstance = null;
@@ -260,7 +261,7 @@ public class PSatClient {
   		while(!ClientServerBroker.netDeserialiseProcessPossibleWorldsPathToFileDone){
   			try {
   				if(dinstance != null){
-  					Display.instance = dinstance;
+  					PSatAPI.instance = dinstance;
   					return true;
   				}
   				Thread.sleep(1000);
@@ -652,7 +653,7 @@ public class PSatClient {
 	public static boolean netAgentFactoryInitGraph(){
 		agentFactoryInitGraphExecuted = false;
 
-		if(Display.instance.sessionid == null){
+		if(PSatAPI.instance.sessionid == null){
 			return agentFactoryInitGraphExecuted;
 		}
 		

@@ -11,7 +11,8 @@ import javax.swing.table.DefaultTableModel;
 
 import org.jfree.data.general.SeriesException;
 
-import gla.prisoft.client.Display;
+import gla.prisoft.server.PSatAPI;
+import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.PSatTableResult;
 import gla.prisoft.shared.RowType;
@@ -89,7 +90,8 @@ public class FeasibilityView extends javax.swing.JPanel {
             }
         };
         String tableheader[] = null;
-		if(!instance.isModeEntropy && !instance.isModeCommonKnowledge){
+//		if(!instance.isModeEntropy && !instance.isModeCommonKnowledge){
+		if(!instance.isModeEntropy){
         	tableheader = new String [] {	
         			"<html>Path</html>",
         			"<html>Flow</html>", 
@@ -131,7 +133,8 @@ public class FeasibilityView extends javax.swing.JPanel {
 //        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
 //        leftRenderer.setHorizontalAlignment( JLabel.LEFT );  
     	jTable1.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-        if(instance.isModeEntropy || instance.isModeCommonKnowledge){
+//        if(instance.isModeEntropy || instance.isModeCommonKnowledge){
+        if(instance.isModeEntropy){
         	jTable1.getColumnModel().getColumn(5).setCellRenderer( centerRenderer );
         	jTable1.getColumnModel().getColumn(6).setCellRenderer( centerRenderer );
         	jTable1.getColumnModel().getColumn(7).setCellRenderer( centerRenderer );
@@ -227,7 +230,7 @@ public class FeasibilityView extends javax.swing.JPanel {
     	if(ptr.getRowType() == RowType.MF){    		
 //    		prdesc = ptr.getRequirementHtmlFullDesc()+", COST Tradeoff:"+String.format("%.2f", Display.instance.costTradeoff);
     		prdesc = "pr:";
-    		if(instance.isModeCommonKnowledge){
+    		if(instance.collectiveStrategy != CollectiveStrategy.NONE){
     			String ckdescs [] = ptr.getRequirementHtmlFullDesc().split(" Actual");
     			prdesc = prdesc+ ckdescs[0];
     			prdesc = prdesc+"]";
@@ -243,7 +246,8 @@ public class FeasibilityView extends javax.swing.JPanel {
     		reqDescLabel.setText(prdesc);
     		reqDesc = ptr.getRequirementHtmlFullDesc();
     		path = ptr.getPath();
-    		if(!instance.isModeEntropy && !instance.isModeCommonKnowledge){
+//    		if(!instance.isModeEntropy && !instance.isModeCommonKnowledge){
+    		if(!instance.isModeEntropy){
     			dtm.addRow(new Object[] { 	
             			ptr.getPath(),
             			ptr.getFlowColumn(), 
@@ -449,7 +453,7 @@ public class FeasibilityView extends javax.swing.JPanel {
     	    protocol = protocol.replace("</sub>","");
     	    writer.append(protocol);
     	    writer.append(',');
-    	    if(!Display.instance.isModeEntropy){
+    	    if(!PSatAPI.instance.isModeEntropy){
     	    	if(ptr.getSuSat() <0){
     	    		writer.append("");
         		}

@@ -18,8 +18,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import gla.prisoft.client.Display;
 import gla.prisoft.client.kernel.behaviour.protocol.ClientProtocolFactory;
+import gla.prisoft.server.PSatAPI;
 
 import java.util.Vector;
 
@@ -157,11 +157,11 @@ public class ProtocolView extends JPanel {
 		        if(p !=null){
 		        	if(b){
 //		        		PSatClient.netAddToEvaluatedProtocols(p);
-		        		ClientProtocolFactory.addToEvaluatedProtocols(p, Display.instance);	
+		        		ClientProtocolFactory.addToEvaluatedProtocols(p, PSatAPI.instance);	
 			        }
 			        else{
 //			        	PSatClient.netRemoveFromEvaluatedProtocols(p);
-		        		ClientProtocolFactory.removeFromEvaluatedProtocols(p, Display.instance);	
+		        		ClientProtocolFactory.removeFromEvaluatedProtocols(p, PSatAPI.instance);	
 
 			        }
 		        }
@@ -180,11 +180,11 @@ public class ProtocolView extends JPanel {
 			        if(p !=null){
 			        	if(value){
 //			        		PSatClient.netAddToEvaluatedProtocols(p);
-			        		ClientProtocolFactory.addToEvaluatedProtocols(p, Display.instance);	
+			        		ClientProtocolFactory.addToEvaluatedProtocols(p, PSatAPI.instance);	
 				        }
 				        else{
 //				        	PSatClient.netRemoveFromEvaluatedProtocols(p);
-			        		ClientProtocolFactory.removeFromEvaluatedProtocols(p, Display.instance);	
+			        		ClientProtocolFactory.removeFromEvaluatedProtocols(p, PSatAPI.instance);	
 				        }
 			        }
 			        rowData.set(1,value);

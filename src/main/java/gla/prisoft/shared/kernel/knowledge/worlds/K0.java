@@ -39,7 +39,7 @@ public class K0 extends World implements Serializable {
 	@Override
 	public String toString() {
 		String res = "";
-		res = res+"<b>f</b>";					
+		res = res+"f";					
 				
 		return res;
 	}

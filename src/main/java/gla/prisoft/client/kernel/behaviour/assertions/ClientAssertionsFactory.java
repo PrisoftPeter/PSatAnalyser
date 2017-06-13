@@ -4,10 +4,12 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.Properties;
 
-import gla.prisoft.client.Display;
 import gla.prisoft.client.PSatClient;
 import gla.prisoft.client.kernel.display.model.AssertionsView;
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.Agent;
+import gla.prisoft.shared.CollectiveMode;
+import gla.prisoft.shared.CollectiveStrategy;
 
 
 public class ClientAssertionsFactory implements Serializable{
@@ -35,11 +37,11 @@ public class ClientAssertionsFactory implements Serializable{
 		
 	public void displayAssertions(final AssertionsView av){
 		
-		if(Display.instance.isModePick){
+		if(PSatAPI.instance.isModePick){
 			this.av = av;
 			
-			if(Display.instance.is_aspect_run){
-				String partialPath = agentName+"_"+Display.instance.sourceAgentName+"_Aspect";
+			if(PSatAPI.instance.is_aspect_run){
+				String partialPath = agentName+"_"+PSatAPI.instance.sourceAgentName+"_Aspect";
 				if(partialPath != null){
 					displayAssertionsStore(agentName,partialPath,av);						
 				}
@@ -52,7 +54,7 @@ public class ClientAssertionsFactory implements Serializable{
 			}
 			else{
 				Agent a = PSatClient.netGetAgent(agentName);
-				if(!a.containedInMemoryStores(Display.instance.sourceAgentName)){
+				if(!a.containedInMemoryStores(PSatAPI.instance.sourceAgentName)){
 					PSatClient.netNewMemoryStore(a.getAgentName());
 				}						
 				String [] partialPaths = PSatClient.netGetAssertionsStorePaths(agentName);
@@ -80,7 +82,7 @@ public class ClientAssertionsFactory implements Serializable{
 //		PSatClient.netDeseraliseConfigInstance();
 		Properties [] ppties = PSatClient.netDisplayAssertionsStore(agentName, partialPath);
 		
-		if(Display.instance.is_aspect_run){
+		if(PSatAPI.instance.is_aspect_run){
 			for(Properties ppty: ppties){
 				String aspectType = ppty.getProperty("aspectType");
 				boolean checked = false;
@@ -90,6 +92,21 @@ public class ClientAssertionsFactory implements Serializable{
 				String genericFormula = ppty.getProperty("genericFormula");
 				double goal_v = new Double(ppty.getProperty("goalv"));
 				String meaning = ppty.getProperty("meaning");
+				String collectiveStrDesc = ppty.getProperty("collectiveStrategy"); 
+				
+				CollectiveStrategy cs = CollectiveMode.getCollectiveStrategy(collectiveStrDesc);
+				String cs_limithtmldesc = CollectiveMode.getModeLimitHtmlDesc(cs);
+				if(cs != CollectiveStrategy.NONE){
+					meaning = collectiveStrDesc+" "+meaning;
+					meaning = collectiveStrDesc+" "+meaning;
+					meaning = meaning.replace("<html>", "");
+					meaning = "<html>"+meaning;
+					
+					genericFormula = cs_limithtmldesc+"("+genericFormula+")";
+					genericFormula =genericFormula.replace("<html>", "");
+					genericFormula =genericFormula.replace("</html>", "");
+					genericFormula = "<html>"+genericFormula+"</html>";
+				}
 				
 				av.model.addRow(new Object[]{aspectType,checked,genericFormula,goal_v,meaning});
 				av.model.fireTableDataChanged();
@@ -105,8 +122,22 @@ public class ClientAssertionsFactory implements Serializable{
 					checked =true;
 				}
 				String w = ppty.getProperty("w");
-				String meaning = ppty.getProperty("meaning");
 				double goal_v = new Double(ppty.getProperty("goalv"));
+				String meaning = ppty.getProperty("meaning");
+				String collectiveStrDesc = ppty.getProperty("collectiveStrategy"); 
+				
+				CollectiveStrategy cs = CollectiveMode.getCollectiveStrategy(collectiveStrDesc);
+				String cs_limithtmldesc = CollectiveMode.getModeLimitHtmlDesc(cs);
+				if(cs != CollectiveStrategy.NONE){
+					meaning = collectiveStrDesc+" "+meaning;
+					meaning = meaning.replace("<html>", "");
+					meaning = "<html>"+meaning;
+					w = cs_limithtmldesc+"("+w+")";
+					w =w.replace("<html>", "");
+					w =w.replace("</html>", "");
+					w = "<html>"+w+"</html>";
+
+				}
 				
 				av.model.addRow(new Object[]{a_counter,checked,w, goal_v,meaning});
 				av.model.fireTableDataChanged();

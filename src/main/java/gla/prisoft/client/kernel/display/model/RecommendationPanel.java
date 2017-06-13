@@ -23,6 +23,7 @@ import javax.swing.table.TableColumn;
 
 import gla.prisoft.client.Display;
 import gla.prisoft.client.PSatClient;
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.behaviour.InformationFlows;
 import gla.prisoft.shared.DecisionCategory;
 import gla.prisoft.shared.PSatTableResult;
@@ -132,9 +133,9 @@ public class RecommendationPanel extends javax.swing.JPanel {
 			}        	
         });        
         
-        jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f", Display.instance.currentPrivacyGoal.get(Display.instance.currentPath)));
+        jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f", PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
         jLabel3.setText("#iterations="+Display.noiterations+" |"+detRecomputeText());
-        jLabel4.setText("Original privacy goal(v):"+String.format("%.2f", Display.instance.originalPrivacyGoal.get(Display.instance.currentPath)));
+        jLabel4.setText("Original privacy goal(v):"+String.format("%.2f", PSatAPI.instance.originalPrivacyGoal.get(PSatAPI.instance.currentPath)));
 //        jLabel6.setText("α convergence search for pr:");
         
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -196,21 +197,21 @@ public class RecommendationPanel extends javax.swing.JPanel {
 //    		Display.opgset = true;
 //    	}
     	boolean pathexist = false;
-		for(String pkey: Display.instance.originalPrivacyGoal.keySet()){
-			if(pkey.equals(Display.instance.currentPath));
+		for(String pkey: PSatAPI.instance.originalPrivacyGoal.keySet()){
+			if(pkey.equals(PSatAPI.instance.currentPath));
 			pathexist = true;
 		}		
 		if(!pathexist){
-			double originalgoal = InformationFlows.suggestOriginalCollectiveGoalValue(Display.instance);
-			Display.instance.originalPrivacyGoal.put(Display.instance.currentPath, originalgoal);
+			double originalgoal = InformationFlows.suggestOriginalCollectiveGoalValue(PSatAPI.instance);
+			PSatAPI.instance.originalPrivacyGoal.put(PSatAPI.instance.currentPath, originalgoal);
 			PSatClient.netSerialiseConfigInstance();
 		}
     	
     }
     private void iterate(){    	
-    	Display.instance.costTradeoff = 1;
-		double newgoalvalue = Display.instance.currentPrivacyGoal.get(Display.instance.currentPath) - 0.05;
-		InformationFlows.resetGlobalGoalForAllPathAgents(Display.instance, Display.instance.currentPath, newgoalvalue);
+    	PSatAPI.instance.costTradeoff = 1;
+		double newgoalvalue = PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath) - 0.05;
+		InformationFlows.resetGlobalGoalForAllPathAgents(PSatAPI.instance, PSatAPI.instance.currentPath, newgoalvalue);
 		
 		Display.window.runSatAnalysis();
 
@@ -224,7 +225,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
     	if(!checkerrunning){
     		checkerrunning = true;
     		
-    		if(Display.instance.currentPrivacyGoal.get(Display.instance.currentPath) <=0.05){
+    		if(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath) <=0.05){
 				jButton1.setText("convergence failed");
 				jButton1.setForeground(Color.BLACK);
 				jButton1.setBackground(new Color(232,93,57));
@@ -251,7 +252,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
     				        			jButton1.setBackground(jLabel1.getBackground());
     				        			jButton1.setEnabled(true);
     				        			
-    				        			if(counter <=0 && !Display.instance.runningTraining && ufin){
+    				        			if(counter <=0 && !PSatAPI.instance.runningTraining && ufin){
     				        				Display.noiterations = Display.noiterations+1;
     				        				iterate();	
     				        				counter = 10;
@@ -300,7 +301,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 //    	updateThread = new Thread() {
 //			public void run() {
 //				while(true && !this.isInterrupted()){
-					if(!Display.instance.runningTraining && !pause){
+					if(!PSatAPI.instance.runningTraining && !pause){
 						if(!displayed || limitchanged){
 							model.setRowCount(0);
 
@@ -345,7 +346,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 					for(PSatTableResult ptr:flow.cat1Ptrs){
 						recommendedprotocols.add(ptr.getProtocolColumn());
 					}
-					double cat1dof = (double)flow.cat1Ptrs.size()/(double)Display.instance.evaluatedProtocols.length;
+					double cat1dof = (double)flow.cat1Ptrs.size()/(double)PSatAPI.instance.evaluatedProtocols.length;
 					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT1)+"("+Display.RoundTo2Decimals(cat1dof)+")");
 				}				
 			}
@@ -354,7 +355,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 					for(PSatTableResult ptr:flow.cat2Ptrs){
 						recommendedprotocols.add(ptr.getProtocolColumn());
 					}
-					double cat2dof = (double)flow.cat2Ptrs.size()/(double)Display.instance.evaluatedProtocols.length;
+					double cat2dof = (double)flow.cat2Ptrs.size()/(double)PSatAPI.instance.evaluatedProtocols.length;
 					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT2)+"("+Display.RoundTo2Decimals(cat2dof)+")");
 				}				
 			}
@@ -363,7 +364,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 					for(PSatTableResult ptr:flow.cat3Ptrs){
 						recommendedprotocols.add(ptr.getProtocolColumn());
 					}
-					double cat3dof = (double)flow.cat3Ptrs.size()/(double)Display.instance.evaluatedProtocols.length;
+					double cat3dof = (double)flow.cat3Ptrs.size()/(double)PSatAPI.instance.evaluatedProtocols.length;
 					cats.add(DecisionCategory.getCatDescription(DecisionCategory.CAT3)+"("+Display.RoundTo2Decimals(cat3dof)+")");
 				}				
 			}
@@ -392,7 +393,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 //				}				
 //			}
 			if(recommendedprotocols.size()>0){
-				dof = (double)recommendedprotocols.size()/(double)Display.instance.evaluatedProtocols.length;
+				dof = (double)recommendedprotocols.size()/(double)PSatAPI.instance.evaluatedProtocols.length;
 				dof = Display.RoundTo3Decimals(dof);
 			}
 			else{
@@ -451,7 +452,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 //		else{
 //			text = "next iteration@ ∆ω=0.05";
 //		}
-    	if(Display.instance.currentPrivacyGoal.get(Display.instance.currentPath) <=0.01){
+    	if(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath) <=0.01){
     		text = "convergence failed";
     	}
 		else{

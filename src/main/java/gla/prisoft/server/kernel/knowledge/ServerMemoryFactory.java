@@ -12,7 +12,6 @@ import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 
-import gla.prisoft.client.Display;
 import gla.prisoft.client.session.ClientServerBroker;
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.kernel.knowledge.worlds.*;
@@ -161,7 +160,7 @@ public class ServerMemoryFactory {
 		}
 		instance.is_generating_memory_store = false;
 		Config.serialiseConfigInstance(instance.sessionid, instance);
-		Display.instance =instance;
+		PSatAPI.instance =instance;
 		ClientServerBroker.messageEvent("updateProgressComponent", 100+"₦"+"",null,null);
 		
 		Properties ppties3 = new Properties();

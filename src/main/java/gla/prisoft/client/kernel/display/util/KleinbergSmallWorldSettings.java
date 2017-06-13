@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 
 import gla.prisoft.client.Display;
 import gla.prisoft.client.PSatClient;
+import gla.prisoft.server.PSatAPI;
 
 public class KleinbergSmallWorldSettings {
 //	public static int no_agents;
@@ -31,7 +32,7 @@ public class KleinbergSmallWorldSettings {
 		else{
 			String tinput = noedgel_tf.getText();
 			if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-				Display.instance.no_edges = new Integer(tinput);		
+				PSatAPI.instance.no_edges = new Integer(tinput);		
 			}
 			else{
 				Display.updateLogPage("#number expected", true);
@@ -40,7 +41,7 @@ public class KleinbergSmallWorldSettings {
 			
 			tinput = clusteringExponent_tf.getText();
 			if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-				Display.instance.clusteringExponent = new Double(tinput);
+				PSatAPI.instance.clusteringExponent = new Double(tinput);
 			}
 			else{
 				Display.updateLogPage("#number expected", true);

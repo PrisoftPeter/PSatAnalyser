@@ -21,6 +21,7 @@ import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 import gla.prisoft.client.Display;
 import gla.prisoft.client.PSatClient;
 import gla.prisoft.client.session.ClientServerBroker;
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.KNode;
 
@@ -66,7 +67,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
            		//ImageIcon dIcon = new ImageIcon("img/download.png");
            		ImageIcon dIcon = new ImageIcon(getClass().getResource("/download.png"));
            		JMenu pwsOpenMenu = new JMenu("Memory Stores");
-           		if(Display.instance.sourceAgentName == null){
+           		if(PSatAPI.instance.sourceAgentName == null){
            			pwsOpenMenu.setEnabled(false);
            		}
 //           		pwsOpenMenu.addActionListener(new ActionListener(){
@@ -101,18 +102,18 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
                			JMenuItem configMenu = new JMenuItem(storePath);
                			configMenu.addActionListener(new ActionListener(){
         					public void actionPerformed(ActionEvent e) {
-        						if(Display.instance.is_generating_memory_store){
+        						if(PSatAPI.instance.is_generating_memory_store){
         						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
                         			return;
         						}
         						Thread queryThread = new Thread() {
         							public void run() {
-        								Display.instance.isMemoryStoreMode = true;
+        								PSatAPI.instance.isMemoryStoreMode = true;
         								Display.updateProgressComponent(0, "");
 //        								Display.selfAgentName = pickV.id;
                 						PSatClient.netSerialiseConfigInstance();
                 						ClientServerBroker.triggerDumpMemoryStoreOnDisplay(pickV.id, storePath, -10);
-                						Display.instance.isMemoryStoreMode = false;
+                						PSatAPI.instance.isMemoryStoreMode = false;
                 						PSatClient.netSerialiseConfigInstance();
                 						Display.updateProgressComponent(100, "");
         							}
@@ -179,20 +180,20 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
            		aspectsMenu.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						
-						if(Display.instance.is_generating_memory_store){
+						if(PSatAPI.instance.is_generating_memory_store){
 						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
                 			return;
 						}
 						
 						isrequirements = true;
-						Display.instance.selfAgentName = pickV.id;
+						PSatAPI.instance.selfAgentName = pickV.id;
 						PSatClient.netSerialiseConfigInstance();
 						
 						PSatClient.netPrivacyRequirementAspects(pickV.id);
 						Display.updateAssertionsPage(pickV.id, "privacy requirement Aspects");
 					}            		
            		});
-           		if(Display.instance.is_aspect_run){
+           		if(PSatAPI.instance.is_aspect_run){
            			aspectsMenu.setEnabled(true);
            		}
            		else{
@@ -204,13 +205,13 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
        			JMenuItem instanceMenu = new JMenuItem("Instances",instanceIcon);       			
        			instanceMenu.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
-						if(Display.instance.is_generating_memory_store){
+						if(PSatAPI.instance.is_generating_memory_store){
 						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
                 			return;
 						}
 						
 						isrequirements = true;
-						Display.instance.selfAgentName = pickV.id;
+						PSatAPI.instance.selfAgentName = pickV.id;
 						PSatClient.netSerialiseConfigInstance();
 
 						Display.updateAssertionsPage(pickV.id, "privacy requirement Instances");
@@ -218,8 +219,8 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
            		});
        			
        			boolean nodeok = false;
-       			if(Display.instance.listPathsData.length >0){
-       				for(String path:Display.instance.listPathsData){
+       			if(PSatAPI.instance.listPathsData.length >0){
+       				for(String path:PSatAPI.instance.listPathsData){
        					path = path.replace("[", "");
        					path = path.replace("]", "");
        					String [] comps = path.split(" ");
@@ -233,12 +234,12 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
        				
        			}
        			
-       			if(Display.instance.is_aspect_run ||!nodeok){
+       			if(PSatAPI.instance.is_aspect_run ||!nodeok){
        				
        				instanceMenu.setEnabled(false);
            		}
            		else{
-           			if(Display.instance.subjectName !=null && Display.instance.targetAgentName !=null){
+           			if(PSatAPI.instance.subjectName !=null && PSatAPI.instance.targetAgentName !=null){
            				instanceMenu.setEnabled(true);
            			}           			
            		}
@@ -288,50 +289,50 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
             	
             	sourceMenuItem.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
-						if(Display.instance.is_generating_memory_store){
+						if(PSatAPI.instance.is_generating_memory_store){
 						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
                 			return;
 						}
 						Display.updateProgressComponent(-1, "");
-						if(Display.instance.selfAgentName !=null && !Display.instance.selfAgentName.equals(pickV.id)){
-							Display.instance.is_new_principal = true;
+						if(PSatAPI.instance.selfAgentName !=null && !PSatAPI.instance.selfAgentName.equals(pickV.id)){
+							PSatAPI.instance.is_new_principal = true;
 							
-							Display.instance.listPathsData = new String[0];
+							PSatAPI.instance.listPathsData = new String[0];
 							Display.pathsListModel.removeAllElements();
-							Display.instance.selectedAgentPaths = null;
+							PSatAPI.instance.selectedAgentPaths = null;
 							Display.prPanel.removeAll();
 							
 						}
 						else{
-							Display.instance.is_new_principal = false;
+							PSatAPI.instance.is_new_principal = false;
 						}
-						Display.instance.sourceAgentName = pickV.id;
-						Display.instance.subjectName = pickV.id;
-						Display.instance.selfAgentName = pickV.id;
+						PSatAPI.instance.sourceAgentName = pickV.id;
+						PSatAPI.instance.subjectName = pickV.id;
+						PSatAPI.instance.selfAgentName = pickV.id;
 									
 						PSatClient.netSerialiseConfigInstance();
 						
 						Thread queryThread = new Thread() {
 							public void run() {
-								if(Display.instance.is_dynamic_memory_store){
+								if(PSatAPI.instance.is_dynamic_memory_store){
 									//Do nothing, memory stores will be generated based Display.listPathsData
 								}
 								else{
 									int noagents = PSatClient.netGetNoAgents();
 									boolean valuesSet = Display.configPercentagePossibleWorldsAndNoAgentsRangeDisplay();
 									if(!valuesSet){
-									Display.instance. maxNoOfknowAgents = noagents-1;
-									Display.instance.minNoOfknowAgents = noagents-1;
-									Display.instance.noOfKnownAgentsGenerator = new Random();
+									PSatAPI.instance. maxNoOfknowAgents = noagents-1;
+									PSatAPI.instance.minNoOfknowAgents = noagents-1;
+									PSatAPI.instance.noOfKnownAgentsGenerator = new Random();
 								}
-								Display.instance.noMemoryStores = 0;	
+								PSatAPI.instance.noMemoryStores = 0;	
 								PSatClient.netSerialiseConfigInstance();
 								PSatClient.netNewMemoryStore();	
 								}
 								
 								//generate paths list
-								if(Display.instance.targetAgentName !=null && Display.instance.targetAgentName.length() !=0){
-									if(Display.instance.sourceAgentName !=null && Display.instance.sourceAgentName.length() !=0){
+								if(PSatAPI.instance.targetAgentName !=null && PSatAPI.instance.targetAgentName.length() !=0){
+									if(PSatAPI.instance.sourceAgentName !=null && PSatAPI.instance.sourceAgentName.length() !=0){
 										Display.updatePathsList();										
 									}
 								}
@@ -347,7 +348,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
             	
             	ImageIcon targetIcon = new ImageIcon(getClass().getResource("/target.png"));
             	JMenuItem targetMenuItem = new JMenuItem("set as target",targetIcon);
-            	if(Display.instance.is_aspect_run){
+            	if(PSatAPI.instance.is_aspect_run){
             		targetMenuItem.setEnabled(false);
            		}
            		else{
@@ -355,11 +356,11 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
            		}
             	targetMenuItem.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
-						if(Display.instance.is_generating_memory_store){
+						if(PSatAPI.instance.is_generating_memory_store){
 						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
                 			return;
 						}
-						Display.instance.targetAgentName = pickV.id;
+						PSatAPI.instance.targetAgentName = pickV.id;
 						PSatClient.netSerialiseConfigInstance();
 
 //						if(Display.targetAgentName !=null && Display.targetAgentName.length() !=0){
@@ -380,26 +381,26 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 //							}
 //						}
 						Display.updateProgressComponent(-1,"");
-						if(Display.instance.targetAgentName != null && Display.instance.targetAgentName.equals(pickV.id)){
-							Display.instance.is_new_target = true;
+						if(PSatAPI.instance.targetAgentName != null && PSatAPI.instance.targetAgentName.equals(pickV.id)){
+							PSatAPI.instance.is_new_target = true;
 							
-							Display.instance.listPathsData = new String[0];
+							PSatAPI.instance.listPathsData = new String[0];
 							Display.pathsListModel.removeAllElements();
-							Display.instance.selectedAgentPaths = null;
+							PSatAPI.instance.selectedAgentPaths = null;
 							Display.prPanel.removeAll();
 							
 							Display.updatePathsList();
 
 							
-							if(Display.instance.listPathsData.length == 0){
-								Display.instance.targetAgentName = "";
+							if(PSatAPI.instance.listPathsData.length == 0){
+								PSatAPI.instance.targetAgentName = "";
 							}
 							
 							Display.updateNetworkNode();
 
 						}
 						else{
-							Display.instance.is_new_target = false;
+							PSatAPI.instance.is_new_target = false;
 						}
 						
 						PSatClient.netSerialiseConfigInstance();
@@ -477,7 +478,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 //           		popup.add(targetMenu);
            		
            		//if(Display.selectedAgentPath != null){
-           		if(Display.instance.sourceAgentName !=null){
+           		if(PSatAPI.instance.sourceAgentName !=null){
 	        		//for(Object ename:Display.selectedAgentPath){
            			for(String ename:PSatClient.netGetAgentNames()){
 	            		//String name = ename.toString();
@@ -495,7 +496,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
             		paMenu.setEnabled(false);
 //            		pwsMenuItem.setEnabled(false);
             	}
-           		if(Display.instance.sourceAgentName !=null && Display.instance.targetAgentName != null){
+           		if(PSatAPI.instance.sourceAgentName !=null && PSatAPI.instance.targetAgentName != null){
         			Display.activateRun(true);	
         		}
                

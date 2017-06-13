@@ -167,7 +167,7 @@ public class InformationFlows {
 				pathAgents =pathAgents2.split(" ");
 				
 				sinstance.serverSatSerializer.currentPath = path;
-				Display.instance.currentPath = path;
+				PSatAPI.instance.currentPath = path;
 //				sinstance.serverSatSerializer.createBeliefUncertaintyLevelFile(instance.subjectName, instance, sinstance);
 
 				ClientServerBroker.messageEvent("Display.listbox.setSelectedIndex()", ""+listIndex, null,null);
@@ -213,7 +213,7 @@ public class InformationFlows {
 				String pathAgents2 = pathAgents1[1];
 				pathAgents =pathAgents2.split(" ");
 				
-				Display.instance.currentPath = selectedPath;
+				PSatAPI.instance.currentPath = selectedPath;
 				PSatClient.netSerialiseConfigInstance();
 				if(instance.isTraining){
 					ClientServerBroker.messageEvent("Display.trainMaxTimeSeriesChart.addMarker()", pathId, null,null);
@@ -650,107 +650,108 @@ public class InformationFlows {
 //						sat_output.displaySat(sinstance.serverSatSerializer.currentPath, instance.selfAgentName, senderName, recipientName, alphaProtocol, -10, -10, -10, pathSat, null,null, instance);						
 //												
 					}
-					else if(instance.isModeCommonKnowledge){
-						//compute satisfiability of CK privacy requirements
-                        double ck_sat;
-                        SATResult c=ServerMemoryFactory.satCKApproach1(instance.subjectName, senderName, recipientName, sinstance, instance);
-                        ck_sat = Math.round(c.getSat() * 100.0) / 100.0;
-                        
-                        currentCommonKnowledge = currentCommonKnowledge+ ck_sat;
-                    	countlocalsat = countlocalsat +1;
-                    	
-                    	double actualCommonKnowledge = currentCommonKnowledge/ countlocalsat;
-                    	double desiredCollectiveCommonKnowledge = 1; //TODO: change to make 1 dynamic by specifying ck as pr for each object and iterate through for collective value
-                    	if(instance.greaterThanOrEqualTo){
-							if(actualCommonKnowledge  >= desiredCollectiveCommonKnowledge){ 
-								pathSat = 1;
-							}
-							else{
-								double difference = Math.abs(desiredCollectiveCommonKnowledge - actualCommonKnowledge);
-								pathSat = 1-difference;
-							}	
-						}
-						else if(instance.lessThanOrEqualTo){
-							if(actualCommonKnowledge <= desiredCollectiveCommonKnowledge){
-								pathSat = 1;
-							}
-							else{
-								double difference = Math.abs(desiredCollectiveCommonKnowledge - actualCommonKnowledge);
-								pathSat = 1-difference;
-							}
-						}
-
-						pathSat = new Double(ConfigInstance.df.format(pathSat));
-						pathSat = Display.RoundTo2Decimals(pathSat);
-						
-						sinstance.serverSatSerializer.protocolDesc = "a-"+alpha;
-						sinstance.serverSatSerializer.iflow = senderName+"->"+recipientName;
-						
-						
-						String desc = "[Desired Common Knowledge";
-						if(instance.greaterThanOrEqualTo){
-							desc = desc+"≥";
-						}
-						else if(instance.lessThanOrEqualTo){
-							desc = desc+"≤";
-						}
-						desc = desc+(Math.round(desiredCollectiveCommonKnowledge * 100.0) / 100.0);
-						desc = desc+" Actual Common Knowledge="+(Math.round(actualCommonKnowledge * 100.0) / 100.0)+"]";
-						if(!sinstance.serverSatSerializer.requirementHtmlDesc.contains(desc)){
-							if(sinstance.serverSatSerializer.requirementHtmlDesc.length() >0){
-								sinstance.serverSatSerializer.requirementHtmlDesc = sinstance.serverSatSerializer.requirementHtmlDesc +" ; ";
-								sinstance.serverSatSerializer.requirementRawDesc = sinstance.serverSatSerializer.requirementRawDesc + ";";
-							}
-							sinstance.serverSatSerializer.requirementHtmlDesc = sinstance.serverSatSerializer.requirementHtmlDesc +desc;	
-							sinstance.serverSatSerializer.requirementRawDesc = sinstance.serverSatSerializer.requirementRawDesc + desc;							
-						}			
-						instance.desiredCommonKnowledgeDesc = desc;
-						
-						String alphaProtocol = "&#945;<sub>"+alpha+"</sub>=["+protocolDesc+"]";
-						sinstance.serverSatSerializer.updateProtocolHtmlFullDesc(alphaProtocol);
-						
-						String protocol_pattern = alpha+" ("+protocolDesc+")";
-						double protocol_cost = instance.protocolCost.get(protocol_pattern);
-						double max_protocol_cost = ServerProtocolFactory.getMaxCost(instance);
-						double normalised_cost = instance.costTradeoff*(protocol_cost/max_protocol_cost);
-						double normalised_cost_no_tradeoff = protocol_cost/max_protocol_cost;
-						
-						double collectiveGoalValue = suggestCollectiveGoalValue( instance,  su,  s, r,instance.subjectName, senderName, recipientName); //v						
-						
-						double benefit = 0;
-						if(pathSat == -1 ||collectiveGoalValue==0){ //when goal=0, feasibility is determined based on only cost
-							benefit =1;
-						}
-						else{
-							benefit =1- Math.abs(pathSat-collectiveGoalValue);
-							if(benefit ==0){
-								benefit = 0.0000000006; //to avoid divide by 0
-							}
-						}
-						
-						double feasibility = normalised_cost/benefit;
-						
-						normalised_cost = Display.RoundTo3Decimals(normalised_cost);
-						benefit = Display.RoundTo3Decimals(benefit);
-						feasibility = Display.RoundTo3Decimals(feasibility);
-						normalised_cost_no_tradeoff = Display.RoundTo3Decimals(normalised_cost_no_tradeoff);
-						
-						String decision = "";
-						if(feasibility < 1){
-							decision = "YES";
-						}
-						else if(feasibility == 1){
-							decision = "MAYBE";
-						}
-						else if(feasibility > 1){
-							decision = "NO";
-						}
-						
-						sat_output.displaySat(path, instance.subjectName, 
-											  senderName, recipientName, alphaProtocol, -10, -10, -10, pathSat, 
-											  null,null, normalised_cost_no_tradeoff, collectiveGoalValue,benefit,feasibility, decision,
-											  instance);		
-					}//////
+					
+//					else if(instance.isModeCommonKnowledge){
+//						//compute satisfiability of CK privacy requirements
+//                        double ck_sat;
+//                        SATResult c=ServerMemoryFactory.satCKApproach1(instance.subjectName, senderName, recipientName, sinstance, instance);
+//                        ck_sat = Math.round(c.getSat() * 100.0) / 100.0;
+//                        
+//                        currentCommonKnowledge = currentCommonKnowledge+ ck_sat;
+//                    	countlocalsat = countlocalsat +1;
+//                    	
+//                    	double actualCommonKnowledge = currentCommonKnowledge/ countlocalsat;
+//                    	double desiredCollectiveCommonKnowledge = 1; //TODO: change to make 1 dynamic by specifying ck as pr for each object and iterate through for collective value
+//                    	if(instance.greaterThanOrEqualTo){
+//							if(actualCommonKnowledge  >= desiredCollectiveCommonKnowledge){ 
+//								pathSat = 1;
+//							}
+//							else{
+//								double difference = Math.abs(desiredCollectiveCommonKnowledge - actualCommonKnowledge);
+//								pathSat = 1-difference;
+//							}	
+//						}
+//						else if(instance.lessThanOrEqualTo){
+//							if(actualCommonKnowledge <= desiredCollectiveCommonKnowledge){
+//								pathSat = 1;
+//							}
+//							else{
+//								double difference = Math.abs(desiredCollectiveCommonKnowledge - actualCommonKnowledge);
+//								pathSat = 1-difference;
+//							}
+//						}
+//
+//						pathSat = new Double(ConfigInstance.df.format(pathSat));
+//						pathSat = Display.RoundTo2Decimals(pathSat);
+//						
+//						sinstance.serverSatSerializer.protocolDesc = "a-"+alpha;
+//						sinstance.serverSatSerializer.iflow = senderName+"->"+recipientName;
+//						
+//						
+//						String desc = "[Desired Common Knowledge";
+//						if(instance.greaterThanOrEqualTo){
+//							desc = desc+"≥";
+//						}
+//						else if(instance.lessThanOrEqualTo){
+//							desc = desc+"≤";
+//						}
+//						desc = desc+(Math.round(desiredCollectiveCommonKnowledge * 100.0) / 100.0);
+//						desc = desc+" Actual Common Knowledge="+(Math.round(actualCommonKnowledge * 100.0) / 100.0)+"]";
+//						if(!sinstance.serverSatSerializer.requirementHtmlDesc.contains(desc)){
+//							if(sinstance.serverSatSerializer.requirementHtmlDesc.length() >0){
+//								sinstance.serverSatSerializer.requirementHtmlDesc = sinstance.serverSatSerializer.requirementHtmlDesc +" ; ";
+//								sinstance.serverSatSerializer.requirementRawDesc = sinstance.serverSatSerializer.requirementRawDesc + ";";
+//							}
+//							sinstance.serverSatSerializer.requirementHtmlDesc = sinstance.serverSatSerializer.requirementHtmlDesc +desc;	
+//							sinstance.serverSatSerializer.requirementRawDesc = sinstance.serverSatSerializer.requirementRawDesc + desc;							
+//						}			
+//						instance.desiredCommonKnowledgeDesc = desc;
+//						
+//						String alphaProtocol = "&#945;<sub>"+alpha+"</sub>=["+protocolDesc+"]";
+//						sinstance.serverSatSerializer.updateProtocolHtmlFullDesc(alphaProtocol);
+//						
+//						String protocol_pattern = alpha+" ("+protocolDesc+")";
+//						double protocol_cost = instance.protocolCost.get(protocol_pattern);
+//						double max_protocol_cost = ServerProtocolFactory.getMaxCost(instance);
+//						double normalised_cost = instance.costTradeoff*(protocol_cost/max_protocol_cost);
+//						double normalised_cost_no_tradeoff = protocol_cost/max_protocol_cost;
+//						
+//						double collectiveGoalValue = suggestCollectiveGoalValue( instance,  su,  s, r,instance.subjectName, senderName, recipientName); //v						
+//						
+//						double benefit = 0;
+//						if(pathSat == -1 ||collectiveGoalValue==0){ //when goal=0, feasibility is determined based on only cost
+//							benefit =1;
+//						}
+//						else{
+//							benefit =1- Math.abs(pathSat-collectiveGoalValue);
+//							if(benefit ==0){
+//								benefit = 0.0000000006; //to avoid divide by 0
+//							}
+//						}
+//						
+//						double feasibility = normalised_cost/benefit;
+//						
+//						normalised_cost = Display.RoundTo3Decimals(normalised_cost);
+//						benefit = Display.RoundTo3Decimals(benefit);
+//						feasibility = Display.RoundTo3Decimals(feasibility);
+//						normalised_cost_no_tradeoff = Display.RoundTo3Decimals(normalised_cost_no_tradeoff);
+//						
+//						String decision = "";
+//						if(feasibility < 1){
+//							decision = "YES";
+//						}
+//						else if(feasibility == 1){
+//							decision = "MAYBE";
+//						}
+//						else if(feasibility > 1){
+//							decision = "NO";
+//						}
+//						
+//						sat_output.displaySat(path, instance.subjectName, 
+//											  senderName, recipientName, alphaProtocol, -10, -10, -10, pathSat, 
+//											  null,null, normalised_cost_no_tradeoff, collectiveGoalValue,benefit,feasibility, decision,
+//											  instance);		
+//					}//////
 					else{
 
 						SATResult self_result;
@@ -1091,17 +1092,17 @@ public class InformationFlows {
 				vlocalgoals.add(recipient.getGlobalPrivacyGoal_v());
 			}
 		}
-		else if(instance.isModeCommonKnowledge){
-			if(subject.getDesiredCommonKnowledge() >0){
-				vlocalgoals.add(subject.getGlobalPrivacyGoal_v());
-			}
-			if(sender.getDesiredCommonKnowledge() >0){
-				vlocalgoals.add(sender.getGlobalPrivacyGoal_v());			
-			}
-			if(recipient.getDesiredCommonKnowledge() >0){
-				vlocalgoals.add(recipient.getGlobalPrivacyGoal_v());
-			}
-		}
+//		else if(instance.isModeCommonKnowledge){
+//			if(subject.getDesiredCommonKnowledge() >0){
+//				vlocalgoals.add(subject.getGlobalPrivacyGoal_v());
+//			}
+//			if(sender.getDesiredCommonKnowledge() >0){
+//				vlocalgoals.add(sender.getGlobalPrivacyGoal_v());			
+//			}
+//			if(recipient.getDesiredCommonKnowledge() >0){
+//				vlocalgoals.add(recipient.getGlobalPrivacyGoal_v());
+//			}
+//		}
 		
 		double collectivevgoal = 0;
 
@@ -1173,7 +1174,7 @@ public class InformationFlows {
 					AssertionInstance[] assertionInstance1 = a.getAssertionInstances();
 					if(assertionInstance1 !=null){
 						for(AssertionInstance ap:assertionInstance1){
-							a.updateAssertionInstance(ap.getAssertion(),newgoalvalue,Display.instance.isModeCommonKnowledge);
+							a.updateAssertionInstance(ap.getAssertion(),newgoalvalue,PSatAPI.instance.collectiveStrategy);
 						}
 					}
 					if(assertionInstance1.length >0){

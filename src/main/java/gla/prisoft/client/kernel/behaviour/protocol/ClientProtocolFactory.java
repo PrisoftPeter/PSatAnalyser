@@ -2,8 +2,8 @@ package gla.prisoft.client.kernel.behaviour.protocol;
 
 import java.awt.Rectangle;
 
-import gla.prisoft.client.Display;
 import gla.prisoft.client.kernel.display.model.ProtocolView;
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.ArrayCleaner;
 import gla.prisoft.shared.ConfigInstance;
 
@@ -19,9 +19,9 @@ public class ClientProtocolFactory {
 		Thread queryThread2 = new Thread() {
 			public void run() {				
 				int k=1;
-				for(String p:Display.instance.protocolSuite){
+				for(String p:PSatAPI.instance.protocolSuite){
 					boolean checked = false;
-					for(String ev:Display.instance.evaluatedProtocols){
+					for(String ev:PSatAPI.instance.evaluatedProtocols){
 						String s1 ="";
 						if(ev != null){
 							s1 = ev.split(" \\(")[1];

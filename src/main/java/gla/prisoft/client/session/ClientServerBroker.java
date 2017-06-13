@@ -351,7 +351,7 @@ public class ClientServerBroker{
 						Display.updateNetworkNode();
 					}
 					else if(actionType.equals("info.apathcompleted")){
-						Display.instance.runningTraining = false;
+						PSatAPI.instance.runningTraining = false;
 						PSatClient.netSerialiseConfigInstance();
 						LayeredBarChart lbc = new LayeredBarChart();
 						Display.window.createLayeredDecisionBarViewPage(lbc);
@@ -566,35 +566,35 @@ public class ClientServerBroker{
 					}
 					else if(actionType.equals("FeasibilityView.addRow()")){	
 						PSatTableResult ptr_row = (PSatTableResult)obj;
-						Display.feasibilityView.addTableRow(Display.instance, ptr_row);
+						Display.feasibilityView.addTableRow(PSatAPI.instance, ptr_row);
 					}
 					else if(actionType.equals("PSatClient.ConfigInstanceUpdateRequest()")){
 						String propertyToUpdate = ppties.getProperty("instanceproperty");
 						if(propertyToUpdate.equals("processedPossibleWorldsPaths")){
 							String[]processedPossibleWorldsPaths = (String[])obj;
-							Display.instance.processedPossibleWorldsPaths = processedPossibleWorldsPaths;
+							PSatAPI.instance.processedPossibleWorldsPaths = processedPossibleWorldsPaths;
 							PSatClient.netSerialiseConfigInstance();
 						}
 						else if(propertyToUpdate.equals("is_generating_memory_store")){
-							Display.instance.is_generating_memory_store = (Boolean)obj;
+							PSatAPI.instance.is_generating_memory_store = (Boolean)obj;
 						}
 						else if(propertyToUpdate.equals("selectedAgentPath")){
-							Display.instance.selectedAgentPath = (String[])obj;
+							PSatAPI.instance.selectedAgentPath = (String[])obj;
 						}
 						else if(propertyToUpdate.equals("runningTraining")){
-							Display.instance.runningTraining = (Boolean)obj;
+							PSatAPI.instance.runningTraining = (Boolean)obj;
 						}
 //						else if(propertyToUpdate.equals("runningAnalysis")){
 //							Display.instance.runningAnalysis = (Boolean)obj;
 //						}
 						else if(propertyToUpdate.equals("learningMaxSubs")){
-							Display.instance.learningMaxSubs = (Boolean)obj;
+							PSatAPI.instance.learningMaxSubs = (Boolean)obj;
 						}
 						else if(propertyToUpdate.equals("evaluatedProtocols")){
-							Display.instance.evaluatedProtocols = (String[])obj;
+							PSatAPI.instance.evaluatedProtocols = (String[])obj;
 						}
 						else if(propertyToUpdate.equals("maxPathSats")){
-							Display.instance.maxPathSats = (HashMap<String, Double>)obj;
+							PSatAPI.instance.maxPathSats = (HashMap<String, Double>)obj;
 						}
 						else if(propertyToUpdate.equals("removeEdge")){
 							HashMap<String, Object> hm = (HashMap<String, Object>)obj;
@@ -616,7 +616,7 @@ public class ClientServerBroker{
 								PSatClient.edgesmutated = false;
 							}
 							
-							ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(Display.instance.sessionid);
+							ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(PSatAPI.instance.sessionid);
 							sinstance.g =ClientKNetworkGraph.g;
 							Config.serialiseServerConfigInstance(sinstance.sessionid, sinstance);
 
@@ -635,7 +635,7 @@ public class ClientServerBroker{
 							netMutateEdgesDone = true;
 							PSatClient.edgesmutated = true;
 							
-							ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(Display.instance.sessionid);
+							ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(PSatAPI.instance.sessionid);
 							sinstance.g =ClientKNetworkGraph.g;
 							Config.serialiseServerConfigInstance(sinstance.sessionid, sinstance);
 							

@@ -40,6 +40,7 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 import gla.prisoft.client.Display;
 import gla.prisoft.client.PSatClient;
 import gla.prisoft.client.session.ClientServerBroker;
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.KLink;
 import gla.prisoft.shared.KNode;
@@ -100,7 +101,7 @@ public class ClientKNetworkGraph {
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public void show(JPanel panel){
-		if(Display.instance.sessionid == null){
+		if(PSatAPI.instance.sessionid == null){
 			return;
 		}
 		panel.setBackground(Color.WHITE);
@@ -163,11 +164,11 @@ public class ClientKNetworkGraph {
 //            	PSatClient.netDeseraliseConfigInstance();
             	KNode node = (KNode)i;
             	            	
-            	if(node.id.equals(Display.instance.sourceAgentName)){
-            		Display.instance.subjectName = Display.instance.sourceAgentName;
+            	if(node.id.equals(PSatAPI.instance.sourceAgentName)){
+            		PSatAPI.instance.subjectName = PSatAPI.instance.sourceAgentName;
             		return Color.green;
             	}
-            	else if(node.id.equals(Display.instance.targetAgentName) && !Display.instance.is_aspect_run){
+            	else if(node.id.equals(PSatAPI.instance.targetAgentName) && !PSatAPI.instance.is_aspect_run){
 //            		return Color.ORANGE;            		
             		return Color.GRAY;
             	}
@@ -204,8 +205,8 @@ public class ClientKNetworkGraph {
             		    }
             		}            		
             	}
-            	else if(Display.instance.selectedAgentPaths !=null){
-            		for(String spath: Display.instance.selectedAgentPaths){
+            	else if(PSatAPI.instance.selectedAgentPaths !=null){
+            		for(String spath: PSatAPI.instance.selectedAgentPaths){
             			String pathAgents1[] =spath.split(": ");
             			String pathAgents2 = pathAgents1[1];
             			String [] selectedAgentPath =pathAgents2.split(" ");
@@ -214,7 +215,7 @@ public class ClientKNetworkGraph {
                     		String name = ename.toString();
                         	if(node.toString().equals(name)){
 //                        		return new Color(30, 77, 43);
-                        		if(Display.instance.is_aspect_run){
+                        		if(PSatAPI.instance.is_aspect_run){
                         			return Color.GRAY; 
                         		}
                         		
@@ -263,11 +264,11 @@ public class ClientKNetworkGraph {
         		} 
         		
         	}
-      		else if(Display.instance.selectedAgentPaths == null){
+      		else if(PSatAPI.instance.selectedAgentPaths == null){
           			return null;          		
       		}
       		else{
-      			tempPaths = Display.instance.selectedAgentPaths;
+      			tempPaths = PSatAPI.instance.selectedAgentPaths;
       		}
       		
       		
@@ -340,8 +341,8 @@ public class ClientKNetworkGraph {
             		} 
             		
             	}
-          		else if(Display.instance.selectedAgentPaths != null){
-          			tempPaths = Display.instance.selectedAgentPaths;          		
+          		else if(PSatAPI.instance.selectedAgentPaths != null){
+          			tempPaths = PSatAPI.instance.selectedAgentPaths;          		
           		}
           		
       			for(String spath: tempPaths){
@@ -419,8 +420,8 @@ public class ClientKNetworkGraph {
             		} 
             		
             	}
-          		else if(Display.instance.selectedAgentPaths != null){
-          			tempPaths = Display.instance.selectedAgentPaths;          		
+          		else if(PSatAPI.instance.selectedAgentPaths != null){
+          			tempPaths = PSatAPI.instance.selectedAgentPaths;          		
           		}
       			
       			for(String spath: tempPaths){
@@ -463,7 +464,7 @@ public class ClientKNetworkGraph {
                 if (object instanceof KNode) {
                 	KNode node = (KNode)object; 
                 	if (pickedState.isPicked(node)) {
-                		if(Display.instance.networkMutationMode){
+                		if(PSatAPI.instance.networkMutationMode){
                  			if(mutant_source != null){
                  				mutateEdges(mutant_source, node);
                  				mutant_target = node;
@@ -499,8 +500,8 @@ public class ClientKNetworkGraph {
 		panel.add(vs);	
 		
 		//
-		if(Display.instance.sourceAgentName !=null){
-			if(Display.instance.targetAgentName !=null){
+		if(PSatAPI.instance.sourceAgentName !=null){
+			if(PSatAPI.instance.targetAgentName !=null){
 				Display.activateRun(true);
 			}
 		}

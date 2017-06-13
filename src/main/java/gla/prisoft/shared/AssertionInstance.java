@@ -6,12 +6,12 @@ public class AssertionInstance implements Serializable{
 	private static final long serialVersionUID = 172147074299623098L;
 	private String assertion;
 	private double goalv; //desired level of assertion satisfaction
-	private boolean isCommonKnowledgeAssertion;
+	private CollectiveStrategy cs;
 	
-	public AssertionInstance(String assertion, double goalv,boolean isCommonKnowledgeAssertion){
+	public AssertionInstance(String assertion, double goalv,CollectiveStrategy cs){
 		this.setAssertion(assertion);
 		this.setGoalv(goalv);
-		this.setCommonKnowledgeAssertion(isCommonKnowledgeAssertion);
+		this.setCollectiveStragegy(cs);
 	}
 	
 	public double getGoalv() {
@@ -32,12 +32,12 @@ public class AssertionInstance implements Serializable{
 		this.assertion = assertion;
 	}
 
-	public boolean isCommonKnowledgeAssertion() {
-		return isCommonKnowledgeAssertion;
+	public CollectiveStrategy getCollectiveStrategy() {
+		return cs;
 	}
 
-	public void setCommonKnowledgeAssertion(boolean isCommonKnowledgeAssertion) {
-		this.isCommonKnowledgeAssertion = isCommonKnowledgeAssertion;
+	public void setCollectiveStragegy(CollectiveStrategy cs) {
+		this.cs = cs;
 	}
 	
 }

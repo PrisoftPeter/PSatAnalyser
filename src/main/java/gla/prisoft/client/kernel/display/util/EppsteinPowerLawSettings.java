@@ -6,6 +6,7 @@ import javax.swing.JTextField;
 
 import gla.prisoft.client.Display;
 import gla.prisoft.client.PSatClient;
+import gla.prisoft.server.PSatAPI;
 
 public class EppsteinPowerLawSettings {
 //	public static int no_agents;
@@ -30,7 +31,7 @@ public class EppsteinPowerLawSettings {
 		else{
 			String tinput = noedgel_tf.getText();
 			if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-				Display.instance.no_edges = new Integer(tinput);		
+				PSatAPI.instance.no_edges = new Integer(tinput);		
 			}
 			else{
 				Display.updateLogPage("#number expected", true);
@@ -39,7 +40,7 @@ public class EppsteinPowerLawSettings {
 			
 			tinput = degreeExponent_tf.getText();
 			if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-				Display.instance.degreeExponent = new Integer(tinput);
+				PSatAPI.instance.degreeExponent = new Integer(tinput);
 			}
 			else{
 				Display.updateLogPage("#number expected", true);

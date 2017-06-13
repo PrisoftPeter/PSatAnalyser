@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import gla.prisoft.shared.ConfigInstance;
+
 public class PSatAPI {
+	public static ConfigInstance instance;
 	public static String datastore_file_path ="datastore";
 	public static int fvindex;
 	
@@ -53,4 +56,5 @@ public class PSatAPI {
 		}
 		return file;
 	}
+
 }
