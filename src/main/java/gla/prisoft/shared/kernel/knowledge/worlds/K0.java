@@ -13,8 +13,8 @@ public class K0 extends World implements Serializable {
 		
 	public K0(Attribute att){
 		super.type = "K0";
-		super.htmlType = "<b>f</b>";
-		htmlType1 = "<b>f</b>";
+		super.htmlType = "<i>f</i>";
+		htmlType1 = "<i>f</i>";
 		this.self = null;
 		this.att =att;
 	}
@@ -22,7 +22,7 @@ public class K0 extends World implements Serializable {
 	@Override
 	public String toHtmlString(){
 		String res = "<html>";
-		res = res+"<b>f</b>";		
+		res = res+"<i>f</i>";		
 		res = res+"</html>";
 				
 		return res;
@@ -31,7 +31,7 @@ public class K0 extends World implements Serializable {
 	@Override
 	public String toLimitHtmlString() {
 		String res = "";
-		res = res+"<b>f</b>";		
+		res = res+"<i>f</i>";		
 				
 		return res;
 	}

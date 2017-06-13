@@ -422,27 +422,36 @@ public class AssertionsView extends Container {
 			((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer())
 			.setHorizontalAlignment(JLabel.LEFT);
 			table.getTableHeader().setFont(new Font("Verdana", Font.BOLD, 10));
-			
+			table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 			TableColumn column = null;
 			for (int n = 0; n < 5; n++) {
 				column = table.getColumnModel().getColumn(n);
-				if (n == 0) 
+				if (n == 0) {
+					column.setMaxWidth(35);
+				}
+				if (n == 1){
+					column.setMinWidth(30);
 					column.setMaxWidth(30);
-				if (n == 1)
-					column.setMaxWidth(30);
-				if (n == 2)
-					column.setMaxWidth(192);
-				if (n == 3)
+				}
+				if (n == 2){
+					column.setMinWidth(192);
+					column.setMaxWidth(250);
+				}
+				if (n == 3){
 					column.setMaxWidth(60);
-				if (n == 4)
-					column.setMaxWidth(362);
+				}
+				if (n == 4){
+					column.setMinWidth(362);
+					//column.setMaxWidth(462);
+				}
 			}
 
 			JScrollPane scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);			
-			JPanel tablePanel = new JPanel(new GridLayout());
-			tablePanel.add(scrollPane);
-			tablePanel.setBackground(Color.red);
-			add(tablePanel);
+//			JPanel tablePanel = new JPanel(new GridLayout());
+//			tablePanel.add(scrollPane);
+//			tablePanel.setBackground(Color.red);
+//			add(tablePanel);
+			add(scrollPane);
 
 		}
 		else if(PSatAPI.instance.isModeUncertainty){

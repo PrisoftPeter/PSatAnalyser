@@ -1786,7 +1786,7 @@ public class Display extends JFrame {
         pick_g_rb.add(uncertainty_rb);
         pick_g_rb.add(entropy_rb);
                 
-        JLabel labelcollective = new JLabel("Collective Pr setting");
+        JLabel labelcollective = new JLabel("Collective privacy setting");
         JRadioButton nonek_rb = new JRadioButton("<html>None</html>");        
         nonek_rb.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent event) {
@@ -1800,7 +1800,7 @@ public class Display extends JFrame {
 	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.CG;
 				PSatClient.netSerialiseConfigInstance();
 	        }
-	    });
+	    });	
         JRadioButton egk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.EG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.EG)+"</html>");        
         egk_rb.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent event) {

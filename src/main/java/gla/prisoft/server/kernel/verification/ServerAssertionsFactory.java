@@ -435,7 +435,7 @@ public class ServerAssertionsFactory implements Serializable{
 
 					}		
 					
-					Properties [] tempproperties = new Properties[properties.length +1];
+					Properties [] tempproperties = new Properties[properties.length +1];					
 					for(int i=0;i< properties.length;i++){
 						tempproperties[i] = properties[i];
 					}
