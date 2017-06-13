@@ -76,7 +76,10 @@ public class ServerAssertionsFactory implements Serializable{
 					World w = (World) in.readObject();
 					
 					if(instance.is_aspect_run){
-						if(w instanceof K1){
+						if(w instanceof K0){
+							w = new K0(h);
+						}
+						else if(w instanceof K1){
 							w = new K1(self, h);
 						}
 						else if(w instanceof K1a){
@@ -221,7 +224,11 @@ public class ServerAssertionsFactory implements Serializable{
 					
 					if(instance.is_aspect_run){
 
-						if(w instanceof K1){
+						if(w instanceof K0){
+							w = new K0(h);
+							aspectType = w.htmlType;
+						}
+						else if(w instanceof K1){
 							w = new K1(self, h);
 							aspectType = w.htmlType;
 						}
@@ -512,7 +519,10 @@ public class ServerAssertionsFactory implements Serializable{
 					World w = (World) in.readObject();
 					if(w.toHtmlString().equals(httpstring)){
 												
-						if(w instanceof K1){
+						if(w instanceof K0){
+							assertion = new K0(h);
+						}
+						else if(w instanceof K1){
 							assertion = new K1(self, h);
 						}
 						else if(w instanceof K1a){
@@ -613,7 +623,10 @@ public class ServerAssertionsFactory implements Serializable{
 	
 	public boolean isUncertainWorld(World w){
 		
-		if(w instanceof K1){
+		if(w instanceof K0){
+			return false;
+		}
+		else if(w instanceof K1){
 			return true;
 		}
 		else if(w instanceof K21){
