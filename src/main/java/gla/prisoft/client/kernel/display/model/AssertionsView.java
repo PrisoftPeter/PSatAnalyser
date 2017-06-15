@@ -24,6 +24,7 @@ import gla.prisoft.client.PSatClient;
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.AssertionAspect;
+import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.KnowledgeBase;
 import gla.prisoft.shared.KnowledgeLevel;
 
@@ -441,7 +442,7 @@ public class AssertionsView extends Container {
 					column.setMaxWidth(60);
 				}
 				if (n == 4){
-					column.setMinWidth(362);
+					column.setMinWidth(300);
 					//column.setMaxWidth(462);
 				}
 			}
@@ -1038,6 +1039,10 @@ public class AssertionsView extends Container {
 				if(!PSatAPI.instance.is_aspect_run){
 					String assertionDesc = (String)rowData.get(2);
 					
+					if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE && assertionDesc.equals("<html><i>f</i></html>")){
+						return;
+					}
+						
 					if(b){
 						agent.addAssertionInstance(assertionDesc, goal_v, PSatAPI.instance.collectiveStrategy);
 					}

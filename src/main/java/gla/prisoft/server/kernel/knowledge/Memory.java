@@ -19,7 +19,6 @@ import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.Attribute;
-import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KnowledgeLevel;
 
@@ -145,10 +144,12 @@ public class Memory implements Serializable{
 		Agent agent1 = pair[0];
 		Agent agent2 = pair[1];
 		
-		if(PSatAPI.instance.collectiveStrategy != CollectiveStrategy.NONE){
-			K0 ko = new K0(tempAttribute);
-			addToAssertionsStore(ko);
-		}
+//		if(PSatAPI.instance.collectiveStrategy != CollectiveStrategy.NONE){
+//			addToAssertionsStore(new K0a(tempAttribute));
+//			addToAssertionsStore(new K0(tempAttribute));
+//		}
+		addToAssertionsStore(new K0a(tempAttribute));
+		addToAssertionsStore(new K0(tempAttribute));
 		
 		addToMemoryStore(new K1(self, tempAttribute));
 		addToAssertionsStore(new K1a(self, tempAttribute));
@@ -870,7 +871,10 @@ public class Memory implements Serializable{
 	        FileOutputStream fileOut = new FileOutputStream(fileName);
 	        ObjectOutputStream out = new ObjectOutputStream(fileOut);
 	        
-	        if(world instanceof K0){
+	        if(world instanceof K0a){
+	        	out.writeObject((K0a)world);
+			}
+	        else if(world instanceof K0){
 	        	out.writeObject((K0)world);
 			}
 	        else if(world instanceof K1){

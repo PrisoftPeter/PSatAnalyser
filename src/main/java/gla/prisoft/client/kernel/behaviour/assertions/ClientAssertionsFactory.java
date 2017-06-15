@@ -98,7 +98,6 @@ public class ClientAssertionsFactory implements Serializable{
 				String cs_limithtmldesc = CollectiveMode.getModeLimitHtmlDesc(cs);
 				if(cs != CollectiveStrategy.NONE){
 					meaning = collectiveStrDesc+" "+meaning;
-					meaning = collectiveStrDesc+" "+meaning;
 					meaning = meaning.replace("<html>", "");
 					meaning = "<html>"+meaning;
 					
@@ -106,6 +105,12 @@ public class ClientAssertionsFactory implements Serializable{
 					genericFormula =genericFormula.replace("<html>", "");
 					genericFormula =genericFormula.replace("</html>", "");
 					genericFormula = "<html>"+genericFormula+"</html>";
+					
+				}
+				if(cs == CollectiveStrategy.NONE){
+					if(genericFormula.equals("<html><i>f</i></html>")){
+						checked = false;
+					}
 				}
 				
 				av.model.addRow(new Object[]{aspectType,checked,genericFormula,goal_v,meaning});
@@ -137,6 +142,11 @@ public class ClientAssertionsFactory implements Serializable{
 					w =w.replace("</html>", "");
 					w = "<html>"+w+"</html>";
 
+				}
+				if(cs == CollectiveStrategy.NONE){
+					if(w.equals("<html><i>f</i></html>")){
+						checked = false;
+					}
 				}
 				
 				av.model.addRow(new Object[]{a_counter,checked,w, goal_v,meaning});

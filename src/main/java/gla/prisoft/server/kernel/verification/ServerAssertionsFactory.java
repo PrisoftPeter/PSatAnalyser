@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 
@@ -76,7 +77,13 @@ public class ServerAssertionsFactory implements Serializable{
 					World w = (World) in.readObject();
 					
 					if(instance.is_aspect_run){
-						if(w instanceof K0){
+						if(w instanceof K0a){
+							w = new K0a(h);
+						}
+						else if(w instanceof K0b){
+							w = new K0b(h);
+						}
+						else if(w instanceof K0){
 							w = new K0(h);
 						}
 						else if(w instanceof K1){
@@ -185,6 +192,8 @@ public class ServerAssertionsFactory implements Serializable{
 	public Properties[] displayAssertionsStore(String agentName, String partialPath, ServerConfigInstance sinstance,ConfigInstance instance){
 
 		Properties [] properties = new Properties[0];
+		
+		
 		sinstance.a_counter = 1;
 		
 		String folderName2 = "";
@@ -224,7 +233,15 @@ public class ServerAssertionsFactory implements Serializable{
 					
 					if(instance.is_aspect_run){
 
-						if(w instanceof K0){
+						if(w instanceof K0a){
+							w = new K0a(h);
+							aspectType = w.htmlType;
+						}
+						else if(w instanceof K0b){
+							w = new K0b(h);
+							aspectType = w.htmlType;
+						}
+						else if(w instanceof K0){
 							w = new K0(h);
 							aspectType = w.htmlType;
 						}
@@ -435,7 +452,7 @@ public class ServerAssertionsFactory implements Serializable{
 
 					}		
 					
-					Properties [] tempproperties = new Properties[properties.length +1];					
+					Properties [] tempproperties = new Properties[properties.length +1];
 					for(int i=0;i< properties.length;i++){
 						tempproperties[i] = properties[i];
 					}
@@ -460,8 +477,83 @@ public class ServerAssertionsFactory implements Serializable{
 			System.err.println("class not found @displayAssertionsStore");
 		}
 		
-		return properties;
+		//reorder constructs
+		if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE){
+			ArrayList<Properties> pptiesarray = new ArrayList<Properties>();
+			for(Properties ppty: properties){
+				if(instance.is_aspect_run){
+					if(!ppty.get("genericFormula").equals(new K0a(new Attribute()).toHtmlString())){
+						if(!ppty.get("genericFormula").equals(new K0(new Attribute()).toHtmlString())){
+							pptiesarray.add(ppty);
+						}
+					}
+				}
+				else{
+					if(!ppty.get("w").equals(new K0a(new Attribute()).toHtmlString())){
+						if(!ppty.get("w").equals(new K0(new Attribute()).toHtmlString())){
+							pptiesarray.add(ppty);
+						}
+					}					   
+				}
+			}
 			
+			properties = new Properties[pptiesarray.size()];
+			properties = pptiesarray.toArray(properties);
+		}
+		else{
+			ArrayList<Properties> k0pptiesarray = new ArrayList<Properties>();
+			ArrayList<Properties> otherpptiesarray = new ArrayList<Properties>();
+
+			for(Properties ppty: properties){
+				if(instance.is_aspect_run){
+					
+					if(ppty.get("genericFormula").equals(new K0a(new Attribute()).toHtmlString())){
+						ppty.setProperty("a_counter", "");
+						k0pptiesarray.add(ppty);						
+					}
+					else if(ppty.get("genericFormula").equals(new K0(new Attribute()).toHtmlString())){
+						ppty.setProperty("a_counter", "");
+						k0pptiesarray.add(ppty);
+					}
+					else{
+						otherpptiesarray.add(ppty);
+					}
+				}
+				else{					
+					if(ppty.get("w").equals(new K0a(new Attribute()).toHtmlString())){
+						ppty.setProperty("a_counter", "");
+						k0pptiesarray.add(ppty);						
+					}
+					else if(ppty.get("w").equals(new K0(new Attribute()).toHtmlString())){
+						ppty.setProperty("a_counter", "");
+						k0pptiesarray.add(ppty);	
+					}
+					else{
+						otherpptiesarray.add(ppty);
+					}
+				}
+			}
+			
+			Properties k0ppties[] = new Properties[k0pptiesarray.size()];
+			k0ppties = k0pptiesarray.toArray(k0ppties);
+			
+			Properties otherppties[] = new Properties[otherpptiesarray.size()];		
+			otherppties = otherpptiesarray.toArray(otherppties);
+			
+			Properties combinedppties[] = new Properties[k0ppties.length+otherppties.length];
+			int ocounter = 0;
+			for(Properties p:k0ppties){
+				combinedppties[ocounter] = p;
+				ocounter = ocounter+1;
+			}
+			for(Properties p:otherppties){
+				combinedppties[ocounter] = p;
+				ocounter = ocounter+1;
+			}
+			properties = combinedppties;
+		}
+		return properties;
+		
 	}
 	
 	public static World getAssertionInstanceWorld(String httpstring, String selfAgentName, String partialPath, String sessionid){
@@ -519,7 +611,13 @@ public class ServerAssertionsFactory implements Serializable{
 					World w = (World) in.readObject();
 					if(w.toHtmlString().equals(httpstring)){
 												
-						if(w instanceof K0){
+						if(w instanceof K0a){
+							assertion = new K0a(h);
+						}
+						else if(w instanceof K0b){
+							assertion = new K0b(h);
+						}
+						else if(w instanceof K0){
 							assertion = new K0(h);
 						}
 						else if(w instanceof K1){
@@ -623,7 +721,7 @@ public class ServerAssertionsFactory implements Serializable{
 	
 	public boolean isUncertainWorld(World w){
 		
-		if(w instanceof K0){
+		if(w instanceof K0a){
 			return false;
 		}
 		else if(w instanceof K1){

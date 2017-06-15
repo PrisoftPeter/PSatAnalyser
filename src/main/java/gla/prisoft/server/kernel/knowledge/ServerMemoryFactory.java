@@ -27,6 +27,7 @@ import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.AssertionAspect;
 import gla.prisoft.shared.AssertionInstance;
 import gla.prisoft.shared.Attribute;
+import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KnowledgeBase;
 import gla.prisoft.shared.KnowledgeLevel;
@@ -1341,6 +1342,13 @@ public class ServerMemoryFactory {
 		int val1 = rand.nextInt(10) + 1;
 		h.setValue(""+val1);		
 		self.addToPersonalAttributes(h);
+		
+//		if(PSatAPI.instance.collectiveStrategy != CollectiveStrategy.NONE){
+//			addToAssertionAspectsStore(new K0a(h),selfAgentName, sinstance);
+//			addToAssertionAspectsStore(new K0(h),selfAgentName, sinstance);
+//		}
+		addToAssertionAspectsStore(new K0a(h),selfAgentName, sinstance);
+		addToAssertionAspectsStore(new K0(h),selfAgentName, sinstance);
 		
 		addToAssertionAspectsStore(new K1a(self, h),selfAgentName, sinstance);
 		addToAssertionAspectsStore(new K1(self, h),selfAgentName, sinstance);
