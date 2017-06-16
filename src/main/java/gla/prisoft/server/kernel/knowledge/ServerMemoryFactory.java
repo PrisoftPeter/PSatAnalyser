@@ -14,8 +14,7 @@ import org.apache.commons.io.FileUtils;
 
 import gla.prisoft.client.session.ClientServerBroker;
 import gla.prisoft.server.PSatAPI;
-import gla.prisoft.shared.kernel.knowledge.worlds.*;
-
+import gla.prisoft.server.kernel.knowledge.worlds.*;
 import gla.prisoft.server.kernel.util.Helper;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.kernel.util.ServerSatSerializer;

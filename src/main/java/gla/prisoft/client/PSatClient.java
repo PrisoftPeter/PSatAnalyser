@@ -6,9 +6,9 @@ import java.util.Properties;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KNode;
-import gla.prisoft.shared.kernel.knowledge.worlds.World;
 import gla.prisoft.client.session.ClientServerBroker;
 import gla.prisoft.server.PSatAPI;
+import gla.prisoft.server.kernel.knowledge.worlds.World;
 
 public class PSatClient {
 	

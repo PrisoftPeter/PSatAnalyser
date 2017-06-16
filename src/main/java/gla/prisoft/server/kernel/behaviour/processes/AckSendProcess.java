@@ -1,8 +1,7 @@
 package gla.prisoft.server.kernel.behaviour.processes;
 
 import gla.prisoft.server.kernel.knowledge.Memory;
-import gla.prisoft.shared.kernel.knowledge.worlds.*;
-
+import gla.prisoft.server.kernel.knowledge.worlds.*;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;

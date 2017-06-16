@@ -1,12 +1,12 @@
 package gla.prisoft.server.kernel.behaviour.processes;
 
 import gla.prisoft.server.kernel.knowledge.Memory;
+import gla.prisoft.server.kernel.knowledge.worlds.*;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.ConfigInstance;
-import gla.prisoft.shared.kernel.knowledge.worlds.*;
 
 public class AckGrantConsentProcess extends Process {
 	static final String processName = "ackGrantConsent";

@@ -15,6 +15,7 @@ import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.behaviour.InformationFlows;
 import gla.prisoft.server.kernel.behaviour.protocol.ServerProtocolFactory;
 import gla.prisoft.server.kernel.knowledge.ServerMemoryFactory;
+import gla.prisoft.server.kernel.knowledge.worlds.World;
 import gla.prisoft.server.kernel.util.GraphAnalyser;
 import gla.prisoft.server.kernel.util.PathsInGraph;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
@@ -28,7 +29,6 @@ import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KLink;
 import gla.prisoft.shared.KNode;
 import gla.prisoft.shared.PSatTableResult;
-import gla.prisoft.shared.kernel.knowledge.worlds.World;
 
 public class ClientServerBroker{
 	

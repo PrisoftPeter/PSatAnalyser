@@ -11,6 +11,7 @@ import java.util.Random;
 
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.knowledge.ServerMemoryFactory;
+import gla.prisoft.server.kernel.knowledge.worlds.*;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
@@ -21,9 +22,6 @@ import gla.prisoft.shared.CollectiveMode;
 import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KnowledgeBase;
-import gla.prisoft.shared.kernel.knowledge.worlds.K1;
-import gla.prisoft.shared.kernel.knowledge.worlds.World;
-import gla.prisoft.shared.kernel.knowledge.worlds.*;
 
 public class ServerAssertionsFactory implements Serializable{
 	private static final long serialVersionUID = 1L;
