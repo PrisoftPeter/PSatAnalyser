@@ -1739,7 +1739,7 @@ public class Display extends JFrame {
         analysis_g_rb.add(roles_rb); 
         
         ///
-        final JLabel labelcollective = new JLabel("<html><font color='#708090'>Collective privacy aspects</font></html>");
+        final JLabel labelcollective = new JLabel("<html><font color='#708090'>Privacy aspects</font></html>");
         final JRadioButton nonek_rb = new JRadioButton("<html>None</html>");        
         final JRadioButton ck_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.CG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.CG)+"</html>");        
         final JRadioButton egk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.EG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.EG)+"</html>");        
