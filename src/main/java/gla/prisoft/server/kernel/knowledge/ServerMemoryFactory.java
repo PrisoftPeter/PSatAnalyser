@@ -1704,6 +1704,9 @@ public class ServerMemoryFactory {
 		if(world instanceof K0 || world instanceof K0a || world instanceof K0b){
 			return true;
 		}
+		else if(!(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE)){
+			return true;
+		}
 		else if(world instanceof K1 || world instanceof K1a || world instanceof K1b){
 			if(world.getSelf().getAgentName().equals(selfAgentName)){
 				return true;

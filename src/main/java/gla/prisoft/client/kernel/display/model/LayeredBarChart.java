@@ -196,7 +196,11 @@ public class LayeredBarChart extends javax.swing.JPanel {
         
         final CategoryAxis categoryAxis = new CategoryAxis("Decisions");
         final ValueAxis valueAxis = new NumberAxis("# of α");
-        valueAxis.setRange(0, catt);
+        try {
+			valueAxis.setRange(0, catt);
+		} catch (java.lang.IllegalArgumentException e) {
+			//e.printStackTrace();
+		}
 
 
         final CategoryPlot plot = new CategoryPlot(dataset,
