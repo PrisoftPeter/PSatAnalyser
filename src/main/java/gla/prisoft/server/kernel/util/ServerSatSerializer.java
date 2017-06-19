@@ -94,7 +94,7 @@ public class ServerSatSerializer implements Serializable{
 		String requirementHtmlDesc = "";
 		for(String agentName: ifs.pathAgents){
 			Agent agent = ServerAgentFactory.getAgent(agentName, sinstance);
-			if(!instance.is_aspect_run){
+			if(!instance.is_role_run){
 				for(AssertionInstance ai: agent.getAssertionInstances()){
 					String req = ai.getAssertion();
 					req = req.replace("<html>", "");
@@ -105,13 +105,13 @@ public class ServerSatSerializer implements Serializable{
 			}
 //			else{
 //				
-//				String f[] = agent.getAssertionAspects();
+//				String f[] = agent.getAssertionRoles();
 //				World reqs [] = new World[f.length];
 //				if(f.length>0){
-//					requirementHtmlDesc = requirementHtmlDesc+"<b>AssertionAspect(";
+//					requirementHtmlDesc = requirementHtmlDesc+"<b>AssertionRole(";
 //				}
 //				for(int i=0;i<f.length;i++){
-//					reqs[i] = AssertionsFactory.getAssertionAspect(agent.getAgentName(), f[i]);
+//					reqs[i] = AssertionsFactory.getAssertionRole(agent.getAgentName(), f[i]);
 //					
 //					requirementHtmlDesc = requirementHtmlDesc + reqs[i].htmlType+ "; ";
 //				}
@@ -124,7 +124,7 @@ public class ServerSatSerializer implements Serializable{
 		
 		updateRequirementHtmlFullDesc(requirementHtmlDesc);
 		
-		if(!instance.is_aspect_run){
+		if(!instance.is_role_run){
 			requirementHtmlDesc = "Instance("+requirementHtmlDesc+")";
 		}
 		
@@ -394,7 +394,7 @@ public class ServerSatSerializer implements Serializable{
 //		if(instance.isModePick){
 //			text = "PathLength:"+pathlength+
 //				   ", KnowledgeBase:"+flowresults[0].knowledgebase +
-//				   ", AspectType:"+flowresults[0].aspectTypeHtml+
+//				   ", RoleType:"+flowresults[0].roleTypeHtml+
 //				   ", PathSat:"+flowresults[flowresults.length-1].pathsat+
 //				   ", AveViableProtocolRatio:"+ave_viable_protocol_ratio;
 //		}
@@ -413,7 +413,7 @@ public class ServerSatSerializer implements Serializable{
 //		ClientServerBroker.messageEvent("updateLogPage", text+"₦"+false,null,null);
 //	
 //		writeToAnalysisVaibleProtocolRatioStore(pathlength, flowresults[0].knowledgebase, 
-//				flowresults[0].aspectTypeRaw,flowresults[flowresults.length-1].pathsat, 
+//				flowresults[0].roleTypeRaw,flowresults[flowresults.length-1].pathsat, 
 //				ave_viable_protocol_ratio, collectiveEntropy, instance, sinstance);		
 //	}
 //	
@@ -423,13 +423,13 @@ public class ServerSatSerializer implements Serializable{
 //		String folderName2 = PSatAPI.datastore_file_path+"/"+sessionid+"/SATTrainingPaths";
 //		String folderName3 = "";
 //		String fileName ="";
-//		if(!instance.is_aspect_run){
+//		if(!instance.is_role_run){
 //			folderName3 = PSatAPI.datastore_file_path+"/"+sessionid+"/SATTrainingPaths/"+instance.sourceAgentName+"_"+instance.targetAgentName;
 //			fileName = folderName3+"/source_"+instance.targetAgentName+".csv";	
 //		}
 //		else{
-//			folderName3 = PSatAPI.datastore_file_path+"/"+sessionid+"/SATTrainingPaths/"+instance.sourceAgentName+"_Aspect";
-//			fileName = folderName3+"/source_Aspect.csv";
+//			folderName3 = PSatAPI.datastore_file_path+"/"+sessionid+"/SATTrainingPaths/"+instance.sourceAgentName+"_Role";
+//			fileName = folderName3+"/source_Role.csv";
 //
 //		}
 //		
@@ -499,13 +499,13 @@ public class ServerSatSerializer implements Serializable{
 //		String folderName2 = PSatAPI.datastore_file_path+"/"+sessionid+"/SATAnalysisPaths";
 //		String folderName3 = "";
 //		String fileName ="";
-//		if(!instance.is_aspect_run){
+//		if(!instance.is_role_run){
 //			folderName3 = PSatAPI.datastore_file_path+"/"+sessionid+"/SATAnalysisPaths/"+instance.sourceAgentName+"_"+instance.targetAgentName;
 //			fileName = folderName3+"/source_"+instance.targetAgentName+".csv";	
 //		}
 //		else{
-//			folderName3 = PSatAPI.datastore_file_path+"/"+sessionid+"/SATAnalysisPaths/"+instance.sourceAgentName+"_Aspect";
-//			fileName = folderName3+"/source_Aspect.csv";
+//			folderName3 = PSatAPI.datastore_file_path+"/"+sessionid+"/SATAnalysisPaths/"+instance.sourceAgentName+"_Role";
+//			fileName = folderName3+"/source_Role.csv";
 //
 //		}
 //		
@@ -577,19 +577,19 @@ public class ServerSatSerializer implements Serializable{
 //		String folderName3 = "";
 //		String fileName ="";
 //
-//		folderName3 = folderName2+"/"+instance.sourceAgentName+"_Aspect";
+//		folderName3 = folderName2+"/"+instance.sourceAgentName+"_Role";
 //		if(instance.isModePick){
-//			fileName = folderName3+"/source_Aspect_viableProtocol_Range_"+instance.k+"_Pick.csv";			
+//			fileName = folderName3+"/source_Role_viableProtocol_Range_"+instance.k+"_Pick.csv";			
 //		}
 //		else{
 //			 if(instance.greaterThanOrEqualTo){
-//				fileName = folderName3+"/source_Aspect_viableProtocol_Range_"+instance.k+"_Entropy≥.csv";	
+//				fileName = folderName3+"/source_Role_viableProtocol_Range_"+instance.k+"_Entropy≥.csv";	
 //			}
 ////			else if(AssertionsView.lessThanOrEqualTo){
-////				fileName = folderName2+"/source_Aspect_viableProtocol_Range_"+PathsInGraph.k+"_Entropy≤.csv";
+////				fileName = folderName2+"/source_Role_viableProtocol_Range_"+PathsInGraph.k+"_Entropy≤.csv";
 ////			}
 //			else{
-//				fileName = folderName3+"/source_Aspect_viableProtocol_Range_"+instance.k+"_Entropy≤.csv";
+//				fileName = folderName3+"/source_Role_viableProtocol_Range_"+instance.k+"_Entropy≤.csv";
 //			}		 
 //					
 //		}
@@ -644,7 +644,7 @@ public class ServerSatSerializer implements Serializable{
 //        	    writer.append(',');
 //        	    writer.append("KnowledgeBase");
 //        	    writer.append(',');
-//        	    writer.append("AspectType");
+//        	    writer.append("RoleType");
 //        	    writer.append(',');
 //        	    writer.append("MaxPathSat");
 //        	    writer.append(',');
@@ -679,7 +679,7 @@ public class ServerSatSerializer implements Serializable{
 //    	return created;
 //	}
 //	
-//	public void writeToAnalysisVaibleProtocolRatioStore(int pathLength, KnowledgeBase knowledgebase, String aspectType
+//	public void writeToAnalysisVaibleProtocolRatioStore(int pathLength, KnowledgeBase knowledgebase, String roleType
 //			,double pathsat, double aveViableProtocolRatio, double desiredEntropy, ConfigInstance instance, ServerConfigInstance sinstance){
 //
 //
@@ -697,7 +697,7 @@ public class ServerSatSerializer implements Serializable{
 //		    	    writer.append(',');
 //		    	    writer.append(""+knowledgebase);
 //		    	    writer.append(',');
-//		    	    writer.append(aspectType);
+//		    	    writer.append(roleType);
 //		    	    writer.append(',');
 //		    	    writer.append(""+pathsat);
 //		    	    writer.append(',');

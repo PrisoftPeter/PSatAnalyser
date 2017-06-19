@@ -15,7 +15,7 @@ public class Agent implements Serializable{
 	private double desiredEntropy;
 	private double desiredCommonKnowledge;
 	
-	private AssertionAspect[] aspects;
+	private AssertionRole[] roles;
 	private KnowledgeLevel[] knowledgeLevels;
 	private double globalPrivacyGoal_v;
 
@@ -28,7 +28,7 @@ public class Agent implements Serializable{
 		setPersonalAttributes(new Attribute[0]);
 		setSharedAttributes(new Attribute[0]);
 		setAssertionInstances(new AssertionInstance[0]);
-//		setAssertionAspects(new String[0]);
+//		setAssertionRoles(new String[0]);
 		setCreatedMemoryStores(new String[0]);
 //		setSubjectSafeZones(new SafeZone[0]);
 		setKnowledgeLevels(new KnowledgeLevel[0]);
@@ -175,19 +175,19 @@ public class Agent implements Serializable{
 		assertionInstances = ArrayCleaner.clean(assertionInstances);
 		return assertionInstances;
 	}
-//	public String [] getAssertionAspects() {
-//		return assertionAspects;
+//	public String [] getAssertionRoles() {
+//		return assertionRoles;
 //	}
 
 	public void setAssertionInstances(AssertionInstance [] assertionInstances) {
 		this.assertionInstances = assertionInstances;
 	}
-//	public void setAssertionAspects(String [] assertionAspects) {
-//		this.assertionAspects = assertionAspects;
+//	public void setAssertionRoles(String [] assertionRoles) {
+//		this.assertionRoles = assertionRoles;
 //	}
 		
-//	public void resetAssertionAspects() {
-//		this.assertionAspects = new String[0];
+//	public void resetAssertionRoles() {
+//		this.assertionRoles = new String[0];
 //	}
 	
 	public void resetAssertionInstances() {
@@ -246,12 +246,13 @@ public class Agent implements Serializable{
 			temp[assertionInstances.length] = new AssertionInstance(world_text, goalv,cs);		
 			assertionInstances = temp;	
 		}		
+		assertionInstances = ArrayCleaner.clean(assertionInstances);
 	}
 	
-//	public void addAssertionAspect(String world_text){
-//		ArrayCleaner.clean(assertionAspects);
+//	public void addAssertionRole(String world_text){
+//		ArrayCleaner.clean(assertionRoles);
 //		boolean exist = false;
-//		for(String w_s: assertionAspects){
+//		for(String w_s: assertionRoles){
 //			if(w_s.equals(world_text)){
 //				exist = true;
 //				break;
@@ -261,12 +262,12 @@ public class Agent implements Serializable{
 //		if(exist){
 //			return;
 //		}
-//		String [] temp = new String[assertionAspects.length+1];
-//		for(int i=0;i<assertionAspects.length;i++){
-//			temp[i] = assertionAspects[i];
+//		String [] temp = new String[assertionRoles.length+1];
+//		for(int i=0;i<assertionRoles.length;i++){
+//			temp[i] = assertionRoles[i];
 //		}
-//		temp[assertionAspects.length] = world_text;		
-//		assertionAspects = temp;	
+//		temp[assertionRoles.length] = world_text;		
+//		assertionRoles = temp;	
 //	}
 
 	public void removeAssertionInstance(String world_text){
@@ -292,10 +293,10 @@ public class Agent implements Serializable{
 		}
 	}
 	
-//	public void removeAssertionAspect(String world_text){
-//		ArrayCleaner.clean(assertionAspects);
+//	public void removeAssertionRole(String world_text){
+//		ArrayCleaner.clean(assertionRoles);
 //		boolean contained = false;
-//		for(String w_s: assertionAspects){
+//		for(String w_s: assertionRoles){
 //			if(w_s.equals(world_text)){
 //				contained = true;
 //				break;
@@ -304,14 +305,14 @@ public class Agent implements Serializable{
 //
 //		if(contained){
 //			int j=0;
-//			String [] temp = new String[assertionAspects.length-1];
-//			for(int i=0;i<assertionAspects.length;i++){
-//				if(!assertionAspects[i].equals(world_text)){
-//					temp[j] = assertionAspects[i];
+//			String [] temp = new String[assertionRoles.length-1];
+//			for(int i=0;i<assertionRoles.length;i++){
+//				if(!assertionRoles[i].equals(world_text)){
+//					temp[j] = assertionRoles[i];
 //					j = j+1;
 //				}				
 //			}
-//			assertionAspects = temp;
+//			assertionRoles = temp;
 //		}
 //	}
 	
@@ -531,105 +532,121 @@ public class Agent implements Serializable{
 	}
 	
 
-	public AssertionAspect[] getAspects() {
-		return aspects;
+	public AssertionRole[] getRoles() {
+		return roles;
 	}
 
-	public void setAspects(AssertionAspect[] aspects) {
-		this.aspects = aspects;
+	public void setRoles(AssertionRole[] roles) {
+		this.roles = roles;
 	}
 	
-	public void updateAspect(AssertionAspect aspect){
-		if(aspects == null){
-			aspects = new AssertionAspect[0];
+	public void resetRoles() {
+		this.roles = new AssertionRole[0];
+	}
+	
+	public void updateRole(AssertionRole role){
+		if(roles == null){
+			roles = new AssertionRole[0];
 		}
-		//update aspect
-		AssertionAspect [] temp = new AssertionAspect[aspects.length];
-		for(int i=0;i< aspects.length;i++){
-			if(aspects[i].getSelfAgentName().equals(aspect.getSelfAgentName()) 
-					&& aspects[i].getAspectType().equals(aspect.getAspectType())
-					&& aspects[i].getKnowledgeBase() != null
-					&& aspects[i].getKnowledgeBase().equals(aspect.getKnowledgeBase())){
-				temp[i] = aspect;
+		//update role
+		AssertionRole [] temp = new AssertionRole[roles.length];
+		for(int i=0;i< roles.length;i++){
+			if(roles[i].getSelfAgentName().equals(role.getSelfAgentName()) 
+					&& roles[i].getRoleType().equals(role.getRoleType())
+					&& roles[i].getKnowledgeBase() != null
+					&& roles[i].getKnowledgeBase().equals(role.getKnowledgeBase())){
+				temp[i] = role;
+
+			}
+			else if(roles[i].getSelfAgentName().equals(role.getSelfAgentName()) 
+					&& roles[i].getRoleType().equals(role.getRoleType())
+					&& roles[i].getKnowledgeBase() == null && role.getKnowledgeBase() == null){
+				temp[i] = role;
 
 			}
 			else{
-				temp[i] = aspects[i];
+				temp[i] = roles[i];
 			}
 		}
 		
-		aspects = temp;
+		roles = temp;
 	}
 	
 
-	public void addAspect(AssertionAspect aspect){
+	public void addRole(AssertionRole role){
 		boolean exist = false;
-		if(aspects == null){
-			aspects = new AssertionAspect[0];
+		if(roles == null){
+			roles = new AssertionRole[0];
 		}
-		for(AssertionAspect a:aspects){
-			if(a.getSelfAgentName().equals(aspect.getSelfAgentName()) 
-					&& a.getAspectType().equals(aspect.getAspectType())
+		for(AssertionRole a:roles){
+			if(a.getSelfAgentName().equals(role.getSelfAgentName()) 
+					&& a.getRoleType().equals(role.getRoleType())
 					&& a.getKnowledgeBase() !=null
-					&& a.getKnowledgeBase().equals(aspect.getKnowledgeBase())){
+					&& a.getKnowledgeBase().equals(role.getKnowledgeBase())){
 				exist =true;
 				break;
 			}
 		}
 		
 		if(!exist){
-			//add aspect
-			AssertionAspect [] temp = new AssertionAspect[aspects.length +1];
-			for(int i=0;i< aspects.length;i++){
-				temp[i] = aspects[i];
+			//add role
+			AssertionRole [] temp = new AssertionRole[roles.length +1];
+			for(int i=0;i< roles.length;i++){
+				temp[i] = roles[i];
 			}
-			temp[aspects.length] = aspect;
+			temp[roles.length] = role;
 			
-			aspects = temp;
+			roles = temp;
 		}
 		else{
-			//update aspect
-			AssertionAspect [] temp = new AssertionAspect[aspects.length];
-			for(int i=0;i< aspects.length;i++){
-				if(aspects[i].getSelfAgentName().equals(aspect.getSelfAgentName()) 
-						&& aspects[i].getAspectType().equals(aspect.getAspectType())
-						&& aspects[i].getKnowledgeBase() != null
-						&& aspects[i].getKnowledgeBase().equals(aspect.getKnowledgeBase())){
-					temp[i] = aspect;
+			//update role
+			AssertionRole [] temp = new AssertionRole[roles.length];
+			for(int i=0;i< roles.length;i++){
+				if(roles[i].getSelfAgentName().equals(role.getSelfAgentName()) 
+						&& roles[i].getRoleType().equals(role.getRoleType())
+						&& roles[i].getKnowledgeBase() != null
+						&& roles[i].getKnowledgeBase().equals(role.getKnowledgeBase())){
+					temp[i] = role;
+
+				}
+				else if(roles[i].getSelfAgentName().equals(role.getSelfAgentName()) 
+						&& roles[i].getRoleType().equals(role.getRoleType())
+						&& roles[i].getKnowledgeBase() == null && role.getKnowledgeBase() == null){
+					temp[i] = role;
 
 				}
 				else{
-					temp[i] = aspects[i];
+					temp[i] = roles[i];
 				}
 			}
 			
-			aspects = temp;
+			roles = temp;
 		}
 	}
 	
 	
-	public void removeAspect(AssertionAspect aspect){
+	public void removeRole(AssertionRole role){
 		boolean exist = false;
-		if(aspects == null){
-			aspects = new AssertionAspect[0];
+		if(roles == null){
+			roles = new AssertionRole[0];
 		}
-		for(AssertionAspect a:aspects){
-			if(a.getSelfAgentName().equals(aspect.getSelfAgentName()) 
-					&& a.getAspectType().equals(aspect.getAspectType())
-					&& a.getKnowledgeBase().equals(aspect.getKnowledgeBase())){
+		for(AssertionRole a:roles){
+			if(a.getSelfAgentName().equals(role.getSelfAgentName()) 
+					&& a.getRoleType().equals(role.getRoleType())
+					&& a.getKnowledgeBase().equals(role.getKnowledgeBase())){
 				exist =true;
 				break;
 			}
 		}
 		
 		if(exist){
-			AssertionAspect temp[] = new AssertionAspect[aspects.length-1];
+			AssertionRole temp[] = new AssertionRole[roles.length-1];
 			int j=0;
-			for(int i=0;i< aspects.length;i++){
-				AssertionAspect a = aspects[i];
-				if(a.getSelfAgentName().equals(aspect.getSelfAgentName()) 
-						&& a.getAspectType().equals(aspect.getAspectType())
-						&& a.getKnowledgeBase().equals(aspect.getKnowledgeBase())){
+			for(int i=0;i< roles.length;i++){
+				AssertionRole a = roles[i];
+				if(a.getSelfAgentName().equals(role.getSelfAgentName()) 
+						&& a.getRoleType().equals(role.getRoleType())
+						&& a.getKnowledgeBase().equals(role.getKnowledgeBase())){
 					//do nothing
 				}
 				else{
@@ -637,19 +654,19 @@ public class Agent implements Serializable{
 					j = j+1;
 				}
 			}
-			aspects = temp;
+			roles = temp;
 		}
 	}
 	
-	public boolean aspectExist(AssertionAspect aspect){
+	public boolean roleExist(AssertionRole role){
 		boolean exist = false;
-		if(aspects == null){
-			aspects = new AssertionAspect[0];
+		if(roles == null){
+			roles = new AssertionRole[0];
 		}
-		for(AssertionAspect a:aspects){
-			if(a.getSelfAgentName().equals(aspect.getSelfAgentName()) 
-					&& a.getAspectType().equals(aspect.getAspectType())
-					&& a.getKnowledgeBase().equals(aspect.getKnowledgeBase())){
+		for(AssertionRole a:roles){
+			if(a.getSelfAgentName().equals(role.getSelfAgentName()) 
+					&& a.getRoleType().equals(role.getRoleType())
+					&& a.getKnowledgeBase().equals(role.getKnowledgeBase())){
 				exist =true;
 				break;
 			}
@@ -658,34 +675,34 @@ public class Agent implements Serializable{
 		return exist;
 	}
 	
-	public void emptyAspects(){
-		aspects = new AssertionAspect[0];
+	public void emptyRoles(){
+		roles = new AssertionRole[0];
 	}
 	
-	public AssertionAspect getAspect(String selfAgentName, String aspectType, KnowledgeBase knowledgeBase){
-		AssertionAspect aspect = null;
-		if(aspects == null){
-			aspects = new AssertionAspect[0];
+	public AssertionRole getRole(String selfAgentName, String roleType, KnowledgeBase knowledgeBase){
+		AssertionRole role = null;
+		if(roles == null){
+			roles = new AssertionRole[0];
 		}
-		for(AssertionAspect a:aspects){
+		for(AssertionRole a:roles){
 			if(a.getSelfAgentName().equals(selfAgentName) 
-					&& a.getAspectType().equals(aspectType)
+					&& a.getRoleType().equals(roleType)
 					&& a.getKnowledgeBase().equals(knowledgeBase)){
-				aspect = a;
+				role = a;
 				break;
 			}
 		}
-		return aspect;
+		return role;
 	}
 	
-	public boolean aspectExist(String selfAgentName, String aspectType, KnowledgeBase knowledgeBase){
+	public boolean roleExist(String selfAgentName, String roleType, KnowledgeBase knowledgeBase){
 		boolean exist = false;
-		if(aspects == null){
-			aspects = new AssertionAspect[0];
+		if(roles == null){
+			roles = new AssertionRole[0];
 		}
-		for(AssertionAspect a:aspects){
+		for(AssertionRole a:roles){
 			if(a.getSelfAgentName().equals(selfAgentName) 
-					&& a.getAspectType().equals(aspectType)
+					&& a.getRoleType().equals(roleType)
 					&& a.getKnowledgeBase() !=null
 					&& a.getKnowledgeBase().equals(knowledgeBase)){
 				exist =true;
@@ -696,13 +713,13 @@ public class Agent implements Serializable{
 		return exist;
 	}
 	
-	public double getAspectVGoal(String selfAgentName, String aspectType, KnowledgeBase knowledgeBase){
-		if(aspects == null){
-			aspects = new AssertionAspect[0];
+	public double getRoleVGoal(String selfAgentName, String roleType, KnowledgeBase knowledgeBase){
+		if(roles == null){
+			roles = new AssertionRole[0];
 		}
-		for(AssertionAspect a:aspects){
+		for(AssertionRole a:roles){
 			if(a.getSelfAgentName().equals(selfAgentName) 
-					&& a.getAspectType().equals(aspectType)
+					&& a.getRoleType().equals(roleType)
 					&& a.getKnowledgeBase() !=null
 					&& a.getKnowledgeBase().equals(knowledgeBase)){
 				

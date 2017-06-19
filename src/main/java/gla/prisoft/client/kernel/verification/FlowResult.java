@@ -12,8 +12,8 @@ public class FlowResult {
 	public double ratio_viableProtocols;
 	public double ratio_MaximumProtocols;
 	
-	public String aspectTypeRaw;
-	public String aspectTypeHtml;
+	public String roleTypeRaw;
+	public String roleTypeHtml;
 	
 	public double desiredEntropy;
 	

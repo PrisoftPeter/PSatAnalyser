@@ -168,7 +168,7 @@ public class ClientKNetworkGraph {
             		PSatAPI.instance.subjectName = PSatAPI.instance.sourceAgentName;
             		return Color.green;
             	}
-            	else if(node.id.equals(PSatAPI.instance.targetAgentName) && !PSatAPI.instance.is_aspect_run){
+            	else if(node.id.equals(PSatAPI.instance.targetAgentName) && !PSatAPI.instance.is_role_run){
 //            		return Color.ORANGE;            		
             		return Color.GRAY;
             	}
@@ -215,7 +215,7 @@ public class ClientKNetworkGraph {
                     		String name = ename.toString();
                         	if(node.toString().equals(name)){
 //                        		return new Color(30, 77, 43);
-                        		if(PSatAPI.instance.is_aspect_run){
+                        		if(PSatAPI.instance.is_role_run){
                         			return Color.GRAY; 
                         		}
                         		

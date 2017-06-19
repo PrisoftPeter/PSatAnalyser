@@ -26,7 +26,7 @@ public class ServerConfigInstance implements Serializable{
 	public Agent [] agents;
 	public ServerKNetworkGraph kgraph;
 	
-	public String assertionAspectsStorePath;
+	public String assertionRolesStorePath;
 	
 	public double expectedSelfUncertaintyLevel_su;
 	public double expectedSelfUncertaintyLevel_s;

@@ -23,7 +23,7 @@ import gla.prisoft.client.Display;
 import gla.prisoft.client.PSatClient;
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.Agent;
-import gla.prisoft.shared.AssertionAspect;
+import gla.prisoft.shared.AssertionRole;
 import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.KnowledgeBase;
 import gla.prisoft.shared.KnowledgeLevel;
@@ -49,6 +49,10 @@ public class AssertionsView extends Container {
 
 	private JLabel controlDescLabel;
 	private JLabel kblabel;
+	
+	private JRadioButton kb_rb1;
+	private JRadioButton kb_rb2;
+	private JRadioButton kb_rb3;
 
 	private DecimalFormat df = new DecimalFormat("####0.00");
 
@@ -64,8 +68,8 @@ public class AssertionsView extends Container {
 		setBackground(Color.white);
 		agent = PSatClient.netGetAgent(agentName);
 
-		if(PSatAPI.instance.is_aspect_run){
-//			//set range of aspect
+		if(PSatAPI.instance.is_role_run){
+//			//set range of role
 //			Integer [] k = new Integer[Display.instance.max_analysis_path_length];
 //			for(int i=0;i<Display.instance.max_analysis_path_length;i++){
 //				k[i] = i;
@@ -75,9 +79,9 @@ public class AssertionsView extends Container {
 //			final JComboBox<Integer> comboBox = new JComboBox<Integer>(k);
 //			comboBox.setBackground(Color.white);
 //
-//			Object[] message = {"set range of aspect",comboBox};
+//			Object[] message = {"set range of role",comboBox};
 //			Object[] options = {"proceed"};
-//			int n= JOptionPane.showOptionDialog(Display.iframeNet,message,"AssertionAspect:"+agentName, JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+//			int n= JOptionPane.showOptionDialog(Display.iframeNet,message,"AssertionRole:"+agentName, JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 //
 //			if (n == JOptionPane.YES_OPTION){
 //				if(Display.instance.is_generating_memory_store){
@@ -137,11 +141,12 @@ public class AssertionsView extends Container {
 		JLabel labelmode = new JLabel("KnowledgeBase: subject-su, sender-s, recipient-r");
 		labelmode.setForeground(new Color(54,133,47));
 		labelmode.setBackground(Color.white);
-		if(!PSatAPI.instance.is_aspect_run && PSatAPI.instance.isModePick){
+		if(!PSatAPI.instance.is_role_run && PSatAPI.instance.isModePick){
 			labelmode.setEnabled(false);
 		}
 
-		final JRadioButton kb_rb1 = new JRadioButton("[su]");
+//		final JRadioButton kb_rb1 = new JRadioButton("[su]");
+		kb_rb1 = new JRadioButton("[su]");
 		kb_rb1.setBackground(Color.white);
 		kb_rb1.addActionListener(new ActionListener() {
 
@@ -151,7 +156,7 @@ public class AssertionsView extends Container {
 				
 				KnowledgeLevel kl = agent.getKnowledgeLevel(agentName,PSatAPI.instance.knowledgeBase);
 
-				if(PSatAPI.instance.is_aspect_run && PSatAPI.instance.isModePick){
+				if(PSatAPI.instance.is_role_run && PSatAPI.instance.isModePick){
 					model.setRowCount(0);
 
 					Display.afactory.displayAssertions(Display.ksView);
@@ -178,7 +183,8 @@ public class AssertionsView extends Container {
 			}
 		});
 
-		final JRadioButton kb_rb2 = new JRadioButton("[s]");
+//		final JRadioButton kb_rb2 = new JRadioButton("[s]");
+		kb_rb2 = new JRadioButton("[s]");
 		kb_rb2.setBackground(Color.white);
 
 		kb_rb2.addActionListener(new ActionListener() {
@@ -189,7 +195,7 @@ public class AssertionsView extends Container {
 
 				KnowledgeLevel kl = agent.getKnowledgeLevel(agentName,PSatAPI.instance.knowledgeBase);
 
-				if(PSatAPI.instance.is_aspect_run && PSatAPI.instance.isModePick){
+				if(PSatAPI.instance.is_role_run && PSatAPI.instance.isModePick){
 					model.setRowCount(0);
 					Display.afactory.displayAssertions(Display.ksView);
 				}
@@ -214,7 +220,8 @@ public class AssertionsView extends Container {
 			}
 		});
 
-		final JRadioButton kb_rb3 = new JRadioButton("[r]");
+//		final JRadioButton kb_rb3 = new JRadioButton("[r]");
+		kb_rb3 = new JRadioButton("[r]");
 		kb_rb3.setBackground(Color.white);
 
 		kb_rb3.addActionListener(new ActionListener() {
@@ -226,7 +233,7 @@ public class AssertionsView extends Container {
 				PSatClient.netSerialiseConfigInstance();
 
 				KnowledgeLevel kl = agent.getKnowledgeLevel(agentName,PSatAPI.instance.knowledgeBase);
-				if(PSatAPI.instance.is_aspect_run && PSatAPI.instance.isModePick){
+				if(PSatAPI.instance.is_role_run && PSatAPI.instance.isModePick){
 					model.setRowCount(0);
 					Display.afactory.displayAssertions(Display.ksView);
 				}
@@ -280,7 +287,7 @@ public class AssertionsView extends Container {
 		kb_g_rb.add(kb_rb2);
 		kb_g_rb.add(kb_rb3);
 
-		if((PSatAPI.instance.isModePick && !PSatAPI.instance.is_aspect_run)||PSatAPI.instance.isModeEntropy){
+		if((PSatAPI.instance.isModePick && !PSatAPI.instance.is_role_run)||PSatAPI.instance.isModeEntropy){
 			kb_rb1.setSelected(false);
 			kb_rb2.setSelected(false);
 			kb_rb3.setSelected(false);
@@ -321,14 +328,14 @@ public class AssertionsView extends Container {
 		lpanel.add(kbmpanel); //lpanel 1
 
 		String aori = "";
-		if(PSatAPI.instance.is_aspect_run){
-			aori = "AspectRange="+(PSatAPI.instance.k-1);
+		if(PSatAPI.instance.is_role_run){
+			aori = "RoleRange="+(PSatAPI.instance.k-1);
 		}
 		else{
 			aori = "source="+PSatAPI.instance.sourceAgentName+" target="+PSatAPI.instance.targetAgentName;
 		}
 
-		if(PSatAPI.instance.is_aspect_run){
+		if(PSatAPI.instance.is_role_run){
 			if(kl !=null){
 				double uncertaintyLevel = kl.getUncertaintyLevel();
 				// double beliefLevel = kl.getBeliefLevel();
@@ -716,9 +723,9 @@ public class AssertionsView extends Container {
 
 						String aori = "";
 
-						if(PSatAPI.instance.is_aspect_run){
+						if(PSatAPI.instance.is_role_run){
 
-							aori = "AspectRange="+(PSatAPI.instance.k-1);
+							aori = "RoleRange="+(PSatAPI.instance.k-1);
 
 						}
 
@@ -728,7 +735,7 @@ public class AssertionsView extends Container {
 						}
 
 						String eldescription = "if[";
-						if(PSatAPI.instance.is_aspect_run){
+						if(PSatAPI.instance.is_role_run){
 							eldescription = eldescription+ PSatAPI.instance.subjectName+";"+ PSatAPI.instance.sourceAgentName+";"+PSatAPI.instance.k+"]";
 						}
 						else{
@@ -760,8 +767,8 @@ public class AssertionsView extends Container {
 			lpanel.setBackground(Color.white);
 		}
 //		else if(PSatAPI.instance.isModeCommonKnowledge){
-//			if(PSatAPI.instance.is_aspect_run){
-//				// aspects knowledge constructs
+//			if(PSatAPI.instance.is_role_run){
+//				// roles knowledge constructs
 //			}
 //			else{
 //				//instances knowledge constructs
@@ -812,6 +819,16 @@ public class AssertionsView extends Container {
 
 
 	private void updateUncertaintyBeliefLevels(){
+		if(kb_rb1.isSelected()){
+			PSatAPI.instance.knowledgeBase = KnowledgeBase.SUBJECT;
+		}
+		else if(kb_rb2.isSelected()){
+			PSatAPI.instance.knowledgeBase = KnowledgeBase.SENDER;
+		}
+		else if(kb_rb3.isSelected()){
+			PSatAPI.instance.knowledgeBase = KnowledgeBase.RECIPIENT;
+		}
+		
 //		PSatClient.netDeseraliseConfigInstance();
 		int uncertaintyLevel_temp = slider_uncertainty.getValue();
 		// int beliefLevel_temp = slider_certainty.getValue();
@@ -879,15 +896,15 @@ public class AssertionsView extends Container {
 		
 		String aori = "";
 		
-		if(PSatAPI.instance.is_aspect_run){
-			aori = "AspectRange="+(PSatAPI.instance.k-1);
+		if(PSatAPI.instance.is_role_run){
+			aori = "RoleRange="+(PSatAPI.instance.k-1);
 		}
 		else{
 			aori = "source="+PSatAPI.instance.sourceAgentName+" target="+PSatAPI.instance.targetAgentName;
 		}
 				
 
-		if(PSatAPI.instance.is_aspect_run){
+		if(PSatAPI.instance.is_role_run){
 			if(PSatAPI.instance.isModeUncertainty){
 				// controlDescLabel.setText("<html><font size='2'>"+agentName+"'s requirements configuration: uncertainty="+uly+", belief="+bly+", "+aori+"</font></html>");
 				controlDescLabel.setText("<html><font size='2'>"+agentName+"'s requirements configuration: uncertainty="+uly+", "+aori+", global privacy goal (v<sub>pr</sub>)="+agent.getGlobalPrivacyGoal_v()+"</font></html>");
@@ -904,7 +921,7 @@ public class AssertionsView extends Container {
 		}
 
 		String kldescription = "if[";
-		if(PSatAPI.instance.is_aspect_run){
+		if(PSatAPI.instance.is_role_run){
 			kldescription = kldescription+ PSatAPI.instance.subjectName+";"+ PSatAPI.instance.sourceAgentName+";"+PSatAPI.instance.k+"]";
 		}
 		else{
@@ -951,7 +968,7 @@ public class AssertionsView extends Container {
 			Class clazz = String.class;
 			switch (columnIndex) {
 			case 0:
-				if(PSatAPI.instance.is_aspect_run){
+				if(PSatAPI.instance.is_role_run){
 					clazz = String.class;
 
 				}
@@ -994,14 +1011,24 @@ public class AssertionsView extends Container {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public void setValueAt(Object aValue, int row, int column) {
+			if(kb_rb1.isSelected()){
+				PSatAPI.instance.knowledgeBase = KnowledgeBase.SUBJECT;
+			}
+			else if(kb_rb2.isSelected()){
+				PSatAPI.instance.knowledgeBase = KnowledgeBase.SENDER;
+			}
+			else if(kb_rb3.isSelected()){
+				PSatAPI.instance.knowledgeBase = KnowledgeBase.RECIPIENT;
+			}
+			
 			if(aValue instanceof Double && column ==3){
 				double v = (double)aValue;
 				if(v >=0 && v <=1){
 					Vector rowData = (Vector)getDataVector().get(row);					
 					String assertionDesc = (String)rowData.get(2);
 					double goal_v =  v;
-					if(PSatAPI.instance.is_aspect_run){
-						String aspectTypeHtml = (String)rowData.get(0);
+					if(PSatAPI.instance.is_role_run){
+						String roleTypeHtml = (String)rowData.get(0);
 						String [] zoneAgents = null;
 						String[] panes = PSatClient.netGetPathAgentNames();
 						
@@ -1011,8 +1038,8 @@ public class AssertionsView extends Container {
 							zoneAgents[i] = an;
 							i = i+1;        
 						}
-						AssertionAspect aspect = new AssertionAspect(agentName, aspectTypeHtml, zoneAgents,PSatAPI.instance.knowledgeBase,goal_v, PSatAPI.instance.collectiveStrategy);
-						agent.updateAspect(aspect);
+						AssertionRole role = new AssertionRole(agentName, roleTypeHtml, zoneAgents,PSatAPI.instance.knowledgeBase,goal_v, PSatAPI.instance.collectiveStrategy);
+						agent.updateRole(role);
 						
 					}
 					else{
@@ -1036,10 +1063,21 @@ public class AssertionsView extends Container {
 				Vector rowData = (Vector)getDataVector().get(row);
 				double goal_v =  (Double)rowData.get(3);
 				
-				if(!PSatAPI.instance.is_aspect_run){
+				if(!PSatAPI.instance.is_role_run){
 					String assertionDesc = (String)rowData.get(2);
 					
+					if(assertionDesc.contains("(")){
+						String [] h3 = assertionDesc.split("\\(");
+						String [] h2 = h3[1].split("\\)");
+						String h1 = h2[0];
+						assertionDesc = "<html>"+h1+"</html>";
+						
+					}
+					
 					if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE && assertionDesc.equals("<html><i>f</i></html>")){
+						return;
+					}
+					if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE && assertionDesc.equals("<html><i>C</i><sub>G</sub>(<i>f</i>|¬<i>f</i>)</html>")){
 						return;
 					}
 						
@@ -1051,7 +1089,7 @@ public class AssertionsView extends Container {
 					}
 				}
 				else{        
-					String aspectTypeHtml = (String)rowData.get(0);
+					String roleTypeHtml = (String)rowData.get(0);
 					String [] zoneAgents = null;
 					String[] panes = PSatClient.netGetPathAgentNames();
 					
@@ -1064,13 +1102,13 @@ public class AssertionsView extends Container {
 						i = i+1;        
 					}
 
-					AssertionAspect aspect = new AssertionAspect(agentName, aspectTypeHtml, zoneAgents,PSatAPI.instance.knowledgeBase,goal_v, PSatAPI.instance.collectiveStrategy);
+					AssertionRole role = new AssertionRole(agentName, roleTypeHtml, zoneAgents,PSatAPI.instance.knowledgeBase,goal_v, PSatAPI.instance.collectiveStrategy);
 
 					if(b){
-						agent.addAspect(aspect);
+						agent.addRole(role);
 					}
 					else{
-						agent.removeAspect(aspect);
+						agent.removeRole(role);
 					}
 				}
 				//         updateKConfigLabel();

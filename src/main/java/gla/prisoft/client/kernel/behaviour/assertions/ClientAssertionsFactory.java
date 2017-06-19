@@ -40,8 +40,8 @@ public class ClientAssertionsFactory implements Serializable{
 		if(PSatAPI.instance.isModePick){
 			this.av = av;
 			
-			if(PSatAPI.instance.is_aspect_run){
-				String partialPath = agentName+"_"+PSatAPI.instance.sourceAgentName+"_Aspect";
+			if(PSatAPI.instance.is_role_run){
+				String partialPath = agentName+"_"+PSatAPI.instance.sourceAgentName+"_Role";
 				if(partialPath != null){
 					displayAssertionsStore(agentName,partialPath,av);						
 				}
@@ -82,9 +82,9 @@ public class ClientAssertionsFactory implements Serializable{
 //		PSatClient.netDeseraliseConfigInstance();
 		Properties [] ppties = PSatClient.netDisplayAssertionsStore(agentName, partialPath);
 		
-		if(PSatAPI.instance.is_aspect_run){
+		if(PSatAPI.instance.is_role_run){
 			for(Properties ppty: ppties){
-				String aspectType = ppty.getProperty("aspectType");
+				String roleType = ppty.getProperty("roleType");
 				boolean checked = false;
 				if(ppty.getProperty("checked").equals("true")){
 					checked =true;
@@ -99,12 +99,23 @@ public class ClientAssertionsFactory implements Serializable{
 				if(cs != CollectiveStrategy.NONE){
 					meaning = collectiveStrDesc+" "+meaning;
 					meaning = meaning.replace("<html>", "");
-					meaning = "<html>"+meaning;
+					meaning = meaning.replace("</html>", "");
+					if(checked){
+						meaning = "<html><font color='red'>"+meaning+"</font></html>";
+					}
+					else{
+						meaning = "<html>"+meaning+"</html>";
+					}
 					
 					genericFormula = cs_limithtmldesc+"("+genericFormula+")";
 					genericFormula =genericFormula.replace("<html>", "");
 					genericFormula =genericFormula.replace("</html>", "");
-					genericFormula = "<html>"+genericFormula+"</html>";
+					if(checked){
+						genericFormula = "<html><font color='red'>"+genericFormula+"</font></html>";
+					}
+					else{
+						genericFormula = "<html>"+genericFormula+"</html>";
+					}
 					
 				}
 				if(cs == CollectiveStrategy.NONE){
@@ -113,7 +124,7 @@ public class ClientAssertionsFactory implements Serializable{
 					}
 				}
 				
-				av.model.addRow(new Object[]{aspectType,checked,genericFormula,goal_v,meaning});
+				av.model.addRow(new Object[]{roleType,checked,genericFormula,goal_v,meaning});
 				av.model.fireTableDataChanged();
 				Rectangle cellBounds = av.table.getCellRect(av.table.getRowCount() - 1, 0, true);
 				av.table.scrollRectToVisible(cellBounds);
@@ -136,11 +147,23 @@ public class ClientAssertionsFactory implements Serializable{
 				if(cs != CollectiveStrategy.NONE){
 					meaning = collectiveStrDesc+" "+meaning;
 					meaning = meaning.replace("<html>", "");
-					meaning = "<html>"+meaning;
+					meaning = meaning.replace("</html>", "");
+					if(checked){
+						meaning = "<html><font color='red'>"+meaning+"</font></html>";
+					}
+					else{
+						meaning = "<html>"+meaning+"</html>";
+					}
+					
 					w = cs_limithtmldesc+"("+w+")";
 					w =w.replace("<html>", "");
 					w =w.replace("</html>", "");
-					w = "<html>"+w+"</html>";
+					if(checked){
+						w = "<html><font color='red'>"+w+"</font></html>";
+					}
+					else{
+						w = "<html>"+w+"</html>";
+					}
 
 				}
 				if(cs == CollectiveStrategy.NONE){

@@ -741,8 +741,8 @@ public class ViabilitySpectrum implements Serializable{
 	public static void serializeSpectrum(ViabilitySpectrum spectrum, ConfigInstance instance){
 		
 		String ref = "";
-		if(instance.is_aspect_run){
-			ref = "aspect";
+		if(instance.is_role_run){
+			ref = "role";
 		}
 		else{
 			ref = "instance";
@@ -807,8 +807,8 @@ public class ViabilitySpectrum implements Serializable{
 	public static ViabilitySpectrum deserializeSpectrum(String pathId, ConfigInstance instance){
 		ViabilitySpectrum spectrum= null;
 		String ref = "";
-		if(instance.is_aspect_run){
-			ref = "aspect";
+		if(instance.is_role_run){
+			ref = "role";
 		}
 		else{
 			ref = "instance";

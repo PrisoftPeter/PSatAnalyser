@@ -2,18 +2,18 @@ package gla.prisoft.shared;
 
 import java.io.Serializable;
 
-public class AssertionAspect implements Serializable{
+public class AssertionRole implements Serializable{
 	private static final long serialVersionUID = 172147074299623098L;
 	private String selfAgentName;
-	private String aspectType;
+	private String roleType;
 	private String[] zoneAgents;
 	private KnowledgeBase knowledgeBase; //used for uncertainty/belief level reasoning
-	private double goalv; //desired level of aspect satisfaction
+	private double goalv; //desired level of role satisfaction
 	private CollectiveStrategy cs;
 	
-	public AssertionAspect(String selfAgentName, String aspectType, String[] zoneAgents, KnowledgeBase knowledgeBase, double goalv, CollectiveStrategy cs){
+	public AssertionRole(String selfAgentName, String roleType, String[] zoneAgents, KnowledgeBase knowledgeBase, double goalv, CollectiveStrategy cs){
 		this.selfAgentName = selfAgentName;
-		this.aspectType = aspectType;
+		this.roleType = roleType;
 		this.zoneAgents = zoneAgents;
 		this.knowledgeBase = knowledgeBase;
 		this.setCollectiveStrategy(cs);
@@ -24,8 +24,8 @@ public class AssertionAspect implements Serializable{
 		return selfAgentName;
 	}
 	
-	public String getAspectType(){
-		return aspectType;
+	public String getRoleType(){
+		return roleType;
 	}
 	
 	public String[] getZoneAgents(){

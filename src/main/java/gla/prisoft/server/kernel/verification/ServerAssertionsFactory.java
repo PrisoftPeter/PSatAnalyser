@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 
+import gla.prisoft.client.PSatClient;
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.knowledge.ServerMemoryFactory;
 import gla.prisoft.server.kernel.knowledge.worlds.*;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
-import gla.prisoft.shared.AssertionAspect;
+import gla.prisoft.shared.AssertionRole;
 import gla.prisoft.shared.AssertionInstance;
 import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.CollectiveMode;
@@ -49,10 +50,10 @@ public class ServerAssertionsFactory implements Serializable{
 //		agent = ServerAgentFactory.getAgent(agentName, sessionid);
 //	}
 	
-	public static World[] retrieveAspectPicks(String agentName, ServerConfigInstance sinstance,ConfigInstance instance){
+	public static World[] retrieveRolePicks(String agentName, ServerConfigInstance sinstance,ConfigInstance instance){
 		
-		World []aspectpicks = new World[0];
-		String folderName2 = sinstance.assertionAspectsStorePath;
+		World []rolepicks = new World[0];
+		String folderName2 = sinstance.assertionRolesStorePath;
 		
 		try {
 			File folder2 = new File(folderName2);
@@ -74,7 +75,7 @@ public class ServerAssertionsFactory implements Serializable{
 					ObjectInputStream in = new ObjectInputStream(fileIn);
 					World w = (World) in.readObject();
 					
-					if(instance.is_aspect_run){
+					if(instance.is_role_run){
 						if(w instanceof K0a){
 							w = new K0a(h);
 						}
@@ -166,12 +167,12 @@ public class ServerAssertionsFactory implements Serializable{
 							w = new K42b(self, agent1, agent2, h);	
 						}	
 						
-						World [] temp = new World[aspectpicks.length+1];
-						for(int i=0;i <aspectpicks.length;i++){
-							temp[i] = aspectpicks[i];
+						World [] temp = new World[rolepicks.length+1];
+						for(int i=0;i <rolepicks.length;i++){
+							temp[i] = rolepicks[i];
 						}
-						temp[aspectpicks.length] = w;
-						aspectpicks = temp;						
+						temp[rolepicks.length] = w;
+						rolepicks = temp;						
 					}
 					in.close();
 					fileIn.close();
@@ -179,12 +180,12 @@ public class ServerAssertionsFactory implements Serializable{
 			}			
 		} 
 		catch (IOException i) {
-			System.err.println("IO exception @readAspectPicks");
+			System.err.println("IO exception @readRolePicks");
 		} 
 		catch (ClassNotFoundException c) {
 			System.err.println("World class not found");
 		}
-		return aspectpicks;
+		return rolepicks;
 	}
 	
 	public Properties[] displayAssertionsStore(String agentName, String partialPath, ServerConfigInstance sinstance,ConfigInstance instance){
@@ -195,7 +196,7 @@ public class ServerAssertionsFactory implements Serializable{
 		sinstance.a_counter = 1;
 		
 		String folderName2 = "";
-		if(!instance.is_aspect_run){
+		if(!instance.is_role_run){
 			Agent a = ServerAgentFactory.getAgent(agentName, sinstance);
 			if(!a.containedInMemoryStores(instance.sourceAgentName)){
 				ServerMemoryFactory.newMemoryStore(a.getAgentName(), sinstance, instance);
@@ -203,7 +204,7 @@ public class ServerAssertionsFactory implements Serializable{
 			folderName2 = PSatAPI.datastore_file_path+"/"+sinstance.sessionid+"/assertions/"+agentName+"/"+partialPath;
 		}
 		else{
-			folderName2 = sinstance.assertionAspectsStorePath;
+			folderName2 = sinstance.assertionRolesStorePath;
 		}
 		try {
 			File folder2 = new File(folderName2);
@@ -211,7 +212,7 @@ public class ServerAssertionsFactory implements Serializable{
 				Agent self = ServerAgentFactory.getAgent(agentName, sinstance);
 				Agent agent1 = new Agent("a1");
 				Agent agent2 = new Agent("a2");
-				String aspectType ="";
+				String roleType ="";
 						
 				Attribute h = new Attribute();
 				h.setSubjectName(instance.sourceAgentName);
@@ -229,127 +230,127 @@ public class ServerAssertionsFactory implements Serializable{
 					ObjectInputStream in = new ObjectInputStream(fileIn);
 					World w = (World) in.readObject();
 					
-					if(instance.is_aspect_run){
+					if(instance.is_role_run){
 
 						if(w instanceof K0a){
 							w = new K0a(h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K0b){
 							w = new K0b(h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K0){
 							w = new K0(h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K1){
 							w = new K1(self, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K1a){
 							w = new K1a(self, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K1b){
 							w = new K1b(self, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K21){
 							w = new K21(self, agent1, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K21a){
 							w = new K21a(self, agent1, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K21b){
 							w = new K21b(self, agent1, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K22){
 							w = new K22(self, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K22a){
 							w = new K22a(self, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K22b){
 							w = new K22b(self, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}	
 						else if(w instanceof K23){
 							w = new K23(self, agent1, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K23a){
 							w = new K23a(self, agent1, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K23b){
 							w = new K23b(self, agent1, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K24){
 							w = new K24(self, agent2, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K24a){
 							w = new K24a(self, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K24b){
 							w = new K24b(self, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K31){
 							w = new K31(self, agent1, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K31a){
 							w  = new K31a(self, agent1, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K31b){
 							w = new K31b(self, agent1, h);		
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K32){
 							w = new K32(self, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K32a){
 							w  = new K32a(self, agent2, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K32b){
 							w = new K32b(self, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K41){
 							w = new K41(self, agent1, agent2, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K41b){
 							w =new K41b(self, agent1, agent2, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K41a){
 							w = new K41a(self, agent1, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K42){
 							w = new K42(self, agent1, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K42a){
 							w = new K42a(self, agent1, agent2, h);
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}
 						else if(w instanceof K42b){
 							w = new K42b(self, agent1, agent2, h);	
-							aspectType = w.htmlType;
+							roleType = w.htmlType;
 						}	
 						
 					}
@@ -357,7 +358,7 @@ public class ServerAssertionsFactory implements Serializable{
 					boolean checked = false;
 					double goal_v = -1;
 					CollectiveStrategy cs = instance.collectiveStrategy;
-					if(!instance.is_aspect_run){
+					if(!instance.is_role_run){
 						for(AssertionInstance assertion: sinstance.agent.getAssertionInstances()){
 							if(assertion !=null && w.toHtmlString().equals(assertion.getAssertion())){
 								checked = true;
@@ -367,8 +368,8 @@ public class ServerAssertionsFactory implements Serializable{
 						}
 					}
 					else{
-						String atype = "<html>"+aspectType+"</html>";
-						if(self.aspectExist(agentName, atype, instance.knowledgeBase)){
+						String atype = "<html>"+roleType+"</html>";
+						if(self.roleExist(agentName, atype, instance.knowledgeBase)){
 							String [] zoneAgents = null;
 							zoneAgents = new String[sinstance.pathAgentNames.size()];
 							int i=0;
@@ -376,16 +377,16 @@ public class ServerAssertionsFactory implements Serializable{
 								zoneAgents[i] = an;
 								i = i+1;		        			
 							}   
-							goal_v = self.getAspectVGoal(agentName, atype, instance.knowledgeBase);
-			        		AssertionAspect anew = new AssertionAspect(agentName, atype, zoneAgents,instance.knowledgeBase, goal_v, instance.collectiveStrategy);
+							goal_v = self.getRoleVGoal(agentName, atype, instance.knowledgeBase);
+			        		AssertionRole anew = new AssertionRole(agentName, atype, zoneAgents,instance.knowledgeBase, goal_v, instance.collectiveStrategy);
 
-			        		self.addAspect(anew);
+			        		self.addRole(anew);
 			        		ServerAgentFactory.writeAgent(self, sinstance);
 			        		
 							checked = true;
 						}						
 					}
-					if(instance.is_aspect_run){
+					if(instance.is_role_run){
 						String meaning = "";
 						String genericFormula = "";
 						if(instance.knowledgeBase == null){
@@ -420,7 +421,7 @@ public class ServerAssertionsFactory implements Serializable{
 							goal_v = self.getGlobalPrivacyGoal_v();
 						}
 						
-						rowproperties.setProperty("aspectType", "<html>"+aspectType+"</html>");
+						rowproperties.setProperty("roleType", "<html>"+roleType+"</html>");
 						rowproperties.setProperty("checked", ""+checked);
 						rowproperties.setProperty("genericFormula", genericFormula);
 						rowproperties.setProperty("goalv", ""+goal_v);
@@ -479,7 +480,7 @@ public class ServerAssertionsFactory implements Serializable{
 		if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE){
 			ArrayList<Properties> pptiesarray = new ArrayList<Properties>();
 			for(Properties ppty: properties){
-				if(instance.is_aspect_run){
+				if(instance.is_role_run){
 					if(!ppty.get("genericFormula").equals(new K0a(new Attribute()).toHtmlString())){
 						if(!ppty.get("genericFormula").equals(new K0(new Attribute()).toHtmlString())){
 							pptiesarray.add(ppty);
@@ -503,13 +504,13 @@ public class ServerAssertionsFactory implements Serializable{
 			ArrayList<Properties> otherpptiesarray = new ArrayList<Properties>();
 
 			for(Properties ppty: properties){
-				if(instance.is_aspect_run){
+				if(instance.is_role_run){
 					
-					if(ppty.get("genericFormula").equals(new K0a(new Attribute()).toHtmlString())){
+					if(ppty.get("roleType").equals("<html><i>k</i><sub>0a</sub></html>")){//K0a
 						ppty.setProperty("a_counter", "");
 						k0pptiesarray.add(ppty);						
 					}
-					else if(ppty.get("genericFormula").equals(new K0(new Attribute()).toHtmlString())){
+					else if(ppty.get("roleType").equals("<html><b>K</b><sub>0</sub></html>")){ //K0
 						ppty.setProperty("a_counter", "");
 						k0pptiesarray.add(ppty);
 					}
@@ -554,7 +555,59 @@ public class ServerAssertionsFactory implements Serializable{
 		
 	}
 	
+	public static void clearAllAgentAssertions(){
+		if(PSatAPI.instance.selectedAgentPaths != null){
+			for(String path: PSatAPI.instance.selectedAgentPaths){
+				String pathAgents1[] =path.split(": ");
+				//String pathId = pathAgents1[0];
+				String pathAgents2 = pathAgents1[1];
+				String[] pathAgents =pathAgents2.split(" ");
+				
+				for(String agentName:pathAgents){
+					Agent a = PSatClient.netGetAgent(agentName);
+					a.resetAssertionInstances();
+					a.resetRoles();
+					PSatClient.netWriteAgent(a);
+					
+				}
+			}
+		}		
+	}
+	
+	public static int getTotalNoOfAssertionsForAllAgents(){
+		int count = 0;
+		for(String path: PSatAPI.instance.selectedAgentPaths){
+			String pathAgents1[] =path.split(": ");
+			//String pathId = pathAgents1[0];
+			String pathAgents2 = pathAgents1[1];
+			String[] pathAgents =pathAgents2.split(" ");
+			
+			for(String agentName:pathAgents){
+				Agent a = PSatClient.netGetAgent(agentName);
+				if(PSatAPI.instance.is_role_run){
+					if(a.getRoles() != null){
+						count = count + a.getRoles().length;
+					}
+				}
+				else{
+					if(a.getAssertionInstances() != null){
+						count = count + a.getAssertionInstances().length;
+					}
+				}				
+			}
+		}
+		return count;
+	}
 	public static World getAssertionInstanceWorld(String httpstring, String selfAgentName, String partialPath, String sessionid){
+		if(httpstring.contains("(")){
+			String [] h3 = httpstring.split("\\(");
+			String [] h2 = h3[1].split("\\)");
+			String h1 = h2[0];
+			httpstring = "<html>"+h1+"</html>";
+			
+		}
+		
+		
 		String folderName2 = PSatAPI.datastore_file_path+"/"+sessionid+"/assertions/"+selfAgentName+"/"+partialPath;
 		World assertion = null;
 		try {
@@ -582,9 +635,9 @@ public class ServerAssertionsFactory implements Serializable{
 		return assertion;
 	}
 	
-	public static World getAssertionAspect(String selfAgentName, String httpstring, 
+	public static World getAssertionRole(String selfAgentName, String httpstring, 
 										  ServerConfigInstance sinstance,ConfigInstance instance){
-		String folderName2 = PSatAPI.datastore_file_path+"/"+sinstance.sessionid+"/assertionAspects/"+selfAgentName;
+		String folderName2 = PSatAPI.datastore_file_path+"/"+sinstance.sessionid+"/assertionRoles/"+selfAgentName;
 		
 		//default agents
 		Agent self = ServerAgentFactory.getAgent(selfAgentName, sinstance);

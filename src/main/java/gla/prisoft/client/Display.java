@@ -83,6 +83,7 @@ import gla.prisoft.client.kernel.display.util.KleinbergSmallWorldSettings;
 import gla.prisoft.client.kernel.display.util.PreferentialAttachmentSettings;
 import gla.prisoft.client.session.ClientConfig;
 import gla.prisoft.server.PSatAPI;
+import gla.prisoft.server.kernel.verification.ServerAssertionsFactory;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.CollectiveMode;
 import gla.prisoft.shared.CombinationStrategy;
@@ -648,10 +649,23 @@ public class Display extends JFrame {
 				    }
 				}
 				else{
+					
+					if(PSatAPI.instance.is_generating_memory_store){
+					    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
+					    return;
+					}
+					if(PSatAPI.instance.evaluatedProtocols == null ||PSatAPI.instance.evaluatedProtocols.length==0){
+						JOptionPane.showMessageDialog(Display.iframeNet, "No disclosure protocol selected...",  "Disclosure Protocol", JOptionPane.NO_OPTION);
+					    return;
+					}
+					if(ServerAssertionsFactory.getTotalNoOfAssertionsForAllAgents() ==0){
+						JOptionPane.showMessageDialog(Display.iframeNet, "No privacy requirement specified...",  "Priva", JOptionPane.NO_OPTION);
+					    return;
+					}
 					startTrainMaxAnalysisButton.setIcon(stopNormalIcon);
 					Display.noiterations=1;
 			    	PSatAPI.instance.costTradeoff = 1;
-
+			    	
 					runSatAnalysis();
 					
 			    	PSatAPI.instance.stop = false;
@@ -695,15 +709,10 @@ public class Display extends JFrame {
 	}
 	
 	
-	public void runSatAnalysis(){		
-		if(PSatAPI.instance.is_generating_memory_store){
-		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-		    return;
-		}
-		if(PSatAPI.instance.evaluatedProtocols == null ||PSatAPI.instance.evaluatedProtocols.length==0){
-			JOptionPane.showMessageDialog(Display.iframeNet, "You need to select one or more disclosure protocol...",  "Disclosure Protocol", JOptionPane.NO_OPTION);
-		    return;
-		}
+	public void runSatAnalysis(){
+		
+		final ImageIcon stopNormalIcon = new ImageIcon(getClass().getResource("/stopnormal.png"));
+		startTrainMaxAnalysisButton.setIcon(stopNormalIcon);
 		
 		PSatClient.netSerialiseConfigInstance();
 				
@@ -1237,7 +1246,7 @@ public class Display extends JFrame {
 
 					Display.updateProgressComponent(-1, "");
 					
-		        	if (command.equals("privacy requirement Instances")) {
+		        	if (command.equals("privacy requirement instances")) {
 		        		Thread queryThread = new Thread() {
 							public void run() {
 				    			logProTabbedPane.setSelectedIndex(2);
@@ -1259,7 +1268,7 @@ public class Display extends JFrame {
 						};
 						queryThread.start();
 					} 	
-		        	else if (command.equals("privacy requirement Aspects")) {
+		        	else if (command.equals("privacy requirement roles")) {
 		        		Thread queryThread = new Thread() {
 							public void run() {
 								
@@ -1379,7 +1388,7 @@ public class Display extends JFrame {
 	}
 	
 	private static void setDefaultSourceTargetForSequenceGraph(){
-//		if(instance.is_aspect_run){
+//		if(instance.is_role_run){
 			Properties sequencesourcetarget = PSatClient.netFindSequenceSourceandTarget();
 			
 			PSatAPI.instance.is_new_principal = true;
@@ -1437,7 +1446,7 @@ public class Display extends JFrame {
 
 			return;
 		}
-		if(PSatAPI.instance.is_aspect_run){
+		if(PSatAPI.instance.is_role_run){
 			PSatAPI.instance.listPathsData = PSatClient.netFindKNearestneighbours();
 			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
 			for(String s:PSatAPI.instance.listPathsData){
@@ -1516,7 +1525,7 @@ public class Display extends JFrame {
 							
 						}
 						
-						if(!PSatAPI.instance.is_aspect_run){
+						if(!PSatAPI.instance.is_role_run){
 							if(PSatAPI.instance.sourceAgentName !=null && PSatAPI.instance.targetAgentName != null){
 								activateRun(true);	
 							}	
@@ -1625,7 +1634,7 @@ public class Display extends JFrame {
 	
 	
 	public static void configProperties(){
-		JLabel label0 = new JLabel("Log Mode:");
+		JLabel label0 = new JLabel("Logs:");
 		label0.setForeground(new Color(54,133,47));
 		final JCheckBox ktransformCheckbox= new JCheckBox("Log object knowledge transformations");
 		if(PSatAPI.instance.log_knowledge_transformation){
@@ -1670,12 +1679,13 @@ public class Display extends JFrame {
 	    
 	    JLabel label = new JLabel("Privacy Requirements:");
 	    label.setForeground(new Color(54,133,47));
-	    JLabel labeltype = new JLabel("Type");
-	    JRadioButton instance_rb = new JRadioButton("privacy instance");
+	    final JLabel labeltype = new JLabel("<html><font color='#708090'>Type</font></html>");
+
+	    JRadioButton instance_rb = new JRadioButton("instance-based");
 	    instance_rb.addActionListener(new ActionListener() {	    	 
 
 	    	public void actionPerformed(ActionEvent event) {
-	        	PSatAPI.instance.is_aspect_run = false;
+	        	PSatAPI.instance.is_role_run = false;
 	        	PSatAPI.instance.listPathsData = new String[0];
 				Display.pathsListModel.removeAllElements();
 				PSatAPI.instance.selectedAgentPaths = null;
@@ -1684,6 +1694,8 @@ public class Display extends JFrame {
 				PSatAPI.instance.subjectName = null;
 				PSatAPI.instance.selfAgentName = null;
 				PSatAPI.instance.targetAgentName =null;
+				ServerAssertionsFactory.clearAllAgentAssertions();
+				
 				PSatClient.netSerialiseConfigInstance();
 				
 				Display.updatePathsList();
@@ -1693,11 +1705,11 @@ public class Display extends JFrame {
     	    	Display.updateProgressComponent(100, "");
 	        }
 	    });
-        JRadioButton aspects_rb = new JRadioButton("privacy aspects");
-        aspects_rb.addActionListener(new ActionListener() {	    	 
+        JRadioButton roles_rb = new JRadioButton("role-based");
+        roles_rb.addActionListener(new ActionListener() {	    	 
 
 	        public void actionPerformed(ActionEvent event) {
-	        	PSatAPI.instance.is_aspect_run = true;
+	        	PSatAPI.instance.is_role_run = true;
 	        	PSatAPI.instance.listPathsData = new String[0];
 				Display.pathsListModel.removeAllElements();
 				PSatAPI.instance.selectedAgentPaths = null;
@@ -1706,6 +1718,8 @@ public class Display extends JFrame {
 				PSatAPI.instance.subjectName = null;
 				PSatAPI.instance.selfAgentName = null;
 				PSatAPI.instance.targetAgentName =null;
+				ServerAssertionsFactory.clearAllAgentAssertions();
+				
 				PSatClient.netSerialiseConfigInstance();
 
 				Display.updatePathsList();
@@ -1714,17 +1728,28 @@ public class Display extends JFrame {
 				
 	        }
 	    });
-        if(PSatAPI.instance.is_aspect_run){
-        	aspects_rb.setSelected(true);
+        if(PSatAPI.instance.is_role_run){
+        	roles_rb.setSelected(true);
         }
         else{
         	instance_rb.setSelected(true);
         }
         ButtonGroup analysis_g_rb = new ButtonGroup();
         analysis_g_rb.add(instance_rb);
-        analysis_g_rb.add(aspects_rb); 
+        analysis_g_rb.add(roles_rb); 
         
-        JLabel labelmode = new JLabel("Mode");
+        ///
+        final JLabel labelcollective = new JLabel("<html><font color='#708090'>Collective privacy aspects</font></html>");
+        final JRadioButton nonek_rb = new JRadioButton("<html>None</html>");        
+        final JRadioButton ck_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.CG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.CG)+"</html>");        
+        final JRadioButton egk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.EG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.EG)+"</html>");        
+        final JRadioButton sgk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.SG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.SG)+"</html>");        
+        final JRadioButton bpk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.BP)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.BP)+"</html>");        
+        final JRadioButton dgk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.DG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.DG)+"</html>");        
+
+        ///
+        
+        JLabel labelmode = new JLabel("<html><font color='#708090'>Mode</font></html>");
 	    label.setForeground(new Color(54,133,47));
 	    JRadioButton pick_rb = new JRadioButton("Pick belief/uncertainty elements");
 	    pick_rb.addActionListener(new ActionListener() {	    	 
@@ -1733,8 +1758,21 @@ public class Display extends JFrame {
 	        	PSatAPI.instance.isModePick = true;
 	        	PSatAPI.instance.isModeUncertainty = false;
 	        	PSatAPI.instance.isModeEntropy = false;
-				PSatClient.netSerialiseConfigInstance();
-
+	        	
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
+	        	nonek_rb.setSelected(true);
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
+	        	
+	        	labelcollective.setEnabled(true);
+	        	nonek_rb.setEnabled(true);
+				ck_rb.setEnabled(true);
+	        	egk_rb.setEnabled(true);
+	        	sgk_rb.setEnabled(true);
+	        	bpk_rb.setEnabled(true);
+	        	dgk_rb.setEnabled(true);
+	        	
+	        	PSatClient.netSerialiseConfigInstance();
+				
 	        }
 	    });
         JRadioButton uncertainty_rb = new JRadioButton("Regulate belief/uncertainty levels");
@@ -1745,6 +1783,19 @@ public class Display extends JFrame {
 	        	PSatAPI.instance.isModePick = false;
 	        	PSatAPI.instance.isModeUncertainty = true;
 	        	PSatAPI.instance.isModeEntropy = false;
+	        	
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
+	        	nonek_rb.setSelected(true);
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
+	        	
+	        	labelcollective.setEnabled(false);
+	        	nonek_rb.setEnabled(false);
+				ck_rb.setEnabled(false);
+	        	egk_rb.setEnabled(false);
+	        	sgk_rb.setEnabled(false);
+	        	bpk_rb.setEnabled(false);
+	        	dgk_rb.setEnabled(false);
+	        	
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
@@ -1756,6 +1807,19 @@ public class Display extends JFrame {
 	        	PSatAPI.instance.isModePick = false;
 	        	PSatAPI.instance.isModeUncertainty = false;
 	        	PSatAPI.instance.isModeEntropy = true;
+	        	
+	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
+	        	nonek_rb.setSelected(true);
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
+	        	
+	        	labelcollective.setEnabled(false);
+	        	nonek_rb.setEnabled(false);
+				ck_rb.setEnabled(false);
+	        	egk_rb.setEnabled(false);
+	        	sgk_rb.setEnabled(false);
+	        	bpk_rb.setEnabled(false);
+	        	dgk_rb.setEnabled(false);
+	        	
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
@@ -1786,49 +1850,49 @@ public class Display extends JFrame {
         pick_g_rb.add(uncertainty_rb);
         pick_g_rb.add(entropy_rb);
                 
-        JLabel labelcollective = new JLabel("Collective privacy setting");
-        JRadioButton nonek_rb = new JRadioButton("<html>None</html>");        
         nonek_rb.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent event) {
 	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });        
-        JRadioButton ck_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.CG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.CG)+"</html>");        
         ck_rb.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent event) {
 	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.CG;
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });	
-        JRadioButton egk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.EG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.EG)+"</html>");        
         egk_rb.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent event) {
 	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.EG;
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
-        JRadioButton sgk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.SG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.SG)+"</html>");        
         sgk_rb.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent event) {
 	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.SG;
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
-        JRadioButton bpk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.BP)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.BP)+"</html>");        
         bpk_rb.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent event) {
 	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.BP;
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
-        JRadioButton dgk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.DG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.DG)+"</html>");        
         dgk_rb.addActionListener(new ActionListener() {	
         	public void actionPerformed(ActionEvent event) {
 	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.DG;
+	        	ServerAssertionsFactory.clearAllAgentAssertions();
 				PSatClient.netSerialiseConfigInstance();
 	        }
 	    });
+        
         if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.NONE){
         	nonek_rb.setSelected(true);
         	ck_rb.setSelected(false);
@@ -1894,6 +1958,19 @@ public class Display extends JFrame {
         cok_rb.add(bpk_rb);
         cok_rb.add(dgk_rb);
         
+        if(entropy_rb.isSelected() || uncertainty_rb.isSelected()){
+        	nonek_rb.setSelected(true);        	
+        }
+        
+        if(!pick_rb.isSelected()){
+        	labelcollective.setEnabled(false);
+        	nonek_rb.setEnabled(false);
+        	ck_rb.setEnabled(false);
+        	egk_rb.setEnabled(false);
+        	sgk_rb.setEnabled(false);
+        	bpk_rb.setEnabled(false);
+        	dgk_rb.setEnabled(false);
+        }
         
         JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
         JSeparator sep2 = new JSeparator(SwingConstants.HORIZONTAL);
@@ -2151,34 +2228,34 @@ public class Display extends JFrame {
 	    });
 	    
 	    
-//	    Object[] message = {noagents_l,nagents_ft,label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
+//	    Object[] message = {noagents_l,nagents_ft,label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
 //	    					sep,label0, ktransformCheckbox, viabledpCheckbox,agentKStateCheckbox,entropyBeliefUncertaintyCheckbox,sep2,
 //	    					"","", label2, "Max. length of path",maxPathLength_cb,
 //	    					"Max. no of paths",max_No_path_Analysis_cb,"limited path analysis(set pathsat threshold)",satTreshold_cb, unlimitedps_cb,
 //	    					sep3,label3,request_cb,consent_cb,notice_cb,label01, networkMutationMode_cb};
 	    
-//	    Object[] message = {noagents_l,nagents_ft,label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
+//	    Object[] message = {noagents_l,nagents_ft,label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
 //				sep,label0, ktransformCheckbox, viabledpCheckbox,agentKStateCheckbox,entropyBeliefUncertaintyCheckbox,sep2,
 //				"","", label2, "Max. length of path",maxPathLength_cb,
 //				"Max. no of paths",max_No_path_Analysis_cb,"limited path analysis(set pathsat threshold)",satTreshold_cb, unlimitedps_cb,
 //				sep4, labelStragegy,minimum_rb,maximum_rb,average_rb,sep3,label3,request_cb,consent_cb,notice_cb,label01, networkMutationMode_cb};	  
 	    
-//	    Object[] message = {noagents_l,nagents_ft,label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
+//	    Object[] message = {noagents_l,nagents_ft,label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
 //				sep,label0, ktransformCheckbox, viabledpCheckbox,agentKStateCheckbox,entropyBeliefUncertaintyCheckbox,sep2,
 //				"","", label2, "Max. length of path",maxPathLength_cb,
 //				"Max. no of paths",max_No_path_Analysis_cb,"limited path analysis(set pathsat threshold)",satTreshold_cb, unlimitedps_cb,
 //				sep4, labelStragegy,minimum_rb,maximum_rb,average_rb,sep3,label01, networkMutationMode_cb};	
 	    
-//	    Object[] message = {noagents_l,nagents_ft,label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
+//	    Object[] message = {noagents_l,nagents_ft,label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
 //				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
 //				"","", label2, "Max. no objects on a path",maxPathLength_cb,
 //				"Max. no of paths",max_No_path_Analysis_cb,"limited path analysis(set pathsat threshold)",satTreshold_cb, unlimitedps_cb,
 //				sep4, labelStragegy,minimum_rb,maximum_rb,average_rb,sep3,tradeoff_l,tradeofftf,label01, networkMutationMode_cb};	
 	    	    
-//	    Object[] message = {label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
+//	    Object[] message = {label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
 //				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
 //				"","", label2, "Max. # of objects on a path",maxPathLength_cb,tradeoff_l,tradeofftf};	
-	    Object[] message = {label, labeltype, aspects_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,labelcollective,nonek_rb,ck_rb,egk_rb,sgk_rb,bpk_rb,dgk_rb,
+	    Object[] message = {label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,labelcollective,nonek_rb,ck_rb,egk_rb,sgk_rb,bpk_rb,dgk_rb,
 				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
 				"","", label2, "Max. # of objects on a path",maxPathLength_cb,decisioncategory_l,decisioncategories_cb};	
 	    

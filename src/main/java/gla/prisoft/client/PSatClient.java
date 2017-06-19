@@ -160,23 +160,23 @@ public class PSatClient {
 	}
 	
 	public static World picks [];
-	public static World [] netRetrieveAspectPicks(){
+	public static World [] netRetrieveRolePicks(){
 		picks = null;
 		
-		ClientServerBroker.messageEvent("PSatClient.retrieveAspectPicks()", "", null, null);
+		ClientServerBroker.messageEvent("PSatClient.retrieveRolePicks()", "", null, null);
     	int waittime= 0;
-  		while(!ClientServerBroker.netRetrieveAspectPicksDone){
+  		while(!ClientServerBroker.netRetrieveRolePicksDone){
   			try {
   				Thread.sleep(1000);
   				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-retrieveAspectPicks()", true);
+//      				Display.updateLogPage("Wait Time: Message Server not Responding-retrieveRolePicks()", true);
       			}
   				waittime = waittime+1;
   			} catch (InterruptedException e) {
   				e.printStackTrace();
   			}			
   		}
-  		ClientServerBroker.netRetrieveAspectPicksDone = false;
+  		ClientServerBroker.netRetrieveRolePicksDone = false;
 		return picks;
 	}
 	
@@ -700,25 +700,25 @@ public class PSatClient {
 		return noagents; 
 	}
 	
-	public static boolean privacyRequirementsAspectsExecuted;
-	public static boolean netPrivacyRequirementAspects(String agentname){
-		privacyRequirementsAspectsExecuted = false;
+	public static boolean privacyRequirementsRolesExecuted;
+	public static boolean netPrivacyRequirementRoles(String agentname){
+		privacyRequirementsRolesExecuted = false;
 		
-		ClientServerBroker.messageEvent("PSatClient.netPrivacyRequirementAspects()", null, null,agentname);
+		ClientServerBroker.messageEvent("PSatClient.netPrivacyRequirementRoles()", null, null,agentname);
     	int waittime= 0;
-  		while(!ClientServerBroker.netPrivacyRequirementAspectsDone){
+  		while(!ClientServerBroker.netPrivacyRequirementRolesDone){
   			try {
   				Thread.sleep(1000);
   				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netPrivacyRequirementAspects()", true);
+//      				Display.updateLogPage("Wait Time: Message Server not Responding-netPrivacyRequirementRoles()", true);
       			}
   				waittime = waittime+1;
   			} catch (InterruptedException e) {
   				e.printStackTrace();
   			}			
   		}
-  		ClientServerBroker.netPrivacyRequirementAspectsDone = false;
-		return privacyRequirementsAspectsExecuted;
+  		ClientServerBroker.netPrivacyRequirementRolesDone = false;
+		return privacyRequirementsRolesExecuted;
 	}
 	
 //	public static boolean writeToSatPathTrainingStoreExecuted;

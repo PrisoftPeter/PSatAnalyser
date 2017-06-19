@@ -233,7 +233,7 @@ public class FeasibilityView extends javax.swing.JPanel {
     		if(instance.collectiveStrategy != CollectiveStrategy.NONE){
     			String ckdescs [] = ptr.getRequirementHtmlFullDesc().split(" Actual");
     			prdesc = prdesc+ ckdescs[0];
-    			prdesc = prdesc+"]";
+    			//prdesc = prdesc;
     		}
     		else{
         		prdesc = prdesc+ ptr.getRequirementHtmlFullDesc();
@@ -347,8 +347,8 @@ public class FeasibilityView extends javax.swing.JPanel {
 		String folderName1 = export_file_path+"/"+sessionid;
 		String folderName2 = export_file_path+"/"+sessionid+"/prfeasibility";
 		String fileName ="";
-		if(instance.is_aspect_run){
-			fileName = folderName2+"/aspect_"+f_counter+".csv";	
+		if(instance.is_role_run){
+			fileName = folderName2+"/role_"+f_counter+".csv";	
 		}
 		else{
 			fileName = folderName2+"/instance_"+f_counter+".csv";

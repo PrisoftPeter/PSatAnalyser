@@ -108,14 +108,14 @@ public class ClientServerBroker{
 						PSatClient.allpossibleagentnames = names;
 						netGetAllPossibleNamesDone = true;
 					}
-					else if(actionType.equals("PSatClient.retrieveAspectPicks()")){
+					else if(actionType.equals("PSatClient.retrieveRolePicks()")){
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);						
 						String selfAgentName = instance.selfAgentName;
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						
-						World[] picks  =ServerAssertionsFactory.retrieveAspectPicks(selfAgentName, sinstance,instance);
+						World[] picks  =ServerAssertionsFactory.retrieveRolePicks(selfAgentName, sinstance,instance);
 						PSatClient.picks = picks;
-						netRetrieveAspectPicksDone = true;
+						netRetrieveRolePicksDone = true;
 					}
 //					else if(actionType.equals("PSatClient.netCreateAnalysisVaibleProtocolRatioStore()")){						
 //						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
@@ -478,21 +478,21 @@ public class ClientServerBroker{
 						netClientAssertionsFactoryDone = true;					
 						
 					}
-					else if(actionType.equals("PSatClient.netPrivacyRequirementAspects()")){	
+					else if(actionType.equals("PSatClient.netPrivacyRequirementRoles()")){	
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 
-						boolean done = ServerMemoryFactory.privacyRequirementAspects((String)obj, sinstance,instance);
+						boolean done = ServerMemoryFactory.privacyRequirementRoles((String)obj, sinstance,instance);
 			
 						if(done){
-							PSatClient.privacyRequirementsAspectsExecuted = true;						
+							PSatClient.privacyRequirementsRolesExecuted = true;						
 						}
 						else{
-							PSatClient.privacyRequirementsAspectsExecuted = false;
-							Display.updateLogPage("PSatClient.netPrivacyRequirementAspects():failed", true);
+							PSatClient.privacyRequirementsRolesExecuted = false;
+							Display.updateLogPage("PSatClient.netPrivacyRequirementRoles():failed", true);
 						}
 						Config.serialiseServerConfigInstance(sendersSessionId, sinstance);
-						netPrivacyRequirementAspectsDone = true;
+						netPrivacyRequirementRolesDone = true;
 					}
 //					else if(actionType.equals("PSatClient.netWriteToSatPathTrainingStore()")){	
 //						Properties ppties = (Properties)obj;
@@ -675,7 +675,7 @@ public class ClientServerBroker{
 	public static boolean netGetAgentDone = false;
 	public static boolean netGetAgentNamesDone = false;
 	public static boolean netGetAllPossibleNamesDone = false;
-	public static boolean netRetrieveAspectPicksDone = false;
+	public static boolean netRetrieveRolePicksDone = false;
 	public static boolean netCreateAnalysisVaibleProtocolRatioStoreDone = false;
 	public static boolean netAnalysePathsDone = false;
 	public static boolean netAutoGenAgentsDone = false;
@@ -699,7 +699,7 @@ public class ClientServerBroker{
 	public static boolean netClientAssertionsFactoryInitDone = false;
 	public static boolean netAgentFactoryInitGraphDone = false;
 	public static boolean netGetNoAgentsDone = false;
-	public static boolean netPrivacyRequirementAspectsDone = false;
+	public static boolean netPrivacyRequirementRolesDone = false;
 	public static boolean netWriteToSatPathTrainingStoreDone = false;
 	public static boolean netWriteToSatPathAnalysisStoreDone = false;
 	public static boolean netAverageClusteringCoefficientDone = false;

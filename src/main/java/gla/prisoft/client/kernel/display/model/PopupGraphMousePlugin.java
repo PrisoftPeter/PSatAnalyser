@@ -175,9 +175,9 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
            		
            		
            		
-        		ImageIcon aspectIcon = new ImageIcon(getClass().getResource("/aspect.png"));
-           		JMenuItem aspectsMenu = new JMenuItem("Aspects",aspectIcon);       			
-           		aspectsMenu.addActionListener(new ActionListener(){
+        		ImageIcon roleIcon = new ImageIcon(getClass().getResource("/role.png"));
+           		JMenuItem rolesMenu = new JMenuItem("role-based specification",roleIcon);       			
+           		rolesMenu.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						
 						if(PSatAPI.instance.is_generating_memory_store){
@@ -189,20 +189,20 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 						PSatAPI.instance.selfAgentName = pickV.id;
 						PSatClient.netSerialiseConfigInstance();
 						
-						PSatClient.netPrivacyRequirementAspects(pickV.id);
-						Display.updateAssertionsPage(pickV.id, "privacy requirement Aspects");
+						PSatClient.netPrivacyRequirementRoles(pickV.id);
+						Display.updateAssertionsPage(pickV.id, "privacy requirement roles");
 					}            		
            		});
-           		if(PSatAPI.instance.is_aspect_run){
-           			aspectsMenu.setEnabled(true);
+           		if(PSatAPI.instance.is_role_run){
+           			rolesMenu.setEnabled(true);
            		}
            		else{
-           			aspectsMenu.setEnabled(false);
+           			rolesMenu.setEnabled(false);
            		}
-       			paMenu.add(aspectsMenu);
+       			paMenu.add(rolesMenu);
        			
        			ImageIcon instanceIcon = new ImageIcon(getClass().getResource("/instance.png"));
-       			JMenuItem instanceMenu = new JMenuItem("Instances",instanceIcon);       			
+       			JMenuItem instanceMenu = new JMenuItem("instance-based specification",instanceIcon);       			
        			instanceMenu.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						if(PSatAPI.instance.is_generating_memory_store){
@@ -214,7 +214,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 						PSatAPI.instance.selfAgentName = pickV.id;
 						PSatClient.netSerialiseConfigInstance();
 
-						Display.updateAssertionsPage(pickV.id, "privacy requirement Instances");
+						Display.updateAssertionsPage(pickV.id, "privacy requirement instances");
 					}            		
            		});
        			
@@ -234,7 +234,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
        				
        			}
        			
-       			if(PSatAPI.instance.is_aspect_run ||!nodeok){
+       			if(PSatAPI.instance.is_role_run ||!nodeok){
        				
        				instanceMenu.setEnabled(false);
            		}
@@ -348,7 +348,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
             	
             	ImageIcon targetIcon = new ImageIcon(getClass().getResource("/target.png"));
             	JMenuItem targetMenuItem = new JMenuItem("set as target",targetIcon);
-            	if(PSatAPI.instance.is_aspect_run){
+            	if(PSatAPI.instance.is_role_run){
             		targetMenuItem.setEnabled(false);
            		}
            		else{
@@ -439,7 +439,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 //           				otherPwMenu.addActionListener(new ActionListener(){
 //           					
 //        					public void actionPerformed(ActionEvent e) {
-//        						Display.is_aspect_run = false;
+//        						Display.is_role_run = false;
 //        						Display.targetAgentName = otherAgent;
 //        						Config.serialiseLastTargetAgentName();	
 //        						Config.serialiseConfigInstance();

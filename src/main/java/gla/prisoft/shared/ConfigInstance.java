@@ -48,7 +48,7 @@ public class ConfigInstance implements Serializable{
 	public String listPathsData[];
 	public int kNeighbours;
 	
-	public boolean is_aspect_run =true;
+	public boolean is_role_run =true;
 	public boolean is_dynamic_memory_store = true;
 	public boolean log_knowledge_transformation = false;
 	public boolean log_viable_disclosure_protocols = true;
@@ -106,8 +106,8 @@ public class ConfigInstance implements Serializable{
 	public boolean lessThanOrEqualTo = true;
 	
 	public KnowledgeBase finiteAnalysisKb;
-	public String aspectTypeHtml = "";
-	public String aspectTypeRaw = "";
+	public String roleTypeHtml = "";
+	public String roleTypeRaw = "";
 	
 	public String sessionid;
 	public boolean is_generating_memory_store;
