@@ -1193,7 +1193,7 @@ public class ServerMemoryFactory {
 				}
 			}
 		}
-		applicableReqs = ArrayCleaner.clean(applicableReqs); //remove assertions from aspects
+		applicableReqs = ArrayCleaner.clean(applicableReqs); //remove replicated assertions from aspects
 		
 		for(World w:applicableReqs){
 			collectiveassertions.add(w);
