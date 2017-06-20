@@ -66,7 +66,7 @@ public class CollectiveMode implements Serializable{
 	            desc = "<i>D</i><sub>G</sub>"; //distributed knowledge
 	            break;
 	        case BP:
-		       	 desc = "<i>B</i><sub>p</sub>";
+		       	 desc = "<i>B</i><sub>G</sub>";
 		       	 break;
 	        case SG:
 		       	 desc = "<i>S</i><sub>G</sub>";
