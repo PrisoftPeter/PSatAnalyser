@@ -1,5 +1,6 @@
 package gla.prisoft.server.kernel.verification.collective;
 
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.knowledge.Memory;
 import gla.prisoft.server.kernel.knowledge.worlds.K1a;
 import gla.prisoft.server.kernel.knowledge.worlds.K21a;
@@ -9,6 +10,7 @@ import gla.prisoft.server.kernel.knowledge.worlds.World;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.Attribute;
+import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 
 public class CGK21aCGK22aVerifier {
@@ -50,6 +52,9 @@ public class CGK21aCGK22aVerifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(cg_agent1.getAgentName().equals(subject.getAgentName())){
 				K1a k1a = new K1a(self, message);
 				if(m.contains(k1a.toString())){
@@ -59,6 +64,9 @@ public class CGK21aCGK22aVerifier {
 			}
 			
 			//implication 2: K31a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(!cg_agent1.getAgentName().equals(subject.getAgentName()) && cg_reference.getAgentName().equals(subject.getAgentName())){
 				K31a k31a = new K31a(self, cg_agent1, message);
 				if(m.contains(k31a.toString())){
@@ -68,6 +76,9 @@ public class CGK21aCGK22aVerifier {
 			}			
 						
 			//implication 3: K21a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(!cg_agent1.getAgentName().equals(subject.getAgentName()) && cg_reference.getAgentName().equals(subject.getAgentName())){
 				K21a k21a = new K21a(self, cg_reference, message);
 				if(m.contains(k21a.toString())){
@@ -82,6 +93,9 @@ public class CGK21aCGK22aVerifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(cg_agent1.getAgentName().equals(sender.getAgentName())){
 				K1a k1a = new K1a(self, message);
 				if(m.contains(k1a.toString())){
@@ -91,6 +105,9 @@ public class CGK21aCGK22aVerifier {
 			}
 			
 			//implication 2: K31a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(!cg_agent1.getAgentName().equals(sender.getAgentName()) && cg_reference.getAgentName().equals(sender.getAgentName())){
 				K31a k31a = new K31a(self, cg_agent1, message);
 				if(m.contains(k31a.toString())){
@@ -100,6 +117,9 @@ public class CGK21aCGK22aVerifier {
 			}			
 						
 			//implication 3: K21a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(!cg_agent1.getAgentName().equals(sender.getAgentName()) && cg_reference.getAgentName().equals(sender.getAgentName())){
 				K21a k21a = new K21a(self, cg_reference, message);
 				if(m.contains(k21a.toString())){
@@ -114,6 +134,9 @@ public class CGK21aCGK22aVerifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(cg_agent1.getAgentName().equals(recipient.getAgentName())){
 				K1a k1a = new K1a(self, message);
 				if(m.contains(k1a.toString())){
@@ -123,6 +146,9 @@ public class CGK21aCGK22aVerifier {
 			}
 			
 			//implication 2: K31a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(!cg_agent1.getAgentName().equals(recipient.getAgentName()) && cg_reference.getAgentName().equals(recipient.getAgentName())){
 				K31a k31a = new K31a(self, cg_agent1, message);
 				if(m.contains(k31a.toString())){
@@ -132,6 +158,9 @@ public class CGK21aCGK22aVerifier {
 			}			
 						
 			//implication 3: K21a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				
+			}
 			if(!cg_agent1.getAgentName().equals(recipient.getAgentName()) && cg_reference.getAgentName().equals(recipient.getAgentName())){
 				K21a k21a = new K21a(self, cg_reference, message);
 				if(m.contains(k21a.toString())){
