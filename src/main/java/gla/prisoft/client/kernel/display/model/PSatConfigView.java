@@ -203,11 +203,15 @@ class PrConfig extends javax.swing.JPanel {
         aspects_label.setText("Aspects:");
         aspects_list.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "None", 
-            		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)- Everyone in G knows that everyone beliefs/uncertain that <i>&psi; </i></html>",
-            		             "<html>Introspection:<i>E</i><sub>G</sub>(&psi;)- Everyone in G beliefs/uncertain that <i>&psi;</i></html>", 
-            		             "<html>Distributed Knowledge:<i>S</i><sub>G</sub>(&psi;)- More than one user beliefs/uncertain that <i>&psi;</i></html>", 
-            		             "<html>Distributed Knowledge:<i>B</i><sub>G</sub>(&psi;)- Atleast one user beliefs/uncertain that <i>&psi;</i></html>", 
-            		             "<html>Distributed Knowledge:<i>D</i><sub>G</sub>(&psi;)- The belief/uncertain of <i>&psi;</i> can be inferred by a user </html>" };
+            		             "<html>Shared Knowledge:<i>E</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that <i>&psi;</i></html>", 
+            		             "<html>Introspection:<i>EE</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that everyone knows <i>&psi;</i></html>", 
+            		             "<html>Introspection:<i>EEE</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that everyone knows that everyone knows that <i>&psi;</i> </html>", 
+            		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;) + <i>EEE</i><sub>G</sub>(&psi;) </html>"
+            		            //,
+            		            // "<html>Distributed Knowledge:<i>S</i><sub>G</sub>(&psi;)- More than one user beliefs/uncertain that <i>&psi;</i></html>", 
+            		            // "<html>Distributed Knowledge:<i>B</i><sub>G</sub>(&psi;)- Atleast one user beliefs/uncertain that <i>&psi;</i></html>", 
+//            		             "<html>Distributed Knowledge:<i>D</i><sub>G</sub>(&psi;), The belief/uncertain of <i>&psi;</i> can be inferred by a user </html>" 
+            		             };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -224,22 +228,22 @@ class PrConfig extends javax.swing.JPanel {
 					PSatClient.netSerialiseConfigInstance();
 				}
 				else if(selectedindex ==1){
-					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.CG;
-		        	ServerAssertionsFactory.clearAllAgentAssertions();
-					PSatClient.netSerialiseConfigInstance();
-				}
-				else if(selectedindex ==2){
 					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.EG;
 		        	ServerAssertionsFactory.clearAllAgentAssertions();
 					PSatClient.netSerialiseConfigInstance();
 				}
+				else if(selectedindex ==2){
+					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.EEG;
+		        	ServerAssertionsFactory.clearAllAgentAssertions();
+					PSatClient.netSerialiseConfigInstance();
+				}
 				else if(selectedindex ==3){
-					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.SG;
+					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.EEEG;
 		        	ServerAssertionsFactory.clearAllAgentAssertions();
 					PSatClient.netSerialiseConfigInstance();
 				}
 				else if(selectedindex == 4){
-					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.BP;
+					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.CG;
 		        	ServerAssertionsFactory.clearAllAgentAssertions();
 					PSatClient.netSerialiseConfigInstance();
 				}
@@ -254,16 +258,16 @@ class PrConfig extends javax.swing.JPanel {
         if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.NONE){
         	aspects_list.setSelectedIndex(0);
         }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EG){
         	aspects_list.setSelectedIndex(1);
         }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EG){
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEG){
         	aspects_list.setSelectedIndex(2);
         }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.SG){
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEEG){
         	aspects_list.setSelectedIndex(3);
         }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.BP){
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
         	aspects_list.setSelectedIndex(4);
         }
         else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.DG){

@@ -1630,7 +1630,7 @@ public class Display extends JFrame {
 	public void configProperties(){
 
 		if(iframeConfigView == null ||iframeConfigView.isClosed()){
-			iframeConfigView = new InternalFrame("PSat Configuration",620, 330,true,true,true,true,8,4);
+			iframeConfigView = new InternalFrame("PSat Configuration",680, 330,true,true,true,true,8,4);
 			jdpDesktop.add(iframeConfigView);	
 		}	
 		iframeConfigView.repaint();

@@ -1,5 +1,6 @@
 package gla.prisoft.server.kernel.verification.collective;
 
+import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.knowledge.Memory;
 import gla.prisoft.server.kernel.knowledge.worlds.K1a;
 import gla.prisoft.server.kernel.knowledge.worlds.K31a;
@@ -9,6 +10,7 @@ import gla.prisoft.server.kernel.knowledge.worlds.World;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.Attribute;
+import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 
 public class CGK41aCGK42aVerifier {
@@ -53,31 +55,37 @@ public class CGK41aCGK42aVerifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1a
-			if(cg_agent2.getAgentName().equals(subject.getAgentName())){
-				K1a k1a = new K1a(self, message);
-				if(m.contains(k1a.toString())){
-					noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_agent2.getAgentName().equals(subject.getAgentName())){
+					K1a k1a = new K1a(self, message);
+					if(m.contains(k1a.toString())){
+						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
+					}
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
-			
+
 			//implication 2: K31a
-			if(cg_agent1.getAgentName().equals(subject.getAgentName())){
-				K31a k31a = new K31a(self, cg_agent2, message);
-				if(m.contains(k31a.toString())){
-					noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
-				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
-			}				
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_agent1.getAgentName().equals(subject.getAgentName())){
+					K31a k31a = new K31a(self, cg_agent2, message);
+					if(m.contains(k31a.toString())){
+						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
+					}
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
+				}	
+			}		
 			
 			//implication 3: K41a
-			if(!cg_reference.getAgentName().equals(subject.getAgentName())){
-				K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
-				if(m.contains(k41a.toString())){
-					noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(!cg_reference.getAgentName().equals(subject.getAgentName())){
+					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
+					if(m.contains(k41a.toString())){
+						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
+					}
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
-			}	
+			}
 		}
 		
 		if(verifyinsender){
@@ -85,30 +93,36 @@ public class CGK41aCGK42aVerifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1a
-			if(cg_agent2.getAgentName().equals(sender.getAgentName())){
-				K1a k1a = new K1a(self, message);
-				if(m.contains(k1a.toString())){
-					noofsenderimplicationsverified = noofsenderimplicationsverified+1;
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_agent2.getAgentName().equals(sender.getAgentName())){
+					K1a k1a = new K1a(self, message);
+					if(m.contains(k1a.toString())){
+						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
+					}
+					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}
-				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 			
 			//implication 2: K31a
-			if(cg_agent1.getAgentName().equals(sender.getAgentName())){
-				K31a k31a = new K31a(self, cg_agent2, message);
-				if(m.contains(k31a.toString())){
-					noofsenderimplicationsverified = noofsenderimplicationsverified+1;
-				}
-				totalnoofsenderimplications = totalnoofsenderimplications+1; 
-			}				
-			
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_agent1.getAgentName().equals(sender.getAgentName())){
+					K31a k31a = new K31a(self, cg_agent2, message);
+					if(m.contains(k31a.toString())){
+						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
+					}
+					totalnoofsenderimplications = totalnoofsenderimplications+1; 
+				}	
+			}
+
 			//implication 3: K41a
-			if(!cg_reference.getAgentName().equals(sender.getAgentName())){
-				K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
-				if(m.contains(k41a.toString())){
-					noofsenderimplicationsverified = noofsenderimplicationsverified+1;
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(!cg_reference.getAgentName().equals(sender.getAgentName())){
+					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
+					if(m.contains(k41a.toString())){
+						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
+					}
+					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}
-				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 		}
 		
@@ -117,31 +131,37 @@ public class CGK41aCGK42aVerifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1a
-			if(cg_agent2.getAgentName().equals(recipient.getAgentName())){
-				K1a k1a = new K1a(self, message);
-				if(m.contains(k1a.toString())){
-					noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_agent2.getAgentName().equals(recipient.getAgentName())){
+					K1a k1a = new K1a(self, message);
+					if(m.contains(k1a.toString())){
+						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+					}
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 			
 			//implication 2: K31a
-			if(cg_agent1.getAgentName().equals(recipient.getAgentName())){
-				K31a k31a = new K31a(self, cg_agent2, message);
-				if(m.contains(k31a.toString())){
-					noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
-				}
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
-			}				
-			
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_agent1.getAgentName().equals(recipient.getAgentName())){
+					K31a k31a = new K31a(self, cg_agent2, message);
+					if(m.contains(k31a.toString())){
+						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+					}
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
+				}	
+			}
+
 			//implication 3: K41a
-			if(!cg_reference.getAgentName().equals(recipient.getAgentName())){
-				K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
-				if(m.contains(k41a.toString())){
-					noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
-				}
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
-			}	
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(!cg_reference.getAgentName().equals(recipient.getAgentName())){
+					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
+					if(m.contains(k41a.toString())){
+						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+					}
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+				}	
+			}
 		}
 						
 		int totalnoofimplications = totalnoofsubjectimplications+totalnoofsenderimplications+totalnoofrecipientimplications;

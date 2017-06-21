@@ -406,7 +406,6 @@ public class ServerAssertionsFactory implements Serializable{
 						}
 						
 						
-						
 						//update checked
 						if(checked){
 							meaning = "<html><font color='red'>"+meaning+"</font></html>";

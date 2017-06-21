@@ -1223,69 +1223,64 @@ public class ServerMemoryFactory {
 			
 		}
 		
-		if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-			Agent subject = ServerAgentFactory.getAgent(subjectName, sinstance);
-			Agent sender = ServerAgentFactory.getAgent(senderName, sinstance);
-			Agent recipient = ServerAgentFactory.getAgent(recipientName, sinstance);
 
-			HashMap<World, Double> satvalues =new HashMap<World, Double>();
-			
-			for(World w: applicableReqs){
-				if(w instanceof K0){
-					double satvalue = CGK0Verifier.verify(subject, sender, recipient, sinstance,instance, message);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K0a){
-					double satvalue = CGK0aVerifier.verify(subject, sender, recipient, sinstance,instance, message);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K1){
-					double satvalue = CGK1Verifier.verify(subject, sender, recipient, sinstance,instance, (K1)w);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K1a){
-					double satvalue = CGK1aVerifier.verify(subject, sender, recipient, sinstance,instance, (K1a)w);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K31a | w instanceof K32a){
-					double satvalue = CGK31aCGK32aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K31 | w instanceof K32){
-					double satvalue = CGK31CGK32Verifier.verify(subject, sender, recipient, sinstance,instance, w);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K21a | w instanceof K22a){
-					double satvalue = CGK21aCGK22aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K21 | w instanceof K22){
-					double satvalue = CGK21CGK22Verifier.verify(subject, sender, recipient, sinstance,instance, w);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K41a | w instanceof K42a){
-					double satvalue = CGK41aCGK42aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
-					satvalues.put(w, satvalue);
-				}
-				else if(w instanceof K41 | w instanceof K42){
-					double satvalue = CGK41CGK42Verifier.verify(subject, sender, recipient, sinstance,instance, w);
-					satvalues.put(w, satvalue);
-				}
-				
+		Agent subject = ServerAgentFactory.getAgent(subjectName, sinstance);
+		Agent sender = ServerAgentFactory.getAgent(senderName, sinstance);
+		Agent recipient = ServerAgentFactory.getAgent(recipientName, sinstance);
+
+		HashMap<World, Double> satvalues =new HashMap<World, Double>();
+		
+		for(World w: applicableReqs){
+			if(w instanceof K0){
+				double satvalue = CGK0Verifier.verify(subject, sender, recipient, sinstance,instance, message);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K0a){
+				double satvalue = CGK0aVerifier.verify(subject, sender, recipient, sinstance,instance, message);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K1){
+				double satvalue = CGK1Verifier.verify(subject, sender, recipient, sinstance,instance, (K1)w);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K1a){
+				double satvalue = CGK1aVerifier.verify(subject, sender, recipient, sinstance,instance, (K1a)w);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K31a | w instanceof K32a){
+				double satvalue = CGK31aCGK32aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K31 | w instanceof K32){
+				double satvalue = CGK31CGK32Verifier.verify(subject, sender, recipient, sinstance,instance, w);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K21a | w instanceof K22a){
+				double satvalue = CGK21aCGK22aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K21 | w instanceof K22){
+				double satvalue = CGK21CGK22Verifier.verify(subject, sender, recipient, sinstance,instance, w);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K41a | w instanceof K42a){
+				double satvalue = CGK41aCGK42aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				satvalues.put(w, satvalue);
+			}
+			else if(w instanceof K41 | w instanceof K42){
+				double satvalue = CGK41CGK42Verifier.verify(subject, sender, recipient, sinstance,instance, w);
+				satvalues.put(w, satvalue);
 			}
 			
-			double sumsatvalues = 0;
-			for (Map.Entry<World, Double> entry : satvalues.entrySet()) {
-			    //World w = entry.getKey();
-			    Double satvalue = entry.getValue();
-			    sumsatvalues = sumsatvalues+ satvalue;
-			}
-			sat.setSat(sumsatvalues/applicableReqs.length);
-
-		}	
-		if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.SG){
-			//xxxxx
 		}
+		
+		double sumsatvalues = 0;
+		for (Map.Entry<World, Double> entry : satvalues.entrySet()) {
+		    //World w = entry.getKey();
+		    Double satvalue = entry.getValue();
+		    sumsatvalues = sumsatvalues+ satvalue;
+		}
+		sat.setSat(sumsatvalues/applicableReqs.length);
 		
 		return sat;
 	}
