@@ -203,11 +203,11 @@ class PrConfig extends javax.swing.JPanel {
         aspects_label.setText("Aspects:");
         aspects_list.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "None", 
-            		             "<html>Common Knowledge: Everyone in G knows that everyone knows that <i>&psi;</i>- <i>C</i><sub>G</sub>(&psi;)</html>",
-            		             "<html>Introspection: Everyone in G knows that <i>&psi;</i> - <i>E</i><sub>G</sub>(&psi;)</html>", 
-            		             "<html>Distributed Knowledge: More than one user knows that<i>&psi;</i> - <i>S</i><sub>G</sub>(&psi;)</html>", 
-            		             "<html>Distributed Knowledge: Atleast one user knows that<i>&psi;</i> - <i>B</i><sub>G</sub>(&psi;)</html>", 
-            		             "<html>Distributed Knowledge: It can be inferred that<i>&psi;</i> - <i>D</i><sub>G</sub>(&psi;)</html>" };
+            		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)- Everyone in G knows that everyone beliefs/uncertain that <i>&psi; </i></html>",
+            		             "<html>Introspection:<i>E</i><sub>G</sub>(&psi;)- Everyone in G beliefs/uncertain that <i>&psi;</i></html>", 
+            		             "<html>Distributed Knowledge:<i>S</i><sub>G</sub>(&psi;)- More than one user beliefs/uncertain that <i>&psi;</i></html>", 
+            		             "<html>Distributed Knowledge:<i>B</i><sub>G</sub>(&psi;)- Atleast one user beliefs/uncertain that <i>&psi;</i></html>", 
+            		             "<html>Distributed Knowledge:<i>D</i><sub>G</sub>(&psi;)- The belief/uncertain of <i>&psi;</i> can be inferred by a user </html>" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -276,6 +276,7 @@ class PrConfig extends javax.swing.JPanel {
 			PSatClient.netSerialiseConfigInstance();
         }
                 
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -286,17 +287,19 @@ class PrConfig extends javax.swing.JPanel {
                     .addComponent(mode_label)
                     .addComponent(aspects_label)
                     .addComponent(type_label))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(rolebased_rb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(instancebased_rb))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(aspects_sp, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(modes_sp, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(31, 31, 31))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                        .addComponent(instancebased_rb)
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(aspects_sp)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(modes_sp)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

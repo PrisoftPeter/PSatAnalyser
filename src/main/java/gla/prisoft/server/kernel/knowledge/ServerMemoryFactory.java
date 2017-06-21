@@ -1197,8 +1197,7 @@ public class ServerMemoryFactory {
 		
 		for(World w:applicableReqs){
 			collectiveassertions.add(w);
-		}
-		
+		}		
 	}
 	
 	public static SATResult collectivesat(String selfAgentName,String subjectName, String senderName, 
