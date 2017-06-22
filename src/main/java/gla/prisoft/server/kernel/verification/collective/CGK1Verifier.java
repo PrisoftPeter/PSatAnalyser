@@ -67,8 +67,8 @@ public class CGK1Verifier {
 					if(m.contains(k21.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;				
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;				
 			}
 			
 			//implication 4: K22
@@ -78,8 +78,8 @@ public class CGK1Verifier {
 					if(m.contains(k22.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 			
 			//implication 5: K41 (sender)
@@ -89,8 +89,8 @@ public class CGK1Verifier {
 					if(m.contains(k41.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 				
 			//implication 6: K42 (sender)
@@ -100,8 +100,8 @@ public class CGK1Verifier {
 					if(m.contains(k42.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;	
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;	
 			}
 			
 			//implication 7: K41 (recipient)
@@ -111,8 +111,8 @@ public class CGK1Verifier {
 					if(m.contains(k41.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}	
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 				
 			//implication 8: K42 (recipient)
@@ -122,8 +122,8 @@ public class CGK1Verifier {
 					if(m.contains(k42.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;	
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;	
 			}			
 		}
 		
@@ -149,8 +149,8 @@ public class CGK1Verifier {
 					if(m.contains(k31.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1; 
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1; 
 			}
 						
 			//implication 3: K21
@@ -160,8 +160,8 @@ public class CGK1Verifier {
 					if(m.contains(k21.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;				
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1;				
 			}
 			
 			//implication 4: K22
@@ -171,8 +171,8 @@ public class CGK1Verifier {
 					if(m.contains(k22.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 			
 			//implication 5: K41 (subject)
@@ -182,8 +182,8 @@ public class CGK1Verifier {
 					if(m.contains(k41.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 			
 			//implication 6: K42 (subject)
@@ -193,8 +193,8 @@ public class CGK1Verifier {
 					if(m.contains(k42.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;	
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;	
 			}
 			
 			//implication 7: K41 (recipient)
@@ -204,8 +204,8 @@ public class CGK1Verifier {
 					if(m.contains(k41.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 			
 			//implication 8: K42 (recipient)
@@ -215,8 +215,8 @@ public class CGK1Verifier {
 					if(m.contains(k42.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;	
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1;	
 			}		
 		}
 		
@@ -242,8 +242,8 @@ public class CGK1Verifier {
 					if(m.contains(k31.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 			}
 						
 			//implication 3: K21
@@ -253,8 +253,8 @@ public class CGK1Verifier {
 					if(m.contains(k21.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;				
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;				
 			}
 			
 			//implication 4: K22
@@ -264,8 +264,8 @@ public class CGK1Verifier {
 					if(m.contains(k22.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 			
 			//implication 5: K41 (sender)
@@ -275,8 +275,8 @@ public class CGK1Verifier {
 					if(m.contains(k41.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 			
 			//implication 6: K42 (sender)
@@ -286,8 +286,8 @@ public class CGK1Verifier {
 					if(m.contains(k42.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;	
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;	
 			}
 			
 			//implication 7: K41 (subject)
@@ -297,8 +297,8 @@ public class CGK1Verifier {
 					if(m.contains(k41.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 			
 			//implication 8: K42 (subject)
@@ -308,8 +308,8 @@ public class CGK1Verifier {
 					if(m.contains(k42.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;	
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;	
 			}					
 		}
 				

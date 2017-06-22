@@ -55,8 +55,8 @@ public class CGK0Verifier {
 					if(m.contains(k31.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 			
 			//implication3: K32
@@ -66,8 +66,8 @@ public class CGK0Verifier {
 					if(m.contains(k32.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 			
 			//implication4: K21
@@ -77,8 +77,8 @@ public class CGK0Verifier {
 					if(m.contains(k21.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;				
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;				
 			}
 			
 			//implication5: K22
@@ -88,8 +88,8 @@ public class CGK0Verifier {
 					if(m.contains(k22.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 			
 			//implication6: K41
@@ -99,8 +99,8 @@ public class CGK0Verifier {
 					if(m.contains(k41.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 			
 			//implication7: K42
@@ -110,8 +110,8 @@ public class CGK0Verifier {
 					if(m.contains(k42.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}	
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 		}
 		
@@ -135,8 +135,8 @@ public class CGK0Verifier {
 					if(m.contains(k31a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;	
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;	
 			}
 			
 			//implication3: K32a
@@ -146,8 +146,8 @@ public class CGK0Verifier {
 					if(m.contains(k32a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 			
 			//implication4: K21
@@ -157,8 +157,8 @@ public class CGK0Verifier {
 					if(m.contains(k21.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 			
 			//implication5: K22
@@ -168,8 +168,8 @@ public class CGK0Verifier {
 					if(m.contains(k22.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}		
 			
 			//implication6: K41
@@ -179,8 +179,8 @@ public class CGK0Verifier {
 					if(m.contains(k41.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;	
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;	
 			}
 			
 			//implication7: K42
@@ -190,8 +190,8 @@ public class CGK0Verifier {
 					if(m.contains(k42.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}						
 		}
 		
@@ -215,8 +215,8 @@ public class CGK0Verifier {
 					if(m.contains(k31a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 						
 			//implication3: K32a
@@ -226,8 +226,8 @@ public class CGK0Verifier {
 					if(m.contains(k32a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}		
 			
 			//implication4: K21
@@ -237,8 +237,8 @@ public class CGK0Verifier {
 					if(m.contains(k21.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 			
 			//implication5: K22
@@ -248,8 +248,8 @@ public class CGK0Verifier {
 					if(m.contains(k22.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 			
 			//implication6: K41
@@ -259,8 +259,8 @@ public class CGK0Verifier {
 					if(m.contains(k41.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}				
 			
 			//implication7: K42
@@ -270,8 +270,8 @@ public class CGK0Verifier {
 					if(m.contains(k42.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;	
 				}		
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;	
 			}					
 		}
 		

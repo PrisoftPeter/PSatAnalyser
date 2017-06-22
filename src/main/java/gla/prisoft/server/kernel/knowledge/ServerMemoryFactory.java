@@ -1284,7 +1284,7 @@ public class ServerMemoryFactory {
 		    	sumsatapplicable  =sumsatapplicable +1;
 			}
 		}
-		if(sumsatvalues == 0){
+		if(sumsatapplicable == 0){
 			sat.setSat(-1);	
 		}
 		else{

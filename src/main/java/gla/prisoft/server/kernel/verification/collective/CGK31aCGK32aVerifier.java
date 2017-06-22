@@ -59,8 +59,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k1a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 			
 			//implication 2: K31a
@@ -70,8 +70,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k31a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
 				}	
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
 			}
 		
 			//implication 3: K21a
@@ -81,8 +81,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k21a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;				
 				}	
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;				
 			}
 
 			//implication 4: K41a
@@ -92,8 +92,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k41a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}	
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 		}
 		
@@ -108,8 +108,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k1a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 			
 			//implication 2: K31a
@@ -119,8 +119,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k31a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1; 
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1; 
 			}		
 						
 			//implication 3: K21a
@@ -130,8 +130,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k21a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;				
 				}	
+				totalnoofsenderimplications = totalnoofsenderimplications+1;				
 			}
 
 			//implication 4: K41a
@@ -141,8 +141,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k41a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 		}
 		
@@ -157,8 +157,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k1a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 			
 			//implication 2: K31a
@@ -168,8 +168,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k31a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 			}
 		
 			//implication 3: K21a
@@ -179,8 +179,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k21a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;				
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;				
 			}	
 			
 			//implication 4: K41a
@@ -190,8 +190,8 @@ public class CGK31aCGK32aVerifier {
 					if(m.contains(k41a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 		}
 						

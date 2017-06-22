@@ -62,8 +62,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k1.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 	
 			//implication 2: K31
@@ -73,8 +73,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k31.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
 			}
 
 			//implication 3: K41
@@ -84,8 +84,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k41.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 				}
+				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
 			}
 		}
 		
@@ -100,8 +100,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k1.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 
 			//implication 2: K31
@@ -111,8 +111,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k31.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1; 
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1; 
 			}
 
 			//implication 3: K41
@@ -122,8 +122,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k41.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
 				}
+				totalnoofsenderimplications = totalnoofsenderimplications+1;
 			}
 		}
 		
@@ -138,8 +138,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k1.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 
 			//implication 2: K31
@@ -149,8 +149,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k31.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 				}	
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 			}
 				
 			//implication 3: K41
@@ -160,8 +160,8 @@ public class CGK41CGK42Verifier {
 					if(m.contains(k41.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 				}
+				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 			}
 		}
 						
