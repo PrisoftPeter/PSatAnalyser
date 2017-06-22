@@ -316,6 +316,10 @@ public class CGK1Verifier {
 		int totalnoofimplications = totalnoofsubjectimplications+totalnoofsenderimplications+totalnoofrecipientimplications;
 		int noofimplicationsverified = noofsubjectimplicationsverified + noofsenderimplicationsverified+noofrecipientimplicationsverified;
 		
+		if(totalnoofimplications == 0){
+			return Double.NaN;
+		}
+		
 		double sat = (double)noofimplicationsverified/(double)totalnoofimplications;
 		return sat;
 	}

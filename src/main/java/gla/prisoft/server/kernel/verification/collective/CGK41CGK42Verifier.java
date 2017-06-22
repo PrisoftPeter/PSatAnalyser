@@ -56,7 +56,7 @@ public class CGK41CGK42Verifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
 				if(cg_agent2.getAgentName().equals(subject.getAgentName())){
 					K1 k1 = new K1(self, message);
 					if(m.contains(k1.toString())){
@@ -67,7 +67,7 @@ public class CGK41CGK42Verifier {
 			}
 	
 			//implication 2: K31
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG){
 				if(cg_agent1.getAgentName().equals(subject.getAgentName())){
 					K31 k31 = new K31(self, cg_agent2, message);
 					if(m.contains(k31.toString())){
@@ -78,7 +78,7 @@ public class CGK41CGK42Verifier {
 			}
 
 			//implication 3: K41
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
 				if(!cg_reference.getAgentName().equals(subject.getAgentName())){
 					K41 k41 = new K41(self, cg_agent1, cg_agent2, message);
 					if(m.contains(k41.toString())){
@@ -94,7 +94,7 @@ public class CGK41CGK42Verifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
 				if(cg_agent2.getAgentName().equals(sender.getAgentName())){
 					K1 k1 = new K1(self, message);
 					if(m.contains(k1.toString())){
@@ -105,7 +105,7 @@ public class CGK41CGK42Verifier {
 			}
 
 			//implication 2: K31
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG){
 				if(cg_agent1.getAgentName().equals(sender.getAgentName())){
 					K31 k31 = new K31(self, cg_agent2, message);
 					if(m.contains(k31.toString())){
@@ -116,7 +116,7 @@ public class CGK41CGK42Verifier {
 			}
 
 			//implication 3: K41
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
 				if(!cg_reference.getAgentName().equals(sender.getAgentName())){
 					K41 k41 = new K41(self, cg_agent1, cg_agent2, message);
 					if(m.contains(k41.toString())){
@@ -132,7 +132,7 @@ public class CGK41CGK42Verifier {
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
 				if(cg_agent2.getAgentName().equals(recipient.getAgentName())){
 					K1 k1 = new K1(self, message);
 					if(m.contains(k1.toString())){
@@ -143,7 +143,7 @@ public class CGK41CGK42Verifier {
 			}
 
 			//implication 2: K31
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG){
 				if(cg_agent1.getAgentName().equals(recipient.getAgentName())){
 					K31 k31 = new K31(self, cg_agent2, message);
 					if(m.contains(k31.toString())){
@@ -154,7 +154,7 @@ public class CGK41CGK42Verifier {
 			}
 				
 			//implication 3: K41
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
 				if(!cg_reference.getAgentName().equals(recipient.getAgentName())){
 					K41 k41 = new K41(self, cg_agent1, cg_agent2, message);
 					if(m.contains(k41.toString())){
@@ -167,6 +167,10 @@ public class CGK41CGK42Verifier {
 						
 		int totalnoofimplications = totalnoofsubjectimplications+totalnoofsenderimplications+totalnoofrecipientimplications;
 		int noofimplicationsverified = noofsubjectimplicationsverified + noofsenderimplicationsverified+noofrecipientimplicationsverified;
+		
+		if(totalnoofimplications == 0){
+			return Double.NaN;
+		}
 		
 		double sat = (double)noofimplicationsverified/(double)totalnoofimplications;
 		return sat;

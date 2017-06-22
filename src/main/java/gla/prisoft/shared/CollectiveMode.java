@@ -56,10 +56,10 @@ public class CollectiveMode implements Serializable{
 			return CollectiveStrategy.EG;
 		}
 		else if(desc.equals("everyone beliefs/uncertain that everyone knows that")){
-			return CollectiveStrategy.EG;
+			return CollectiveStrategy.EEG;
 		}
 		else if(desc.equals("everyone beliefs/uncertain that everyone knows that everyone knows that")){
-			return CollectiveStrategy.EG;
+			return CollectiveStrategy.EEEG;
 		}
 		else if(desc.equals("it is common knowledge that")){//EG+ EEG +EEEG
 			return CollectiveStrategy.CG;
