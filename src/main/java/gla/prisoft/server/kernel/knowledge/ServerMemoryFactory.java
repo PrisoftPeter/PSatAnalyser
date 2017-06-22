@@ -1275,12 +1275,21 @@ public class ServerMemoryFactory {
 		}
 		
 		double sumsatvalues = 0;
+		double sumsatapplicable = 0;
 		for (Map.Entry<World, Double> entry : satvalues.entrySet()) {
-		    //World w = entry.getKey();
 		    Double satvalue = entry.getValue();
-		    sumsatvalues = sumsatvalues+ satvalue;
+		    //World w = entry.getKey();
+		    if(!Double.isNaN(satvalue)){
+		    	sumsatvalues = sumsatvalues+ satvalue;
+		    	sumsatapplicable  =sumsatapplicable +1;
+			}
 		}
-		sat.setSat(sumsatvalues/applicableReqs.length);
+		if(sumsatvalues == 0){
+			sat.setSat(-1);	
+		}
+		else{
+			sat.setSat(sumsatvalues/sumsatapplicable);
+		}
 		
 		return sat;
 	}
