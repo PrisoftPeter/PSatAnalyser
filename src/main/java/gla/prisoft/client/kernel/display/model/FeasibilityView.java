@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,9 +34,8 @@ public class FeasibilityView extends javax.swing.JPanel {
     private JLabel reqDescLabel;
 	public static String export_file_path;
 	private boolean export;
-	private static int f_counter;
+	private static int f_counter = 1;
 	private File exportFile;
-
 	public static double sumCollectiveGoal;
 	public static double collectiveGoalCount;
     public static ArrayList<PSatTableResult> ptrs;
@@ -45,18 +45,28 @@ public class FeasibilityView extends javax.swing.JPanel {
      * Creates new form NewJPanel
      */
     public FeasibilityView(ConfigInstance instance) {
-//    	int n = JOptionPane.showConfirmDialog(this,
-//    		    "Export Pr analysis",
-//    		    "Export", JOptionPane.YES_NO_OPTION);
-//    	
-//    	if(n == 0){
-//    		export_file_path = DatastoreChooser.show("select export folder", false);
-//			createExportStore(instance);
-//			export = true;
-//    	}
-//    	else{
-//    		export = false;
-//    	}
+    	if(export_file_path == null && !export){
+    		int n = JOptionPane.showConfirmDialog(this,
+        		    "Export Pr analysis",
+        		    "Export", JOptionPane.YES_NO_OPTION);
+        	
+        	if(n == 0){
+        		export_file_path = DatastoreChooser.show("select export folder", false);
+    			createExportStore(instance);
+    			export = true;
+        	}
+        	else{
+        		export = false;
+        	}
+    	}
+    	else if(export_file_path != null){
+    		createExportStore(instance);
+			export = true;
+    	}
+    	else{
+    		export = false;
+    	}
+    	
         initComponents(instance);
         
         sumCollectiveGoal=0;
@@ -348,10 +358,10 @@ public class FeasibilityView extends javax.swing.JPanel {
 		String folderName2 = export_file_path+"/"+sessionid+"/prfeasibility";
 		String fileName ="";
 		if(instance.is_role_run){
-			fileName = folderName2+"/role_"+f_counter+".csv";	
+			fileName = folderName2+"/role_iter"+f_counter+".csv";	
 		}
 		else{
-			fileName = folderName2+"/instance_"+f_counter+".csv";
+			fileName = folderName2+"/instance_iter"+f_counter+".csv";
 		}
 		f_counter = f_counter +1;
 		
