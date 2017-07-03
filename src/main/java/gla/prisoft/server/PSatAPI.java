@@ -3,13 +3,89 @@ package gla.prisoft.server;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import gla.prisoft.client.Display;
+import gla.prisoft.server.kernel.knowledge.worlds.World;
+import gla.prisoft.shared.CollectiveMode;
 import gla.prisoft.shared.ConfigInstance;
 
 public class PSatAPI {
 	public static ConfigInstance instance;
 	public static String datastore_file_path ="datastore";
 	public static int fvindex;
+	public static boolean isnextpath;
+	public static HashMap<World, ArrayList<World>> higherOrderKs = new HashMap<World, ArrayList<World>>();
+	
+	
+	public static void logHighOrderImplications(){
+				
+		for (Map.Entry<World, ArrayList<World>> entry : higherOrderKs.entrySet()) {
+		    World key = entry.getKey();
+		    ArrayList<World> value = entry.getValue();
+
+		    String htmlcgdesc = CollectiveMode.getModeLimitHtmlDesc(PSatAPI.instance.collectiveStrategy)+"("+key.toLimitHtmlString()+") &#8658; {";
+		    
+		    int count = 0;
+		    int countTotal = 0;
+		    for(World loworder:value){
+				htmlcgdesc = htmlcgdesc + loworder.toLimitHtmlString()+", ";
+				if(count == 10){
+					htmlcgdesc = htmlcgdesc +"<br>";
+					count = 0;
+				}
+				else{
+					count = count +1;
+				}
+				countTotal = countTotal+1;
+
+		    }
+		    htmlcgdesc = "<html>"+instance.currentPath+"<br>"+htmlcgdesc + "}</html>";
+			htmlcgdesc = htmlcgdesc.replace(", }</html>", "}</html>");
+			htmlcgdesc = htmlcgdesc.replace("</html>", "&#8712; A #:"+countTotal+"<br></html>");
+			Display.updateLogPage(htmlcgdesc, false);
+			
+			
+		}	
+	}
+	public static void addHighOrderImplication(World highorder, World loworder){
+		if(!PSatAPI.isnextpath){
+			return;
+		}
+		boolean exist = false;
+		World key=null;
+		ArrayList<World> value = null;
+		for (Map.Entry<World, ArrayList<World>> entry : higherOrderKs.entrySet()) {
+		    key = entry.getKey();
+		    value = entry.getValue();
+		    
+		    if(highorder.toString().equals(key.toString())){
+		    	exist = true;
+		    	break;
+		    }
+		}
+		
+		if(!exist){
+			ArrayList<World>loworders = new ArrayList<World>();
+			loworders.add(loworder);
+			higherOrderKs.put(highorder, loworders);
+		}
+		else{
+			boolean contained = false;
+			for(World v:value){
+				if(v.toString().equals(loworder.toString())){
+					contained = true;
+				}
+			}
+			if(!contained){
+				value.add(loworder);
+				higherOrderKs.put(key, value);
+			}			
+		}
+		
+	}
 	
 	public static File writeGraphMlGmlToFile(String sessionid,String filename, byte [] bytes){
 		String foldername0 = PSatAPI.datastore_file_path+"/filestore";

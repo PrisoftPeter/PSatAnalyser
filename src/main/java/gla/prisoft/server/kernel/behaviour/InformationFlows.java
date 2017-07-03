@@ -1,6 +1,7 @@
 package gla.prisoft.server.kernel.behaviour;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -22,6 +23,7 @@ import gla.prisoft.server.kernel.behaviour.transactions.RequestTransaction;
 import gla.prisoft.server.kernel.behaviour.transactions.Sent1Transaction;
 import gla.prisoft.server.kernel.behaviour.transactions.Sent2Transaction;
 import gla.prisoft.server.kernel.knowledge.ServerMemoryFactory;
+import gla.prisoft.server.kernel.knowledge.worlds.World;
 import gla.prisoft.server.kernel.util.SafeZone;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.kernel.util.ServerSatSerializer;
@@ -156,6 +158,8 @@ public class InformationFlows {
 
 			int listIndex =0;
 			for(String path:instance.listPathsData){
+				PSatAPI.isnextpath = true;
+				PSatAPI.higherOrderKs = new HashMap<World, ArrayList<World>>();
 				
 				sat_treshold_reached = false;
 				containRequest = false;
@@ -203,6 +207,8 @@ public class InformationFlows {
 
 			int pathsIndex =0;
 			for(String selectedPath: selectedPaths){
+				PSatAPI.isnextpath = true;
+				PSatAPI.higherOrderKs = new HashMap<World, ArrayList<World>>();
 				
 				sat_treshold_reached = false;
 				containRequest = false;
@@ -472,7 +478,7 @@ public class InformationFlows {
 				sumlocalsat = 0;
 				countlocalsat = 0;
 				double pathSat = 0; //local pathsat (involves a single path)
-				
+								
 				Agent su = null;
 				ArrayList<Agent> agentsInPath = new ArrayList<Agent>();
 				for(String agentName:pathAgents){
@@ -487,7 +493,7 @@ public class InformationFlows {
 					}
 				}
 				
-				if(instance.collectiveStrategy != CollectiveStrategy.NONE){
+				if(instance.collectiveStrategy != CollectiveStrategy.NONE){					
 					ServerMemoryFactory.extractCollectiveAssertions(instance.subjectName, pathAgents, sinstance,instance);
 				}
 				
@@ -682,15 +688,15 @@ public class InformationFlows {
 						}
 						else{
 							//compute satisfiability of su privacy requirements
-							self_result = ServerMemoryFactory.collectivesat(instance.subjectName, instance.subjectName, senderName, recipientName, sinstance,instance,sat_output, message);
+							self_result = ServerMemoryFactory.collectivesat(instance.subjectName, instance.subjectName, senderName, recipientName, sinstance,instance,sat_output, message,agentsInPath);
 							self_sat = Math.round(self_result.getSat() * 100.0) / 100.0;
 											
 							//compute satisfiability of s privacy requirements
-							s_result = ServerMemoryFactory.collectivesat(senderName, instance.subjectName,senderName, recipientName, sinstance,instance, sat_output, message);
+							s_result = ServerMemoryFactory.collectivesat(senderName, instance.subjectName,senderName, recipientName, sinstance,instance, sat_output, message,agentsInPath);
 							s_sat = Math.round(s_result.getSat() * 100.0) / 100.0;
 
 							//compute satisfiability of r privacy requirements
-							r_result = ServerMemoryFactory.collectivesat(recipientName, instance.subjectName,senderName, recipientName, sinstance,instance, sat_output, message);
+							r_result = ServerMemoryFactory.collectivesat(recipientName, instance.subjectName,senderName, recipientName, sinstance,instance, sat_output, message,agentsInPath);
 							r_sat = Math.round(r_result.getSat() * 100.0) / 100.0;	
 						}
 						
@@ -919,6 +925,11 @@ public class InformationFlows {
 				for(int k=0;k<pathAgents.length;k++){
 					ServerMemoryFactory.restoreMemoryFromClone(pathAgents[k], instance.subjectName, sessionid);	
 				}	
+			}
+			
+			if(PSatAPI.isnextpath){
+				PSatAPI.logHighOrderImplications();
+				PSatAPI.isnextpath = false;
 			}
 			
 			return;

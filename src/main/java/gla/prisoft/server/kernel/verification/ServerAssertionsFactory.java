@@ -436,7 +436,7 @@ public class ServerAssertionsFactory implements Serializable{
 						else{
 							meaning = "<html>"+meaning+"</html>";
 						}
-						
+							
 						if(goal_v == -1){
 							goal_v = self.getGlobalPrivacyGoal_v();
 						}

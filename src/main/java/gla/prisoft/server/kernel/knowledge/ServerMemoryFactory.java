@@ -1202,7 +1202,7 @@ public class ServerMemoryFactory {
 	
 	public static SATResult collectivesat(String selfAgentName,String subjectName, String senderName, 
 			String recipientName, ServerConfigInstance sinstance,
-			ConfigInstance instance, ServerSatSerializer serversatserializer, Attribute message){
+			ConfigInstance instance, ServerSatSerializer serversatserializer, Attribute message, ArrayList<Agent> agentsInPath){
 		
 		SATResult sat = new SATResult();
 		World [] applicableReqs = new World[collectiveassertions.size()];
@@ -1232,19 +1232,19 @@ public class ServerMemoryFactory {
 		
 		for(World w: applicableReqs){
 			if(w instanceof K0){
-				double satvalue = CGK0Verifier.verify(subject, sender, recipient, sinstance,instance, message);
+				double satvalue = CGK0Verifier.verify(subject, sender, recipient, sinstance,instance, message, agentsInPath);
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K0a){
-				double satvalue = CGK0aVerifier.verify(subject, sender, recipient, sinstance,instance, message);
+				double satvalue = CGK0aVerifier.verify(subject, sender, recipient, sinstance,instance, message,agentsInPath);
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K1){
-				double satvalue = CGK1Verifier.verify(subject, sender, recipient, sinstance,instance, (K1)w);
+				double satvalue = CGK1Verifier.verify(subject, sender, recipient, sinstance,instance, (K1)w,agentsInPath);
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K1a){
-				double satvalue = CGK1aVerifier.verify(subject, sender, recipient, sinstance,instance, (K1a)w);
+				double satvalue = CGK1aVerifier.verify(subject, sender, recipient, sinstance,instance, (K1a)w, agentsInPath);
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K31a | w instanceof K32a){

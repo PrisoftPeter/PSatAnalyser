@@ -203,7 +203,7 @@ class PrConfig extends javax.swing.JPanel {
         aspects_label.setText("Aspects:");
         aspects_list.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "None", 
-            		             "<html>Shared Knowledge:<i>E</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that <i>&psi;</i></html>", 
+            		             "<html>Mutual Knowledge:<i>E</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that <i>&psi;</i></html>", 
             		             "<html>Introspection:<i>EE</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that everyone knows <i>&psi;</i></html>", 
             		             "<html>Introspection:<i>EEE</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that everyone knows that everyone knows that <i>&psi;</i> </html>", 
             		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;) + <i>EEE</i><sub>G</sub>(&psi;) </html>"

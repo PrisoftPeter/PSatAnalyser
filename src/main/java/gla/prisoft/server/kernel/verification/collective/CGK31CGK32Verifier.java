@@ -59,8 +59,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k1a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+					PSatAPI.addHighOrderImplication(w, k1a);
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+				}				
 			}
 			
 			//implication 2: K31
@@ -70,8 +71,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k31.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
+					PSatAPI.addHighOrderImplication(w, k31);
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
+				}				
 			}		
 						
 			//implication 3: K21
@@ -81,8 +83,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k21.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1;				
+					PSatAPI.addHighOrderImplication(w, k21);
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1;	
+				}							
 			}
 				
 			//implication 4: K41
@@ -92,8 +95,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k41.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+					PSatAPI.addHighOrderImplication(w, k41);
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+				}				
 			}
 		}
 		
@@ -108,8 +112,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k1a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-				}
-				totalnoofsenderimplications = totalnoofsenderimplications+1;
+					PSatAPI.addHighOrderImplication(w, k1a);
+					totalnoofsenderimplications = totalnoofsenderimplications+1;
+				}				
 			}
 			
 			//implication 2: K31
@@ -119,8 +124,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k31.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-				}	
-				totalnoofsenderimplications = totalnoofsenderimplications+1; 
+					PSatAPI.addHighOrderImplication(w, k31);
+					totalnoofsenderimplications = totalnoofsenderimplications+1; 
+				}					
 			}
 						
 			//implication 3: K21
@@ -130,8 +136,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k21.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-				}
-				totalnoofsenderimplications = totalnoofsenderimplications+1;				
+					PSatAPI.addHighOrderImplication(w, k21);
+					totalnoofsenderimplications = totalnoofsenderimplications+1;
+				}								
 			}
 			
 			//implication 4: K41
@@ -141,8 +148,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k41.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-				}
-				totalnoofsenderimplications = totalnoofsenderimplications+1;
+					PSatAPI.addHighOrderImplication(w, k41);
+					totalnoofsenderimplications = totalnoofsenderimplications+1;
+				}				
 			}
 		}
 		
@@ -157,8 +165,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k1a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-				}
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+					PSatAPI.addHighOrderImplication(w, k1a);
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+				}				
 			}
 			
 			//implication 2: K31
@@ -168,8 +177,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k31.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-				}
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
+					PSatAPI.addHighOrderImplication(w, k31);
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+				}				 
 			}
 						
 			//implication 3: K21
@@ -179,8 +189,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k21.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-				}	
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1;				
+					PSatAPI.addHighOrderImplication(w, k21);
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+				}								
 			}
 				
 			//implication 4: K41
@@ -190,8 +201,9 @@ public class CGK31CGK32Verifier {
 					if(m.contains(k41.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-				}
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+					PSatAPI.addHighOrderImplication(w, k41);
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+				}				
 			}
 		}
 						

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -45,27 +44,27 @@ public class FeasibilityView extends javax.swing.JPanel {
      * Creates new form NewJPanel
      */
     public FeasibilityView(ConfigInstance instance) {
-    	if(export_file_path == null && !export){
-    		int n = JOptionPane.showConfirmDialog(this,
-        		    "Export Pr analysis",
-        		    "Export", JOptionPane.YES_NO_OPTION);
-        	
-        	if(n == 0){
-        		export_file_path = DatastoreChooser.show("select export folder", false);
-    			createExportStore(instance);
-    			export = true;
-        	}
-        	else{
-        		export = false;
-        	}
-    	}
-    	else if(export_file_path != null){
-    		createExportStore(instance);
-			export = true;
-    	}
-    	else{
-    		export = false;
-    	}
+//    	if(export_file_path == null && !export){
+//    		int n = JOptionPane.showConfirmDialog(this,
+//        		    "Export Pr analysis",
+//        		    "Export", JOptionPane.YES_NO_OPTION);
+//        	
+//        	if(n == 0){
+//        		export_file_path = DatastoreChooser.show("select export folder", false);
+//    			createExportStore(instance);
+//    			export = true;
+//        	}
+//        	else{
+//        		export = false;
+//        	}
+//    	}
+//    	else if(export_file_path != null){
+//    		createExportStore(instance);
+//			export = true;
+//    	}
+//    	else{
+//    		export = false;
+//    	}
     	
         initComponents(instance);
         

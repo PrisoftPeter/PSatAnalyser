@@ -61,8 +61,9 @@ public class CGK41aCGK42aVerifier {
 					if(m.contains(k1a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+					PSatAPI.addHighOrderImplication(w, k1a);
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+				}				
 			}
 
 			//implication 2: K31a
@@ -72,19 +73,21 @@ public class CGK41aCGK42aVerifier {
 					if(m.contains(k31a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-				}	
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
+					PSatAPI.addHighOrderImplication(w, k31a);
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+				}				 
 			}		
 			
 			//implication 3: K41a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(!cg_reference.getAgentName().equals(subject.getAgentName())){
+				if(cg_reference.getAgentName().equals(subject.getAgentName())){
 					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
 					if(m.contains(k41a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-				}
-				totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+					PSatAPI.addHighOrderImplication(w, k41a);
+					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+				}				
 			}
 		}
 		
@@ -99,8 +102,9 @@ public class CGK41aCGK42aVerifier {
 					if(m.contains(k1a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-				}
-				totalnoofsenderimplications = totalnoofsenderimplications+1;
+					PSatAPI.addHighOrderImplication(w, k1a);
+					totalnoofsenderimplications = totalnoofsenderimplications+1;
+				}				
 			}
 			
 			//implication 2: K31a
@@ -110,19 +114,21 @@ public class CGK41aCGK42aVerifier {
 					if(m.contains(k31a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-				}	
-				totalnoofsenderimplications = totalnoofsenderimplications+1; 
+					PSatAPI.addHighOrderImplication(w, k31a);
+					totalnoofsenderimplications = totalnoofsenderimplications+1; 
+				}				
 			}
 
 			//implication 3: K41a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(!cg_reference.getAgentName().equals(sender.getAgentName())){
+				if(cg_reference.getAgentName().equals(sender.getAgentName())){
 					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
 					if(m.contains(k41a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-				}
-				totalnoofsenderimplications = totalnoofsenderimplications+1;
+					PSatAPI.addHighOrderImplication(w, k41a);
+					totalnoofsenderimplications = totalnoofsenderimplications+1;
+				}				
 			}
 		}
 		
@@ -137,8 +143,9 @@ public class CGK41aCGK42aVerifier {
 					if(m.contains(k1a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-				}
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+					PSatAPI.addHighOrderImplication(w, k1a);
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+				}				
 			}
 			
 			//implication 2: K31a
@@ -148,19 +155,21 @@ public class CGK41aCGK42aVerifier {
 					if(m.contains(k31a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-				}	
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
+					PSatAPI.addHighOrderImplication(w, k31a);
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
+				}				
 			}
 
 			//implication 3: K41a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(!cg_reference.getAgentName().equals(recipient.getAgentName())){
+				if(cg_reference.getAgentName().equals(recipient.getAgentName())){
 					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
 					if(m.contains(k41a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-				}
-				totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+					PSatAPI.addHighOrderImplication(w, k41a);
+					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+				}				
 			}
 		}
 						
