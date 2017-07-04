@@ -29,4 +29,24 @@ public class Helper {
 		return tempo;
 	}
 	
+	public static String [] generatePermutations(String[] s,int i,int k,String[] buff) {
+		String [] permutations = new String[0];
+        if(i<k) {
+            for(int j=0;j<s.length;j++) {
+
+                buff[i] = s[j];
+                generatePermutations(s,i+1,k,buff);
+            }
+        }       
+        else {
+        	String seq = "";
+	        for(String ss:buff){
+	            seq = seq+ss+" ";
+	        }
+	        permutations = (String[])addObjectToArray(permutations, seq) ;
+        }
+        
+        return permutations;
+    }
+	
 }

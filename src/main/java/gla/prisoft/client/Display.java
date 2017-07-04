@@ -54,10 +54,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 
 import javax.swing.JToolBar;
 
@@ -80,6 +82,7 @@ import gla.prisoft.client.kernel.display.util.KleinbergSmallWorldSettings;
 import gla.prisoft.client.kernel.display.util.PreferentialAttachmentSettings;
 import gla.prisoft.client.session.ClientConfig;
 import gla.prisoft.server.PSatAPI;
+import gla.prisoft.server.kernel.util.Helper;
 import gla.prisoft.server.kernel.verification.ServerAssertionsFactory;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.NetworkType;
@@ -581,6 +584,7 @@ public class Display extends JFrame {
 				PSatClient.netAutoGenAgents();		
 				updateNetworkPage();
 				setDefaultSourceTargetForSequenceGraph(); //
+				loadPossibleSequences();
 				runGraphStatistics();
 				updateProgressComponent(100,"");
 			}			
@@ -1409,13 +1413,13 @@ public class Display extends JFrame {
 						int noagents = PSatClient.netGetNoAgents();
 						boolean valuesSet = Display.configPercentagePossibleWorldsAndNoAgentsRangeDisplay();
 						if(!valuesSet){
-						PSatAPI.instance. maxNoOfknowAgents = noagents-1;
-						PSatAPI.instance.minNoOfknowAgents = noagents-1;
-						PSatAPI.instance.noOfKnownAgentsGenerator = new Random();
-					}
-					PSatAPI.instance.noMemoryStores = 0;	
-					PSatClient.netSerialiseConfigInstance();
-					PSatClient.netNewMemoryStore();	
+							PSatAPI.instance. maxNoOfknowAgents = noagents-1;
+							PSatAPI.instance.minNoOfknowAgents = noagents-1;
+							PSatAPI.instance.noOfKnownAgentsGenerator = new Random();
+						}
+						PSatAPI.instance.noMemoryStores = 0;	
+						PSatClient.netSerialiseConfigInstance();
+						PSatClient.netNewMemoryStore();	
 					}
 					
 					//generate paths list
@@ -1440,7 +1444,11 @@ public class Display extends JFrame {
 
 			return;
 		}
-		if(PSatAPI.instance.is_role_run){
+//		if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){
+//			xx
+//		}
+//		else
+			if(PSatAPI.instance.is_role_run){
 			PSatAPI.instance.listPathsData = PSatClient.netFindKNearestneighbours();
 			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
 			for(String s:PSatAPI.instance.listPathsData){
@@ -2447,7 +2455,26 @@ public class Display extends JFrame {
 		queryThread.start();
 	}
 	
-	
+	private static void loadPossibleSequences(){
+//		ArrayList<String> sequences = new ArrayList<String>();
+//		String [] agentNames = PSatClient.netGetAgentNames();
+//	    
+//		 String[] seq = new String[agentNames.length];
+//	     int k = agentNames.length;
+//	     for(int i=1;i<=k;i++) {
+//	        Helper.generatePermutations(agentNames,0,i,seq);
+//	     }
+//	     int j=0;
+//	     for(String s: seq){
+//	    	 System.out.println(s);
+//	    	 if(s !=)
+//	    	 j = j+1;
+//	     }
+//	     if(j == agentNames.length){
+//	    	 
+//	     }
+//		
+	}
 	
 	public static double RoundTo2Decimals(double val) {
 		if(Double.isNaN(val)){
