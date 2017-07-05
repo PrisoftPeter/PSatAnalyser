@@ -192,6 +192,9 @@ public class ServerAssertionsFactory implements Serializable{
 
 		Properties [] properties = new Properties[0];
 		
+		if(instance == null){
+			instance = PSatAPI.instance;
+		}
 		
 		sinstance.a_counter = 1;
 		

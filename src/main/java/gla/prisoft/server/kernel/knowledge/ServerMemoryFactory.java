@@ -1256,7 +1256,7 @@ public class ServerMemoryFactory {
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K21a | w instanceof K22a){
-				double satvalue = CGK21aCGK22aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				double satvalue = CGK21aCGK22aVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K21 | w instanceof K22){
