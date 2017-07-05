@@ -29,6 +29,17 @@ public class Helper {
 		return tempo;
 	}
 	
+	public static String[] addStringToArray(String [] stringArray, String s){
+		String [] tempo = new String[stringArray.length +1];
+		
+		for(int i=0;i<stringArray.length;i++){
+			tempo[i] = stringArray[i];
+		}
+		tempo[stringArray.length] = s;
+		
+		return tempo;
+	}
+	
 	public static String [] generatePermutations(String[] s,int i,int k,String[] buff) {
 		String [] permutations = new String[0];
         if(i<k) {
@@ -43,7 +54,7 @@ public class Helper {
 	        for(String ss:buff){
 	            seq = seq+ss+" ";
 	        }
-	        permutations = (String[])addObjectToArray(permutations, seq) ;
+	        permutations = addStringToArray(permutations, seq) ;
         }
         
         return permutations;

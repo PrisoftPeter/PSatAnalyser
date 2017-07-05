@@ -54,10 +54,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 
 import javax.swing.JToolBar;
 
@@ -80,6 +82,7 @@ import gla.prisoft.client.kernel.display.util.KleinbergSmallWorldSettings;
 import gla.prisoft.client.kernel.display.util.PreferentialAttachmentSettings;
 import gla.prisoft.client.session.ClientConfig;
 import gla.prisoft.server.PSatAPI;
+import gla.prisoft.server.kernel.util.Helper;
 import gla.prisoft.server.kernel.verification.ServerAssertionsFactory;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.NetworkType;
@@ -2453,24 +2456,32 @@ public class Display extends JFrame {
 	}
 	
 	private static void loadPossibleSequences(){
-//		ArrayList<String> sequences = new ArrayList<String>();
-//		String [] agentNames = PSatClient.netGetAgentNames();
-//	    
-//		 String[] seq = new String[agentNames.length];
-//	     int k = agentNames.length;
-//	     for(int i=1;i<=k;i++) {
-//	        Helper.generatePermutations(agentNames,0,i,seq);
-//	     }
-//	     int j=0;
-//	     for(String s: seq){
-//	    	 System.out.println(s);
-//	    	 if(s !=)
-//	    	 j = j+1;
-//	     }
-//	     if(j == agentNames.length){
-//	    	 
-//	     }
-//		
+		ArrayList<String> sequences = new ArrayList<String>();
+		String [] agentNames = PSatClient.netGetAgentNames();
+	    
+		 String[] seq = new String[agentNames.length];
+	     int k = agentNames.length;
+	     for(int i=1;i<=k;i++) {
+	        Helper.generatePermutations(agentNames,0,i,seq);
+	     }
+	     int j=0;
+	     for(String s: seq){
+	    	 System.out.println(s);
+	    	 if(s != null){
+		    	 j = j+1; 
+	    	 }
+	     }
+	     if(j == agentNames.length){
+	    	 Set<String> set = new HashSet<String>();
+	    	 for(String s:seq){
+	    		 set.add(s);
+	    	 }
+
+	    	 if(set.size() == seq.length){ //no duplicates
+	    		 
+	    	 }
+	     }
+		
 	}
 	
 	public static double RoundTo2Decimals(double val) {
