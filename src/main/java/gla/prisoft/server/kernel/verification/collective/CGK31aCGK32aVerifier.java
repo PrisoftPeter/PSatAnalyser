@@ -1,9 +1,10 @@
 package gla.prisoft.server.kernel.verification.collective;
 
+import java.util.ArrayList;
+
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.knowledge.Memory;
 import gla.prisoft.server.kernel.knowledge.worlds.K1a;
-import gla.prisoft.server.kernel.knowledge.worlds.K21a;
 import gla.prisoft.server.kernel.knowledge.worlds.K31a;
 import gla.prisoft.server.kernel.knowledge.worlds.K32a;
 import gla.prisoft.server.kernel.knowledge.worlds.K41a;
@@ -17,7 +18,7 @@ import gla.prisoft.shared.ConfigInstance;
 public class CGK31aCGK32aVerifier {
 	//Common knowledge of K31a/K32a
 	public static double verify(Agent subject, Agent sender, Agent recipient, ServerConfigInstance sinstance,
-			ConfigInstance instance, World w){
+			ConfigInstance instance, World w, ArrayList<Agent> agentsInPath){
 		
 		int totalnoofsubjectimplications =0;
 		int noofsubjectimplicationsverified = 0;
@@ -49,173 +50,155 @@ public class CGK31aCGK32aVerifier {
 		}
 				
 		if(verifyinsubject){
+
 			Agent self = subject;
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
-				if(cg_agent1.getAgentName().equals(subject.getAgentName())){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_reference.getAgentName().equals(subject.getAgentName())){
 					K1a k1a = new K1a(self, message);
 					if(m.contains(k1a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
 					PSatAPI.addHighOrderImplication(w, k1a);
 					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
-				}				
+				}
 			}
 			
 			//implication 2: K31a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG){
-				if(!cg_agent1.getAgentName().equals(subject.getAgentName()) && cg_reference.getAgentName().equals(subject.getAgentName())){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_reference.getAgentName().equals(subject.getAgentName())){
 					K31a k31a = new K31a(self, cg_agent1, message);
 					if(m.contains(k31a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
 					PSatAPI.addHighOrderImplication(w, k31a);
 					totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
-				}				
-			}
-		
-			//implication 3: K21a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(cg_agent1.getAgentName().equals(subject.getAgentName()) && !cg_reference.getAgentName().equals(subject.getAgentName())){
-					K21a k21a = new K21a(self, cg_reference, message);
-					if(m.contains(k21a.toString())){
-						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
-					}
-					PSatAPI.addHighOrderImplication(w, k21a);
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;	
-				}							
-			}
-
-			//implication 4: K41a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(!cg_agent1.getAgentName().equals(subject.getAgentName()) && !cg_reference.getAgentName().equals(subject.getAgentName())){
-					K41a k41a = new K41a(self, cg_reference, cg_agent1, message);
-					if(m.contains(k41a.toString())){
-						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
-					}
-					PSatAPI.addHighOrderImplication(w, k41a);
-					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
-				}				
-			}
+				}
+			}					
+			
+			//implication 5: K41a/K42a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
+//			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
+				for(Agent r1:agentsInPath){
+					if(!r1.getAgentName().equals(cg_reference.getAgentName()) && !cg_reference.getAgentName().equals(cg_agent1.getAgentName())){
+						K41a k41a = new K41a(r1, cg_reference, cg_agent1, message);
+						if(m.contains(k41a.toString())){
+							noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
+						}
+						PSatAPI.addHighOrderImplication(w, k41a);
+						totalnoofsubjectimplications = totalnoofsubjectimplications+1;
+					}					
+					
+				}
+			}	
 		}
 		
-		if(verifyinsender){
+		if(verifyinsender && !subject.getAgentName().equals(sender.getAgentName())){
+
 			Agent self = sender;
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
 			
 			//implication 1: K1a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
-				if(cg_agent1.getAgentName().equals(sender.getAgentName())){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_reference.getAgentName().equals(sender.getAgentName())){
 					K1a k1a = new K1a(self, message);
 					if(m.contains(k1a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
 					PSatAPI.addHighOrderImplication(w, k1a);
 					totalnoofsenderimplications = totalnoofsenderimplications+1;
-				}				
+				}
 			}
 			
 			//implication 2: K31a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG){
-				if(!cg_agent1.getAgentName().equals(sender.getAgentName()) && cg_reference.getAgentName().equals(sender.getAgentName())){
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+				if(cg_reference.getAgentName().equals(sender.getAgentName())){
 					K31a k31a = new K31a(self, cg_agent1, message);
 					if(m.contains(k31a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
 					PSatAPI.addHighOrderImplication(w, k31a);
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
-				}				 
-			}		
-						
-			//implication 3: K21a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(cg_agent1.getAgentName().equals(sender.getAgentName()) && !cg_reference.getAgentName().equals(sender.getAgentName())){
-					K21a k21a = new K21a(self, cg_reference, message);
-					if(m.contains(k21a.toString())){
-						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
-					}
-					PSatAPI.addHighOrderImplication(w, k21a);
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
-				}								
+					totalnoofsenderimplications = totalnoofsenderimplications+1; 
+				}
 			}
-
-			//implication 4: K41a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(!cg_agent1.getAgentName().equals(sender.getAgentName()) && !cg_reference.getAgentName().equals(sender.getAgentName())){
-					K41a k41a = new K41a(self, cg_reference, cg_agent1, message);
-					if(m.contains(k41a.toString())){
-						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
+					
+			
+			//implication 5: K41a/K42a
+			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
+//			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
+				for(Agent r1:agentsInPath){
+					if(!r1.getAgentName().equals(cg_reference.getAgentName()) && !cg_reference.getAgentName().equals(cg_agent1.getAgentName())){
+						K41a k41a = new K41a(r1, cg_reference, cg_agent1, message);
+						if(m.contains(k41a.toString())){
+							noofsenderimplicationsverified = noofsenderimplicationsverified+1;
+						}
+						PSatAPI.addHighOrderImplication(w, k41a);
+						totalnoofsenderimplications = totalnoofsenderimplications+1;
 					}
-					PSatAPI.addHighOrderImplication(w, k41a);
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
-				}				
-			}
+				}
+			}				
+					
 		}
 		
 		if(verifyinrecipient){
-			Agent self = recipient;
-			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
-			
-			//implication 1: K1a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
-				if(cg_agent1.getAgentName().equals(recipient.getAgentName())){
-					K1a k1a = new K1a(self, message);
-					if(m.contains(k1a.toString())){
-						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+			if(cg_reference.getAgentName().equals(recipient.getAgentName())){
+				Agent self = recipient;
+				Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);
+				
+				//implication 1: K1a
+				if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+					if(cg_reference.getAgentName().equals(recipient.getAgentName())){
+						K1a k1a = new K1a(self, message);
+						if(m.contains(k1a.toString())){
+							noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+						}
+						PSatAPI.addHighOrderImplication(w, k1a);
+						totalnoofrecipientimplications = totalnoofrecipientimplications+1;
 					}
-					PSatAPI.addHighOrderImplication(w, k1a);
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
-				}				
-			}
-			
-			//implication 2: K31a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG){
-				if(!cg_agent1.getAgentName().equals(recipient.getAgentName()) && cg_reference.getAgentName().equals(recipient.getAgentName())){
-					K31a k31a = new K31a(self, cg_agent1, message);
-					if(m.contains(k31a.toString())){
-						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
-					}
-					PSatAPI.addHighOrderImplication(w, k31a);
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 				}
-			}
-		
-			//implication 3: K21a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(cg_agent1.getAgentName().equals(recipient.getAgentName()) && !cg_reference.getAgentName().equals(recipient.getAgentName())){
-					K21a k21a = new K21a(self, cg_reference, message);
-					if(m.contains(k21a.toString())){
-						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+				
+				//implication 2: K31a
+				if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
+					if(cg_reference.getAgentName().equals(recipient.getAgentName())){
+						K31a k31a = new K31a(self, cg_agent1, message);
+						if(m.contains(k31a.toString())){
+							noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+						}
+						PSatAPI.addHighOrderImplication(w, k31a);
+						totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 					}
-					PSatAPI.addHighOrderImplication(w, k21a);
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
-				}				
-			}	
-			
-			//implication 4: K41a
-			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
-				if(!cg_agent1.getAgentName().equals(recipient.getAgentName()) && !cg_reference.getAgentName().equals(recipient.getAgentName())){
-					K41a k41a = new K41a(self, cg_reference, cg_agent1, message);
-					if(m.contains(k41a.toString())){
-						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+				}
+										
+				//implication 5: K41a/K42a
+				if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG){
+//				if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EG ||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEG||PSatAPI.instance.collectiveStrategy == CollectiveStrategy.EEEG){
+					for(Agent r1:agentsInPath){
+						if(!r1.getAgentName().equals(cg_reference.getAgentName()) && !cg_reference.getAgentName().equals(cg_agent1.getAgentName())){
+							K41a k41a = new K41a(r1, cg_reference, cg_agent1, message);
+							if(m.contains(k41a.toString())){
+								noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
+							}
+							PSatAPI.addHighOrderImplication(w, k41a);
+							totalnoofrecipientimplications = totalnoofrecipientimplications+1;
+						}
 					}
-					PSatAPI.addHighOrderImplication(w, k41a);
-					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
-				}				
-			}
+				}	
+			}							
 		}
-						
+				
 		int totalnoofimplications = totalnoofsubjectimplications+totalnoofsenderimplications+totalnoofrecipientimplications;
 		int noofimplicationsverified = noofsubjectimplicationsverified + noofsenderimplicationsverified+noofrecipientimplicationsverified;
 		
 		if(totalnoofimplications == 0){
+			PSatAPI.addHighOrderImplication(w, null);
 			return Double.NaN;
 		}
 		
 		double sat = (double)noofimplicationsverified/(double)totalnoofimplications;
 		return sat;
 	}
+
 
 }

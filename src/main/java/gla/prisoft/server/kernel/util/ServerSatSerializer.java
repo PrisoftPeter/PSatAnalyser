@@ -198,24 +198,37 @@ public class ServerSatSerializer implements Serializable{
 		ptr_row.setDecisionColumn(decision);
 		ptr_row.setDecision(decision);
 		
-		if(path_sat >= collectiveGoalValue && feasibility < 1){
-			ptr_row.setDecisionCategory(DecisionCategory.CAT1);
+		if(path_sat == -1){
+			if(feasibility < 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT1);
+			}
+			else if(feasibility == 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT2);
+			}
+			else if(feasibility > 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT3);
+			}
 		}
-		else if(path_sat >= collectiveGoalValue && feasibility == 1){
-			ptr_row.setDecisionCategory(DecisionCategory.CAT2);
-		}
-		else if(path_sat >= collectiveGoalValue && feasibility > 1){
-			ptr_row.setDecisionCategory(DecisionCategory.CAT3);
-		}
-//		else if(path_sat < collectiveGoalValue && feasibility < 1){
-//			ptr_row.setDecisionCategory(DecisionCategory.CAT4);
-//		}
-//		else if(path_sat < collectiveGoalValue && feasibility == 1){
-//			ptr_row.setDecisionCategory(DecisionCategory.CAT5);
-//		}
-//		else if(path_sat < collectiveGoalValue && feasibility > 1){
-//			ptr_row.setDecisionCategory(DecisionCategory.CAT6);
-//		}
+		else{
+			if(path_sat >= collectiveGoalValue && feasibility < 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT1);
+			}
+			else if(path_sat >= collectiveGoalValue && feasibility == 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT2);
+			}
+			else if(path_sat >= collectiveGoalValue && feasibility > 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT3);
+			}
+//			else if(path_sat < collectiveGoalValue && feasibility < 1){
+//				ptr_row.setDecisionCategory(DecisionCategory.CAT4);
+//			}
+//			else if(path_sat < collectiveGoalValue && feasibility == 1){
+//				ptr_row.setDecisionCategory(DecisionCategory.CAT5);
+//			}
+//			else if(path_sat < collectiveGoalValue && feasibility > 1){
+//				ptr_row.setDecisionCategory(DecisionCategory.CAT6);
+//			}
+		}		
 		
 		ptr_row.setSuSat(su_sat);
 		ptr_row.setsSat(s_sat);

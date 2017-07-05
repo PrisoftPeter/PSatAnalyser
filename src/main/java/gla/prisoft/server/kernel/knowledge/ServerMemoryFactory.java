@@ -1248,11 +1248,11 @@ public class ServerMemoryFactory {
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K31a | w instanceof K32a){
-				double satvalue = CGK31aCGK32aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				double satvalue = CGK31aCGK32aVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K31 | w instanceof K32){
-				double satvalue = CGK31CGK32Verifier.verify(subject, sender, recipient, sinstance,instance, w);
+				double satvalue = CGK31CGK32Verifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K21a | w instanceof K22a){

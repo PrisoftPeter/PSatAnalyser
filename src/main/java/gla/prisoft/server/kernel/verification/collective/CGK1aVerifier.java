@@ -243,6 +243,7 @@ public class CGK1aVerifier {
 		int noofimplicationsverified = noofsubjectimplicationsverified + noofsenderimplicationsverified+noofrecipientimplicationsverified;
 		
 		if(totalnoofimplications == 0){
+			PSatAPI.addHighOrderImplication(cg, null);
 			return Double.NaN;
 		}
 		

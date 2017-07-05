@@ -30,17 +30,19 @@ public class PSatAPI {
 		    
 		    int count = 0;
 		    int countTotal = 0;
-		    for(World loworder:value){
-				htmlcgdesc = htmlcgdesc + loworder.toLimitHtmlString()+", ";
-				if(count == 10){
-					htmlcgdesc = htmlcgdesc +"<br>";
-					count = 0;
-				}
-				else{
-					count = count +1;
-				}
-				countTotal = countTotal+1;
-
+		    for(Object loworder_o:value){
+		    	if(loworder_o !=null){
+		    		World loworder = (World)loworder_o;
+		    		htmlcgdesc = htmlcgdesc + loworder.toLimitHtmlString()+", ";
+					if(count == 10){
+						htmlcgdesc = htmlcgdesc +"<br>";
+						count = 0;
+					}
+					else{
+						count = count +1;
+					}
+					countTotal = countTotal+1;
+		    	}
 		    }
 		    htmlcgdesc = "<html>"+instance.currentPath+"<br>"+htmlcgdesc + "}</html>";
 			htmlcgdesc = htmlcgdesc.replace(", }</html>", "}</html>");
@@ -74,10 +76,17 @@ public class PSatAPI {
 		}
 		else{
 			boolean contained = false;
-			for(World v:value){
-				if(v.toString().equals(loworder.toString())){
+			for(Object vx:value){
+				
+				if(vx == null && loworder == null){
 					contained = true;
 				}
+				else{
+					World v = (World)vx;
+					if(v !=null && loworder !=null && v.toString().equals(loworder.toString())){
+						contained = true;
+					}
+				}				
 			}
 			if(!contained){
 				value.add(loworder);
