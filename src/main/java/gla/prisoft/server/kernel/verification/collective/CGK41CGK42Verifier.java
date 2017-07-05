@@ -132,8 +132,7 @@ public class CGK41CGK42Verifier {
 					PSatAPI.addHighOrderImplication(w, k41);
 					totalnoofsenderimplications = totalnoofsenderimplications+1; 
 				}
-			}					
-					
+			}		
 		}
 		
 		if(verifyinrecipient){

@@ -54,12 +54,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 
 import javax.swing.JToolBar;
 
@@ -82,7 +80,6 @@ import gla.prisoft.client.kernel.display.util.KleinbergSmallWorldSettings;
 import gla.prisoft.client.kernel.display.util.PreferentialAttachmentSettings;
 import gla.prisoft.client.session.ClientConfig;
 import gla.prisoft.server.PSatAPI;
-import gla.prisoft.server.kernel.util.Helper;
 import gla.prisoft.server.kernel.verification.ServerAssertionsFactory;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.NetworkType;
@@ -1638,7 +1635,7 @@ public class Display extends JFrame {
 	public void configProperties(){
 
 		if(iframeConfigView == null ||iframeConfigView.isClosed()){
-			iframeConfigView = new InternalFrame("PSat Configuration",680, 330,true,true,true,true,8,4);
+			iframeConfigView = new InternalFrame("PSat Configuration",580, 330,true,true,true,true,8,4);
 			jdpDesktop.add(iframeConfigView);	
 		}	
 		iframeConfigView.repaint();

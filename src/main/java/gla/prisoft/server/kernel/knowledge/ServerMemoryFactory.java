@@ -113,6 +113,9 @@ public class ServerMemoryFactory {
 		boolean done = false;
 
 //		Display.updateLogPage("generating possible worlds statespace...", false);
+		if(instance == null){
+			instance = PSatAPI.instance;
+		}
 		instance.is_generating_memory_store = true;
 		Properties ppties1 = new Properties();
 		ppties1.setProperty("instanceproperty", "is_generating_memory_store");
@@ -589,608 +592,611 @@ public class ServerMemoryFactory {
 		collectiveassertions = new ArrayList<World>();
 		World applicableReqs [] = new World[0];
 
-		for(int k=0;k<pathAgents.length-1;k++){										
-			
-			String senderName = pathAgents[k];
-			String recipientName = pathAgents[k+1];
-			
-			boolean extractFromSubject = true;
-			boolean extractFromSender = true;
-			boolean extractFromRecipient = true;
-			
-			if(extractFromRecipient){
-				String selfAgentName = recipientName;
-				Agent self = ServerAgentFactory.getAgent(selfAgentName, sinstance);
-				//Memory m = new Memory(self, subjectName, sinstance, instance);
-				
-				if(instance.isModePick){
-					if(!instance.is_role_run){
+//		for(int k=0;k<pathAgents.length-1;k++){	
+		for(String agentName1:pathAgents){
+			for(String agentName2:pathAgents){
+				if(!agentName1.equals(agentName2)){
+					
+					boolean extractFromSubject = true;
+					boolean extractFromAgentName1 = true;
+					boolean extractFromAgentName2 = true;
+					
+					if(extractFromAgentName2){
+						String selfAgentName = agentName1;
+						Agent self = ServerAgentFactory.getAgent(selfAgentName, sinstance);
 						
-						AssertionInstance f[] = self.getAssertionInstances();
-						
-						World reqs [] = new World[f.length];
-						for(int i=0;i<f.length;i++){
-							reqs[i] = ServerAssertionsFactory.getAssertionInstanceWorld(f[i].getAssertion(), selfAgentName, selfAgentName+"_"+subjectName, sinstance.sessionid);
-						}
-						
-						for(World req:reqs){
-							if(isInstanceApplicable(req, selfAgentName,subjectName,senderName, recipientName)){
-								World temp [] = new World[applicableReqs.length +1];
-								for(int i=0;i< applicableReqs.length;i++){
-									temp[i] = applicableReqs[i];
+						if(instance.isModePick){
+							if(!instance.is_role_run){
+								
+								AssertionInstance f[] = self.getAssertionInstances();
+								
+								World reqs [] = new World[f.length];
+								for(int i=0;i<f.length;i++){
+									reqs[i] = ServerAssertionsFactory.getAssertionInstanceWorld(f[i].getAssertion(), selfAgentName, selfAgentName+"_"+subjectName, sinstance.sessionid);
 								}
-								temp[applicableReqs.length] = req;
-								applicableReqs = temp;
-							}
-						}
-					}
-					else{
-						AssertionRole roles[] = new AssertionRole[0];
-						if(self.getRoles() !=null){
-							for(AssertionRole a: self.getRoles()){
-								boolean applicableRole = false;
-								if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-								   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-									applicableRole = true;
-								}
-								if(applicableRole){
-									AssertionRole temp[] = new AssertionRole[roles.length+1];
-									for(int i=0;i<roles.length;i++){
-										temp[i] = roles[i];
-									}
-									temp[roles.length] = a;
-									roles = temp;
-								}						
-							}	
-						}
-						
-						if(!selfAgentName.equals(subjectName)){
-							Agent su = ServerAgentFactory.getAgent(subjectName, sinstance);
-							if(su.getRoles() !=null){
-								for(AssertionRole a: su.getRoles()){
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-												applicableRole = true;
-									}
-									
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
-									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
+								
+								for(World req:reqs){
+									if(isInstanceApplicable(req, selfAgentName,subjectName,agentName1, agentName2)){
+										World temp [] = new World[applicableReqs.length +1];
+										for(int i=0;i< applicableReqs.length;i++){
+											temp[i] = applicableReqs[i];
 										}
-										temp[roles.length] = a;
-										roles = temp;
-									}							
-								}	
+										temp[applicableReqs.length] = req;
+										applicableReqs = temp;
+									}
+								}
 							}
-						}
-						
-						if(!selfAgentName.equals(subjectName) && !senderName.equals(subjectName)){
-							Agent s = ServerAgentFactory.getAgent(senderName, sinstance);
-							if(s.getRoles() !=null){
-								for(AssertionRole a: s.getRoles()){
-																
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-												applicableRole = true;
-									}
-									
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
-									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
+							else{
+								AssertionRole roles[] = new AssertionRole[0];
+								if(self.getRoles() !=null){
+									for(AssertionRole a: self.getRoles()){
+										boolean applicableRole = false;
+										if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+										   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+											applicableRole = true;
 										}
-										temp[roles.length] = a;
-										roles = temp;	
-									}							
-								}	
-							}
-						}
-						
-						if(!selfAgentName.equals(recipientName) ){
-							Agent r = ServerAgentFactory.getAgent(recipientName, sinstance);
-							if(r.getRoles() !=null){
-								for(AssertionRole a: r.getRoles()){
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-												applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
-									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+											applicableRole = true;
 										}
-										temp[roles.length] = a;
-										roles = temp;	
-									}
-								}	
-							}
-						}
-						
-						for(AssertionRole role: roles){
-							//String roleSelfAgentName = role.getSelfAgentName();
-							String roleType = role.getRoleType();
-							roleType = roleType.replace("<html>", "");
-							roleType = roleType.replace("</html>", "");
-							String[] roleZoneAgents = role.getZoneAgents();
-							KnowledgeBase knowledgeBase = role.getKnowledgeBase();
-							
-							boolean su_inzone = false;
-							boolean s_inzone = false;
-							boolean r_inzone = false;
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(subjectName)){
-									su_inzone = true;							
-								}
-							}
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(recipientName)){
-									r_inzone = true;
-								}
-							}
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(senderName)){
-									s_inzone = true;
-								}
-							}
-							//World reqs [] = new World[0];
-
-							if(s_inzone && su_inzone && r_inzone){
-								World  roleReq = World.createWorld(knowledgeBase, roleType, ServerAgentFactory.getAgent(subjectName, sinstance), 
-										 ServerAgentFactory.getAgent(senderName, sinstance), ServerAgentFactory.getAgent(recipientName, sinstance), 
-										 ServerAgentFactory.getAgent(subjectName, sinstance).getPersonalAttributes()[0]);
-								if(roleReq != null){
-									World temp[] = new World[applicableReqs.length + 1];
-									for(int i=0;i < applicableReqs.length; i++){
-										temp[i] = applicableReqs[i];
-									}
-									temp[applicableReqs.length] = roleReq;
-									applicableReqs = temp;	
-								}						
-							}					
-						}
-					}					
-				}
-			
-			}
-			
-			if(extractFromSender){
-				String selfAgentName = senderName;
-				
-				Agent self = ServerAgentFactory.getAgent(selfAgentName, sinstance);
-				//Memory m = new Memory(self, subjectName, sinstance, instance);
-				
-				if(instance.isModePick){
-					if(!instance.is_role_run){
-						
-						AssertionInstance f[] = self.getAssertionInstances();
-						
-						World reqs [] = new World[f.length];
-						for(int i=0;i<f.length;i++){
-							reqs[i] = ServerAssertionsFactory.getAssertionInstanceWorld(f[i].getAssertion(), selfAgentName, selfAgentName+"_"+subjectName, sinstance.sessionid);
-						}
-						
-						for(World req:reqs){
-							if(isInstanceApplicable(req, selfAgentName,subjectName,senderName, recipientName)){
-								World temp [] = new World[applicableReqs.length +1];
-								for(int i=0;i< applicableReqs.length;i++){
-									temp[i] = applicableReqs[i];
-								}
-								temp[applicableReqs.length] = req;
-								applicableReqs = temp;
-							}
-						}
-					}
-					else{
-						AssertionRole roles[] = new AssertionRole[0];
-						if(self.getRoles() !=null){
-							for(AssertionRole a: self.getRoles()){
-								boolean applicableRole = false;
-								if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-								   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-									applicableRole = true;
-								}
-								if(applicableRole){
-									AssertionRole temp[] = new AssertionRole[roles.length+1];
-									for(int i=0;i<roles.length;i++){
-										temp[i] = roles[i];
-									}
-									temp[roles.length] = a;
-									roles = temp;
-								}						
-							}	
-						}
-						
-						if(!selfAgentName.equals(subjectName)){
-							Agent su = ServerAgentFactory.getAgent(subjectName, sinstance);
-							if(su.getRoles() !=null){
-								for(AssertionRole a: su.getRoles()){
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-												applicableRole = true;
-									}
-									
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
-									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+											applicableRole = true;
 										}
-										temp[roles.length] = a;
-										roles = temp;
-									}							
-								}	
-							}
-						}
-						
-						if(!selfAgentName.equals(subjectName) && !senderName.equals(subjectName)){
-							Agent s = ServerAgentFactory.getAgent(senderName, sinstance);
-							if(s.getRoles() !=null){
-								for(AssertionRole a: s.getRoles()){
-																
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-												applicableRole = true;
-									}
-									
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
-									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+											applicableRole = true;
 										}
-										temp[roles.length] = a;
-										roles = temp;	
-									}							
-								}	
-							}
-						}
-						
-						if(!selfAgentName.equals(recipientName) ){
-							Agent r = ServerAgentFactory.getAgent(recipientName, sinstance);
-							if(r.getRoles() !=null){
-								for(AssertionRole a: r.getRoles()){
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-												applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
-									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
-										}
-										temp[roles.length] = a;
-										roles = temp;	
-									}
-								}	
-							}
-						}
-						
-						for(AssertionRole role: roles){
-							//String roleSelfAgentName = role.getSelfAgentName();
-							String roleType = role.getRoleType();
-							roleType = roleType.replace("<html>", "");
-							roleType = roleType.replace("</html>", "");
-							String[] roleZoneAgents = role.getZoneAgents();
-							KnowledgeBase knowledgeBase = role.getKnowledgeBase();
-							
-							boolean su_inzone = false;
-							boolean s_inzone = false;
-							boolean r_inzone = false;
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(subjectName)){
-									su_inzone = true;							
+										if(applicableRole){
+											AssertionRole temp[] = new AssertionRole[roles.length+1];
+											for(int i=0;i<roles.length;i++){
+												temp[i] = roles[i];
+											}
+											temp[roles.length] = a;
+											roles = temp;
+										}						
+									}	
 								}
-							}
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(recipientName)){
-									r_inzone = true;
-								}
-							}
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(senderName)){
-									s_inzone = true;
-								}
-							}
-							//World reqs [] = new World[0];
-
-							if(s_inzone && su_inzone && r_inzone){
-								World  roleReq = World.createWorld(knowledgeBase, roleType, ServerAgentFactory.getAgent(subjectName, sinstance), 
-										 ServerAgentFactory.getAgent(senderName, sinstance), ServerAgentFactory.getAgent(recipientName, sinstance), 
-										 ServerAgentFactory.getAgent(subjectName, sinstance).getPersonalAttributes()[0]);
-								if(roleReq != null){
-									World temp[] = new World[applicableReqs.length + 1];
-									for(int i=0;i < applicableReqs.length; i++){
-										temp[i] = applicableReqs[i];
-									}
-									temp[applicableReqs.length] = roleReq;
-									applicableReqs = temp;	
-								}						
-							}					
-						}
-					}					
-				}
-			
-			}
-			
-			if(extractFromSubject){
-				String selfAgentName = subjectName;
-				
-				Agent self = ServerAgentFactory.getAgent(selfAgentName, sinstance);
-				//Memory m = new Memory(self, subjectName, sinstance, instance);
-				
-				if(instance.isModePick){
-					if(!instance.is_role_run){
-						
-						AssertionInstance f[] = self.getAssertionInstances();
-						
-						World reqs [] = new World[f.length];
-						for(int i=0;i<f.length;i++){
-							reqs[i] = ServerAssertionsFactory.getAssertionInstanceWorld(f[i].getAssertion(), selfAgentName, selfAgentName+"_"+subjectName, sinstance.sessionid);
-						}
+								
+								if(!selfAgentName.equals(subjectName)){
+									Agent su = ServerAgentFactory.getAgent(subjectName, sinstance);
+									if(su.getRoles() !=null){
+										for(AssertionRole a: su.getRoles()){
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
 											
-						for(World req:reqs){
-							if(isInstanceApplicable(req, selfAgentName,subjectName,senderName, recipientName)){
-								World temp [] = new World[applicableReqs.length +1];
-								for(int i=0;i< applicableReqs.length;i++){
-									temp[i] = applicableReqs[i];
-								}
-								temp[applicableReqs.length] = req;
-								applicableReqs = temp;
-							}
-						}
-					}
-					else{
-						AssertionRole roles[] = new AssertionRole[0];
-						if(self.getRoles() !=null){
-							for(AssertionRole a: self.getRoles()){
-								boolean applicableRole = false;
-								if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-								   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-									applicableRole = true;
-								}
-								else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-									applicableRole = true;
-								}
-								if(applicableRole){
-									AssertionRole temp[] = new AssertionRole[roles.length+1];
-									for(int i=0;i<roles.length;i++){
-										temp[i] = roles[i];
-									}
-									temp[roles.length] = a;
-									roles = temp;
-								}						
-							}	
-						}
-						
-						if(!selfAgentName.equals(subjectName)){
-							Agent su = ServerAgentFactory.getAgent(subjectName, sinstance);
-							if(su.getRoles() !=null){
-								for(AssertionRole a: su.getRoles()){
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
 												applicableRole = true;
-									}
-									
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
-									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
-										}
-										temp[roles.length] = a;
-										roles = temp;
-									}							
-								}	
-							}
-						}
-						
-						if(!selfAgentName.equals(subjectName) && !senderName.equals(subjectName)){
-							Agent s = ServerAgentFactory.getAgent(senderName, sinstance);
-							if(s.getRoles() !=null){
-								for(AssertionRole a: s.getRoles()){
-																
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+											}
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
 												applicableRole = true;
-									}
-									
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
-									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
-									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
-										}
-										temp[roles.length] = a;
-										roles = temp;	
-									}							
-								}	
-							}
-						}
-						
-						if(!selfAgentName.equals(recipientName) ){
-							Agent r = ServerAgentFactory.getAgent(recipientName, sinstance);
-							if(r.getRoles() !=null){
-								for(AssertionRole a: r.getRoles()){
-									boolean applicableRole = false;
-									if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
-											   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+											}
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
 												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;
+											}							
+										}	
 									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(recipientName)){
-										applicableRole = true;
+								}
+								
+								if(!selfAgentName.equals(subjectName) && !agentName1.equals(subjectName)){
+									Agent s = ServerAgentFactory.getAgent(agentName1, sinstance);
+									if(s.getRoles() !=null){
+										for(AssertionRole a: s.getRoles()){
+																		
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
+											
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;	
+											}							
+										}	
 									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
-										applicableRole = true;
+								}
+								
+								if(!selfAgentName.equals(agentName2) ){
+									Agent r = ServerAgentFactory.getAgent(agentName2, sinstance);
+									if(r.getRoles() !=null){
+										for(AssertionRole a: r.getRoles()){
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;	
+											}
+										}	
 									}
-									else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(senderName)){
-										applicableRole = true;
-									}
+								}
+								
+								for(AssertionRole role: roles){
+									//String roleSelfAgentName = role.getSelfAgentName();
+									String roleType = role.getRoleType();
+									roleType = roleType.replace("<html>", "");
+									roleType = roleType.replace("</html>", "");
+									String[] roleZoneAgents = role.getZoneAgents();
+									KnowledgeBase knowledgeBase = role.getKnowledgeBase();
 									
-									if(applicableRole){
-										AssertionRole temp[] = new AssertionRole[roles.length+1];
-										for(int i=0;i<roles.length;i++){
-											temp[i] = roles[i];
+									boolean su_inzone = false;
+									boolean s_inzone = false;
+									boolean r_inzone = false;
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(subjectName)){
+											su_inzone = true;							
 										}
-										temp[roles.length] = a;
-										roles = temp;	
 									}
-								}	
-							}
-						}
-						
-						for(AssertionRole role: roles){
-							//String roleSelfAgentName = role.getSelfAgentName();
-							String roleType = role.getRoleType();
-							roleType = roleType.replace("<html>", "");
-							roleType = roleType.replace("</html>", "");
-							String[] roleZoneAgents = role.getZoneAgents();
-							KnowledgeBase knowledgeBase = role.getKnowledgeBase();
-							
-							boolean su_inzone = false;
-							boolean s_inzone = false;
-							boolean r_inzone = false;
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(subjectName)){
-									su_inzone = true;							
-								}
-							}
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(recipientName)){
-									r_inzone = true;
-								}
-							}
-							for(String agentName:roleZoneAgents){
-								if(agentName.equals(senderName)){
-									s_inzone = true;
-								}
-							}
-							//World reqs [] = new World[0];
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(agentName2)){
+											r_inzone = true;
+										}
+									}
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(agentName1)){
+											s_inzone = true;
+										}
+									}
+									//World reqs [] = new World[0];
 
-							if(s_inzone && su_inzone && r_inzone){
-								World  roleReq = World.createWorld(knowledgeBase, roleType, ServerAgentFactory.getAgent(subjectName, sinstance), 
-										 ServerAgentFactory.getAgent(senderName, sinstance), ServerAgentFactory.getAgent(recipientName, sinstance), 
-										 ServerAgentFactory.getAgent(subjectName, sinstance).getPersonalAttributes()[0]);
-								if(roleReq != null){
-									World temp[] = new World[applicableReqs.length + 1];
-									for(int i=0;i < applicableReqs.length; i++){
-										temp[i] = applicableReqs[i];
-									}
-									temp[applicableReqs.length] = roleReq;
-									applicableReqs = temp;	
-								}						
+									if(s_inzone && su_inzone && r_inzone){
+										World  roleReq = World.createWorld(knowledgeBase, roleType, ServerAgentFactory.getAgent(subjectName, sinstance), 
+												 ServerAgentFactory.getAgent(agentName1, sinstance), ServerAgentFactory.getAgent(agentName2, sinstance), 
+												 ServerAgentFactory.getAgent(subjectName, sinstance).getPersonalAttributes()[0]);
+										if(roleReq != null){
+											World temp[] = new World[applicableReqs.length + 1];
+											for(int i=0;i < applicableReqs.length; i++){
+												temp[i] = applicableReqs[i];
+											}
+											temp[applicableReqs.length] = roleReq;
+											applicableReqs = temp;	
+										}						
+									}					
+								}
 							}					
 						}
-					}					
+					
+					}
+					
+					if(extractFromAgentName1){
+						String selfAgentName = agentName1;
+						
+						Agent self = ServerAgentFactory.getAgent(selfAgentName, sinstance);
+						//Memory m = new Memory(self, subjectName, sinstance, instance);
+						
+						if(instance.isModePick){
+							if(!instance.is_role_run){
+								
+								AssertionInstance f[] = self.getAssertionInstances();
+								
+								World reqs [] = new World[f.length];
+								for(int i=0;i<f.length;i++){
+									reqs[i] = ServerAssertionsFactory.getAssertionInstanceWorld(f[i].getAssertion(), selfAgentName, selfAgentName+"_"+subjectName, sinstance.sessionid);
+								}
+								
+								for(World req:reqs){
+									if(isInstanceApplicable(req, selfAgentName,subjectName,agentName1, agentName2)){
+										World temp [] = new World[applicableReqs.length +1];
+										for(int i=0;i< applicableReqs.length;i++){
+											temp[i] = applicableReqs[i];
+										}
+										temp[applicableReqs.length] = req;
+										applicableReqs = temp;
+									}
+								}
+							}
+							else{
+								AssertionRole roles[] = new AssertionRole[0];
+								if(self.getRoles() !=null){
+									for(AssertionRole a: self.getRoles()){
+										boolean applicableRole = false;
+										if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+										   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+											applicableRole = true;
+										}
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+											applicableRole = true;
+										}
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+											applicableRole = true;
+										}
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+											applicableRole = true;
+										}
+										if(applicableRole){
+											AssertionRole temp[] = new AssertionRole[roles.length+1];
+											for(int i=0;i<roles.length;i++){
+												temp[i] = roles[i];
+											}
+											temp[roles.length] = a;
+											roles = temp;
+										}						
+									}	
+								}
+								
+								if(!selfAgentName.equals(subjectName)){
+									Agent su = ServerAgentFactory.getAgent(subjectName, sinstance);
+									if(su.getRoles() !=null){
+										for(AssertionRole a: su.getRoles()){
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
+											
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;
+											}							
+										}	
+									}
+								}
+								
+								if(!selfAgentName.equals(subjectName) && !agentName1.equals(subjectName)){
+									Agent s = ServerAgentFactory.getAgent(agentName1, sinstance);
+									if(s.getRoles() !=null){
+										for(AssertionRole a: s.getRoles()){
+																		
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
+											
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;	
+											}							
+										}	
+									}
+								}
+								
+								if(!selfAgentName.equals(agentName2) ){
+									Agent r = ServerAgentFactory.getAgent(agentName2, sinstance);
+									if(r.getRoles() !=null){
+										for(AssertionRole a: r.getRoles()){
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;	
+											}
+										}	
+									}
+								}
+								
+								for(AssertionRole role: roles){
+									//String roleSelfAgentName = role.getSelfAgentName();
+									String roleType = role.getRoleType();
+									roleType = roleType.replace("<html>", "");
+									roleType = roleType.replace("</html>", "");
+									String[] roleZoneAgents = role.getZoneAgents();
+									KnowledgeBase knowledgeBase = role.getKnowledgeBase();
+									
+									boolean su_inzone = false;
+									boolean s_inzone = false;
+									boolean r_inzone = false;
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(subjectName)){
+											su_inzone = true;							
+										}
+									}
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(agentName2)){
+											r_inzone = true;
+										}
+									}
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(agentName1)){
+											s_inzone = true;
+										}
+									}
+									//World reqs [] = new World[0];
+
+									if(s_inzone && su_inzone && r_inzone){
+										World  roleReq = World.createWorld(knowledgeBase, roleType, ServerAgentFactory.getAgent(subjectName, sinstance), 
+												 ServerAgentFactory.getAgent(agentName1, sinstance), ServerAgentFactory.getAgent(agentName2, sinstance), 
+												 ServerAgentFactory.getAgent(subjectName, sinstance).getPersonalAttributes()[0]);
+										if(roleReq != null){
+											World temp[] = new World[applicableReqs.length + 1];
+											for(int i=0;i < applicableReqs.length; i++){
+												temp[i] = applicableReqs[i];
+											}
+											temp[applicableReqs.length] = roleReq;
+											applicableReqs = temp;	
+										}						
+									}					
+								}
+							}					
+						}
+					
+					}
+					
+					if(extractFromSubject){
+						String selfAgentName = subjectName;
+						
+						Agent self = ServerAgentFactory.getAgent(selfAgentName, sinstance);
+						//Memory m = new Memory(self, subjectName, sinstance, instance);
+						
+						if(instance.isModePick){
+							if(!instance.is_role_run){
+								
+								AssertionInstance f[] = self.getAssertionInstances();
+								
+								World reqs [] = new World[f.length];
+								for(int i=0;i<f.length;i++){
+									reqs[i] = ServerAssertionsFactory.getAssertionInstanceWorld(f[i].getAssertion(), selfAgentName, selfAgentName+"_"+subjectName, sinstance.sessionid);
+								}
+													
+								for(World req:reqs){
+									if(isInstanceApplicable(req, selfAgentName,subjectName,agentName1, agentName2)){
+										World temp [] = new World[applicableReqs.length +1];
+										for(int i=0;i< applicableReqs.length;i++){
+											temp[i] = applicableReqs[i];
+										}
+										temp[applicableReqs.length] = req;
+										applicableReqs = temp;
+									}
+								}
+							}
+							else{
+								AssertionRole roles[] = new AssertionRole[0];
+								if(self.getRoles() !=null){
+									for(AssertionRole a: self.getRoles()){
+										boolean applicableRole = false;
+										if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+										   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+											applicableRole = true;
+										}
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+											applicableRole = true;
+										}
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+											applicableRole = true;
+										}
+										else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+											applicableRole = true;
+										}
+										if(applicableRole){
+											AssertionRole temp[] = new AssertionRole[roles.length+1];
+											for(int i=0;i<roles.length;i++){
+												temp[i] = roles[i];
+											}
+											temp[roles.length] = a;
+											roles = temp;
+										}						
+									}	
+								}
+								
+								if(!selfAgentName.equals(subjectName)){
+									Agent su = ServerAgentFactory.getAgent(subjectName, sinstance);
+									if(su.getRoles() !=null){
+										for(AssertionRole a: su.getRoles()){
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
+											
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase() !=null && a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;
+											}							
+										}	
+									}
+								}
+								
+								if(!selfAgentName.equals(subjectName) && !agentName1.equals(subjectName)){
+									Agent s = ServerAgentFactory.getAgent(agentName1, sinstance);
+									if(s.getRoles() !=null){
+										for(AssertionRole a: s.getRoles()){
+																		
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
+											
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;	
+											}							
+										}	
+									}
+								}
+								
+								if(!selfAgentName.equals(agentName2) ){
+									Agent r = ServerAgentFactory.getAgent(agentName2, sinstance);
+									if(r.getRoles() !=null){
+										for(AssertionRole a: r.getRoles()){
+											boolean applicableRole = false;
+											if(a.getRoleType().equals("<html><i>k</i><sub>0a</sub></html>") ||
+													   a.getRoleType().equals("<html><b>K</b><sub>0</sub></html>")){
+														applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.RECIPIENT) && selfAgentName.equals(agentName2)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SUBJECT) && selfAgentName.equals(subjectName)){
+												applicableRole = true;
+											}
+											else if(a.getKnowledgeBase().equals(KnowledgeBase.SENDER) && selfAgentName.equals(agentName1)){
+												applicableRole = true;
+											}
+											
+											if(applicableRole){
+												AssertionRole temp[] = new AssertionRole[roles.length+1];
+												for(int i=0;i<roles.length;i++){
+													temp[i] = roles[i];
+												}
+												temp[roles.length] = a;
+												roles = temp;	
+											}
+										}	
+									}
+								}
+								
+								for(AssertionRole role: roles){
+									//String roleSelfAgentName = role.getSelfAgentName();
+									String roleType = role.getRoleType();
+									roleType = roleType.replace("<html>", "");
+									roleType = roleType.replace("</html>", "");
+									String[] roleZoneAgents = role.getZoneAgents();
+									KnowledgeBase knowledgeBase = role.getKnowledgeBase();
+									
+									boolean su_inzone = false;
+									boolean s_inzone = false;
+									boolean r_inzone = false;
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(subjectName)){
+											su_inzone = true;							
+										}
+									}
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(agentName2)){
+											r_inzone = true;
+										}
+									}
+									for(String agentName:roleZoneAgents){
+										if(agentName.equals(agentName1)){
+											s_inzone = true;
+										}
+									}
+									//World reqs [] = new World[0];
+
+									if(s_inzone && su_inzone && r_inzone){
+										World  roleReq = World.createWorld(knowledgeBase, roleType, ServerAgentFactory.getAgent(subjectName, sinstance), 
+												 ServerAgentFactory.getAgent(agentName1, sinstance), ServerAgentFactory.getAgent(agentName2, sinstance), 
+												 ServerAgentFactory.getAgent(subjectName, sinstance).getPersonalAttributes()[0]);
+										if(roleReq != null){
+											World temp[] = new World[applicableReqs.length + 1];
+											for(int i=0;i < applicableReqs.length; i++){
+												temp[i] = applicableReqs[i];
+											}
+											temp[applicableReqs.length] = roleReq;
+											applicableReqs = temp;	
+										}						
+									}					
+								}
+							}					
+						}
+					}
+				
 				}
+				
 			}
 		}
 		applicableReqs = ArrayCleaner.clean(applicableReqs); //remove replicated assertions from aspects

@@ -203,10 +203,11 @@ class PrConfig extends javax.swing.JPanel {
         aspects_label.setText("Aspects:");
         aspects_list.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "None", 
-            		             "<html>Mutual Knowledge:<i>E</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that <i>&psi;</i></html>", 
-            		             "<html>Introspection:<i>EE</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that everyone knows <i>&psi;</i></html>", 
-            		             "<html>Introspection:<i>EEE</i><sub>G</sub>(&psi;), Everyone in G beliefs/uncertain that everyone knows that everyone knows that <i>&psi;</i> </html>", 
-            		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;) + <i>EEE</i><sub>G</sub>(&psi;) </html>"
+            		             "<html>Mutual Knowledge:<i>E</i><sub>G</sub>(&psi;), Everyone in G beliefs that <i>&psi;</i></html>", 
+            		             "<html>Introspection:<i>EE</i><sub>G</sub>(&psi;), Everyone in G beliefs that everyone knows <i>&psi;</i></html>", 
+//            		             "<html>Introspection:<i>EEE</i><sub>G</sub>(&psi;), Everyone in G beliefs that everyone knows that everyone knows that <i>&psi;</i> </html>", 
+//            		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;) + <i>EEE</i><sub>G</sub>(&psi;) </html>"
+            		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; &psi; + <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;)</html>"
             		            //,
             		            // "<html>Distributed Knowledge:<i>S</i><sub>G</sub>(&psi;)- More than one user beliefs/uncertain that <i>&psi;</i></html>", 
             		            // "<html>Distributed Knowledge:<i>B</i><sub>G</sub>(&psi;)- Atleast one user beliefs/uncertain that <i>&psi;</i></html>", 
@@ -237,21 +238,26 @@ class PrConfig extends javax.swing.JPanel {
 		        	ServerAssertionsFactory.clearAllAgentAssertions();
 					PSatClient.netSerialiseConfigInstance();
 				}
-				else if(selectedindex ==3){
-					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.EEEG;
-		        	ServerAssertionsFactory.clearAllAgentAssertions();
-					PSatClient.netSerialiseConfigInstance();
-				}
-				else if(selectedindex == 4){
+//				else if(selectedindex ==3){
+//					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.EEEG;
+//		        	ServerAssertionsFactory.clearAllAgentAssertions();
+//					PSatClient.netSerialiseConfigInstance();
+//				}
+				else if(selectedindex == 3){
 					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.CG;
 		        	ServerAssertionsFactory.clearAllAgentAssertions();
 					PSatClient.netSerialiseConfigInstance();
 				}
-				else if(selectedindex == 5){
-					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.DG;
-		        	ServerAssertionsFactory.clearAllAgentAssertions();
-					PSatClient.netSerialiseConfigInstance();
-				}				
+//				else if(selectedindex == 4){
+//					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.CG;
+//		        	ServerAssertionsFactory.clearAllAgentAssertions();
+//					PSatClient.netSerialiseConfigInstance();
+//				}
+//				else if(selectedindex == 5){
+//					PSatAPI.instance.collectiveStrategy = CollectiveStrategy.DG;
+//		        	ServerAssertionsFactory.clearAllAgentAssertions();
+//					PSatClient.netSerialiseConfigInstance();
+//				}				
 			}        	
         });
         
@@ -264,15 +270,18 @@ class PrConfig extends javax.swing.JPanel {
         else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEG){
         	aspects_list.setSelectedIndex(2);
         }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEEG){
+//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEEG){
+//        	aspects_list.setSelectedIndex(3);
+//        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
         	aspects_list.setSelectedIndex(3);
         }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
-        	aspects_list.setSelectedIndex(4);
-        }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.DG){
-        	aspects_list.setSelectedIndex(5);
-        }
+//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
+//        	aspects_list.setSelectedIndex(4);
+//        }
+//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.DG){
+//        	aspects_list.setSelectedIndex(5);
+//        }
         else{
         	aspects_list.setSelectedIndex(0);
         	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
