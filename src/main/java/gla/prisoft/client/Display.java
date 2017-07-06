@@ -2482,6 +2482,22 @@ public class Display extends JFrame {
 	    	 }
 	     }
 		
+	     
+	     
+	     pathsListModel.removeAllElements();
+ 		//selectedAgentPaths = new ArrayList<String>();	
+     	
+ 		ArrayList<String> al = new ArrayList<String>();
+     	for (String path: PSatAPI.instance.listPathsData) {
+         	pathsListModel.addElement(path);
+         	al.add(path);
+         }
+     	PSatAPI.instance.selectedAgentPaths = al;
+     	PSatClient.netSerialiseConfigInstance();
+     	
+			listbox.setBackground(Color.WHITE);
+			listbox.revalidate();
+			listbox.repaint();
 	}
 	
 	public static double RoundTo2Decimals(double val) {
