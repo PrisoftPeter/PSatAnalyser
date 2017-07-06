@@ -201,7 +201,7 @@ public class ServerAgentFactory  implements Serializable{
 				clearAgents(instance);
 				
 				instance.kgraph = new ServerKNetworkGraph();
-				instance.kgraph.createBarabasiAlbertGraph(ginstance.init_no_seeds, ginstance.numEdgesToAttach, ginstance.no_agents, ginstance.no_iterations, instance);
+				instance.kgraph.createBarabasiAlbertGraph(ginstance.init_no_seeds, ginstance.numEdgesToAttach, ginstance.no_agents, ginstance.no_iterations, instance, ginstance);
 			}
 			
 		}
@@ -216,7 +216,7 @@ public class ServerAgentFactory  implements Serializable{
 				clearAgents(instance);
 				
 				instance.kgraph = new ServerKNetworkGraph();
-				instance.kgraph.createEppsteinPowerLawGraph(ginstance.no_agents, ginstance.no_edges, ginstance.degreeExponent, instance);
+				instance.kgraph.createEppsteinPowerLawGraph(ginstance.no_agents, ginstance.no_edges, ginstance.degreeExponent, instance, ginstance);
 			}
 			
 		}
@@ -230,7 +230,7 @@ public class ServerAgentFactory  implements Serializable{
 				clearAgents(instance);
 				
 				instance.kgraph = new ServerKNetworkGraph();
-				instance.kgraph.createKleinbergSmallWorldGraph(ginstance.no_agents, ginstance.no_edges, ginstance.clusteringExponent, instance);
+				instance.kgraph.createKleinbergSmallWorldGraph(ginstance.no_agents, ginstance.no_edges, ginstance.clusteringExponent, instance, ginstance);
 			}
 		}		
 		else if(ginstance.networkType == NetworkType.SEQUENTIAL){

@@ -293,25 +293,25 @@ public class ServerKNetworkGraph implements Serializable{
     }
         
  //   public Graph<KNode, KLink> createEppsteinPowerLawGraph(int noNodes, int noEdges, int degreeExponent){ // power law
-    public void createEppsteinPowerLawGraph(int noNodes, int noEdges, int degreeExponent, ServerConfigInstance instance){ // power law
+    public void createEppsteinPowerLawGraph(int noNodes, int noEdges, int degreeExponent, ServerConfigInstance instance, ConfigInstance cinstance){ // power law
     	Graph<KNode, KLink>  eppstein = 
     			new EppsteinPowerLawGenerator<KNode,KLink>(new GraphFactory(), new NodeFactory(),
     										new EdgeFactory(), noNodes, noEdges, degreeExponent).create();
     	
-    	eppstein = transformGraphNodes(eppstein, instance);
+    	eppstein = transformGraphNodes(eppstein, instance, cinstance);
         createGraph(instance);
     	//return eppstein;
     }
     
 //    public Graph<KNode, KLink> createKleinbergSmallWorldGraph(int noNodes, int noEdges, int clusteringExponent){ //small worlds
-    public void createKleinbergSmallWorldGraph(int noNodes, int noEdges, double clusteringExponent, ServerConfigInstance instance){ //small worlds
+    public void createKleinbergSmallWorldGraph(int noNodes, int noEdges, double clusteringExponent, ServerConfigInstance instance,ConfigInstance cinstance){ //small worlds
     	if(noEdges < 2){
     		noEdges = 2;
     	}
     	Graph<KNode, KLink>  smallworld = 
     			new KleinbergSmallWorldGenerator<KNode,KLink>(new GraphFactory(), new NodeFactory(),
     										new EdgeFactory(), noNodes, noEdges, clusteringExponent).create();
-    	smallworld = transformGraphNodes(smallworld, instance);
+    	smallworld = transformGraphNodes(smallworld, instance, cinstance);
         createGraph(instance);
 
         //return smallworld;
@@ -319,7 +319,7 @@ public class ServerKNetworkGraph implements Serializable{
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
 //	public Graph<KNode, KLink> createBarabasiAlbertGraph(int init_no_seeds, int numEdgesToAttach, int noAgents){ //preferential attachment
-	public void createBarabasiAlbertGraph(int init_no_seeds, int numEdgesToAttach, int noAgents, int no_iterations, ServerConfigInstance instance){ //preferential attachment
+	public void createBarabasiAlbertGraph(int init_no_seeds, int numEdgesToAttach, int noAgents, int no_iterations, ServerConfigInstance instance,ConfigInstance cinstance){ //preferential attachment
     	GraphFactory graphFactory = new GraphFactory();
     	NodeFactory nodeFactory = new NodeFactory();
     	EdgeFactory edgeFactory = new EdgeFactory();
@@ -337,13 +337,13 @@ public class ServerKNetworkGraph implements Serializable{
     	barabasiGen.evolveGraph(no_iterations); 
         Graph gx = barabasiGen.create();
         
-        gx = transformGraphNodes(gx, instance);
+        gx = transformGraphNodes(gx, instance, cinstance);
     	
         createGraph(instance);
     	//return gx;
     }
     
-    private Graph<KNode, KLink> transformGraphNodes(Graph<KNode, KLink> graph, ServerConfigInstance instance){
+    private Graph<KNode, KLink> transformGraphNodes(Graph<KNode, KLink> graph, ServerConfigInstance instance,  ConfigInstance cinstance){
     	String[] names = ServerAgentFactory.getAllPossibleNames();
     	if(graph.getVertices().size() > names.length){
     		System.err.println("Only "+names.length+" available in repository "+graph.getVertices().size()+" required. Excess will remain unchanged..");//, true);
@@ -360,6 +360,8 @@ public class ServerKNetworkGraph implements Serializable{
     		Agent agent = ServerAgentFactory.autoGenAgentWoutConnections(name);
     		ServerAgentFactory.addAgent(agent, instance);
         	knode.id = name;
+        	
+        	cinstance.agentCollectionNames.add(agent.getAgentName());
     	}
     	
     	for(KLink link: graph.getEdges()){
@@ -400,7 +402,9 @@ public class ServerKNetworkGraph implements Serializable{
 //				h.setValue(""+val1);		
 //				e.addToPersonalAttributes(h);
 				
-				ServerAgentFactory.addAgent(e, serverInstance);								
+				ServerAgentFactory.addAgent(e, serverInstance);	
+				instance.agentCollectionNames.add(e.getAgentName());
+				
 				i = i+1;
 			}
 			
@@ -422,14 +426,14 @@ public class ServerKNetworkGraph implements Serializable{
 		createGraph(serverInstance);
     }
     
-    public void createNetworkFromGmlOrGraphML(ServerConfigInstance instance, File gfile){
+    public void createNetworkFromGmlOrGraphML(ServerConfigInstance instance, ConfigInstance cinstance, File gfile){
     	GMLGraphLoader gloader = new GMLGraphLoader();
-    	gloader.loadGraph(instance, gfile);
+    	gloader.loadGraph(instance,cinstance, gfile);
     	gloader.extractNodes(instance);
 		createGraph(instance);
     }
     	
-    public void createNetworkFromGraphML(String fileName, ServerConfigInstance instance){
+    public void createNetworkFromGraphML(String fileName, ServerConfigInstance instance, ConfigInstance cinstance){
     	
     	GraphMLReader2<Graph<KNode, KLink>, KNode, KLink> graphReader = null;
 		
@@ -497,6 +501,8 @@ public class ServerKNetworkGraph implements Serializable{
 					String id = knode.id;
 					Agent agent = new Agent(id);
 					ServerAgentFactory.addAgent(agent, instance);
+					
+					cinstance.agentCollectionNames.add(agent.getAgentName());
 				}
 				
 				Collection< KLink> edges = graph.getEdges();
@@ -547,7 +553,9 @@ public class ServerKNetworkGraph implements Serializable{
 //				e.addToPersonalAttributes(h);
 				if(added){
 					i = i+1;	
-				}				
+				}	
+				
+				ginstance.agentCollectionNames.add(e.getAgentName());
 			}
 						
 			buff.close();
@@ -607,7 +615,9 @@ public class ServerKNetworkGraph implements Serializable{
 //				e.addToPersonalAttributes(h);
 				if(added){
 					i = i+1;	
-				}				
+				}	
+				
+				ginstance.agentCollectionNames.add(e.getAgentName());
 			}
 						
 			buff.close();

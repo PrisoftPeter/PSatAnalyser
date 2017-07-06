@@ -546,6 +546,7 @@ public class ClientServerBroker{
 //					}
 					else if(actionType.equals("ServerKNetworkGraph.createNetworkFromGmlOrGraphML()")){	
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
+						ConfigInstance cinstance = Config.deserialiseConfigInstance(sendersSessionId);
 						sinstance.agents = new Agent[0];
 						ServerAgentFactory.clearAgents(sinstance);
 						sinstance.kgraph = new ServerKNetworkGraph();
@@ -553,7 +554,7 @@ public class ClientServerBroker{
 						String filename = ppties.getProperty("filename");
 						File gfile = PSatAPI.writeGraphMlGmlToFile(sendersSessionId,filename,(byte[])obj);
 												
-						sinstance.kgraph.createNetworkFromGmlOrGraphML( sinstance, gfile);
+						sinstance.kgraph.createNetworkFromGmlOrGraphML( sinstance,cinstance, gfile);
 						
 						ServerAgentFactory.setAgentsPersonalAttributes(sinstance);
 						

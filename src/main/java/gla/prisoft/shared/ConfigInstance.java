@@ -18,6 +18,7 @@ public class ConfigInstance implements Serializable{
 	public String subjectName;
 	public String selfAgentName;
 	public ArrayList<String> selectedAgentPaths;
+	public ArrayList<String> agentCollectionNames = new ArrayList<String>();
 	public String [] selectedAgentPath;
 
 	public boolean verifyAllAssertions;

@@ -85,8 +85,15 @@ public class ServerMemoryFactory {
 		
 		//select all unique agents from paths list
 		for(String path:instance.selectedAgentPaths){
-			String[] p1 = path.split(": ");
-			String[] p2 = p1[1].split(" ");
+			path = path.replace(",", "");
+			String[] p2 =null;
+			if(path.contains(":")){
+				String[] p1 = path.split(": ");
+				p2 = p1[1].split(" ");
+			}
+			else{
+				p2 = path.split(" ");
+			}
 
 			for(String agentName1:p2){
 				boolean exist1 = false;

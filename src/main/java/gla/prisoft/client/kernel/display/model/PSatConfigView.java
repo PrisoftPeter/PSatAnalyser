@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -48,7 +49,6 @@ class PrConfig extends javax.swing.JPanel {
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    @SuppressWarnings("serial")
 	private void initComponents() {
 
         prtype_bg = new javax.swing.ButtonGroup();
@@ -57,10 +57,8 @@ class PrConfig extends javax.swing.JPanel {
         instancebased_rb = new javax.swing.JRadioButton();
         mode_label = new javax.swing.JLabel();
         modes_sp = new javax.swing.JScrollPane();
-        modes_list = new javax.swing.JList<>();
         aspects_label = new javax.swing.JLabel();
         aspects_sp = new javax.swing.JScrollPane();
-        aspects_list = new javax.swing.JList<>();
 
         type_label.setText("Type:");
         rolebased_rb.setText("role-based specification");
@@ -123,15 +121,39 @@ class PrConfig extends javax.swing.JPanel {
         
         
         mode_label.setText("Mode:");
+        
+        
+        javax.swing.DefaultListModel<String> modedata = new javax.swing.DefaultListModel<String>();
+        modedata.addElement("Pick belief/uncertainty elements");
+        modedata.addElement("Regulate belief/uncertainty levels");
+        modedata.addElement("Regulate entropy levels");
+        
+        modes_list = new javax.swing.JList<>(modedata);
+        modes_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        modes_list.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Pick belief/uncertainty elements",
-            					 "Regulate belief/uncertainty levels",
-            					 "Regulate entropy levels"};
-            
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        if(PSatAPI.instance.isModePick){
+        	modes_list.setSelectedIndex(0);
+        }
+        else if(PSatAPI.instance.isModeUncertainty){
+        	modes_list.setSelectedIndex(1);
+        }
+        else if(PSatAPI.instance.isModeEntropy){
+        	modes_list.setSelectedIndex(2);
+        }
+        else{
+        	modes_list.setSelectedIndex(0);
+        	PSatAPI.instance.isModePick = true;
+        	PSatAPI.instance.isModeUncertainty = false;
+        	PSatAPI.instance.isModeEntropy = false;
+        	
+        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
+        	aspects_list.setSelectedIndex(0);
+        	ServerAssertionsFactory.clearAllAgentAssertions();
+        	aspects_list.setEnabled(true);
+        	
+        	PSatClient.netSerialiseConfigInstance();
+        }
+        
         modes_sp.setViewportView(modes_list);
         modes_list.addListSelectionListener(new ListSelectionListener(){
 
@@ -177,45 +199,52 @@ class PrConfig extends javax.swing.JPanel {
 			}
         	
         });
-        if(PSatAPI.instance.isModePick){
-        	modes_list.setSelectedIndex(0);
-        }
-        else if(PSatAPI.instance.isModeUncertainty){
-        	modes_list.setSelectedIndex(1);
-        }
-        else if(PSatAPI.instance.isModeEntropy){
-        	modes_list.setSelectedIndex(2);
-        }
-        else{
-        	modes_list.setSelectedIndex(0);
-        	PSatAPI.instance.isModePick = true;
-        	PSatAPI.instance.isModeUncertainty = false;
-        	PSatAPI.instance.isModeEntropy = false;
-        	
-        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
-        	aspects_list.setSelectedIndex(0);
-        	ServerAssertionsFactory.clearAllAgentAssertions();
-        	aspects_list.setEnabled(true);
-        	
-        	PSatClient.netSerialiseConfigInstance();
-        }
                 
         aspects_label.setText("Aspects:");
-        aspects_list.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "None", 
-            		             "<html>Mutual Knowledge:<i>E</i><sub>G</sub>(&psi;), Everyone in G beliefs that <i>&psi;</i></html>", 
-            		             "<html>Introspection:<i>EE</i><sub>G</sub>(&psi;), Everyone in G beliefs that everyone knows <i>&psi;</i></html>", 
-//            		             "<html>Introspection:<i>EEE</i><sub>G</sub>(&psi;), Everyone in G beliefs that everyone knows that everyone knows that <i>&psi;</i> </html>", 
-//            		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;) + <i>EEE</i><sub>G</sub>(&psi;) </html>"
-            		             "<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; &psi; + <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;)</html>"
-            		            //,
-            		            // "<html>Distributed Knowledge:<i>S</i><sub>G</sub>(&psi;)- More than one user beliefs/uncertain that <i>&psi;</i></html>", 
-            		            // "<html>Distributed Knowledge:<i>B</i><sub>G</sub>(&psi;)- Atleast one user beliefs/uncertain that <i>&psi;</i></html>", 
-//            		             "<html>Distributed Knowledge:<i>D</i><sub>G</sub>(&psi;), The belief/uncertain of <i>&psi;</i> can be inferred by a user </html>" 
-            		             };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        
+        javax.swing.DefaultListModel<String> aspectdata = new javax.swing.DefaultListModel<String>();
+        aspectdata.addElement("None");
+        aspectdata.addElement("<html>Mutual Knowledge:<i>E</i><sub>G</sub>(&psi;), Everyone in G beliefs that <i>&psi;</i></html>");
+        aspectdata.addElement("<html>Introspection:<i>EE</i><sub>G</sub>(&psi;), Everyone in G beliefs that everyone knows <i>&psi;</i></html>");
+//      aspectdata.addElement("<html>Introspection:<i>EEE</i><sub>G</sub>(&psi;), Everyone in G beliefs that everyone knows that everyone knows that <i>&psi;</i> </html>");
+//      aspectdata.addElement("<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;) + <i>EEE</i><sub>G</sub>(&psi;) </html>");
+        aspectdata.addElement("<html>Common Knowledge:<i>C</i><sub>G</sub>(&psi;)&#8872; &psi; + <i>E</i><sub>G</sub>(&psi;) + <i>EE</i><sub>G</sub>(&psi;)</html>");
+//      aspectdata.addElement("<html>Distributed Knowledge:<i>S</i><sub>G</sub>(&psi;)- More than one user beliefs/uncertain that <i>&psi;</i></html>");
+//      aspectdata.addElement("<html>Distributed Knowledge:<i>B</i><sub>G</sub>(&psi;)- Atleast one user beliefs/uncertain that <i>&psi;</i></html>");
+//      aspectdata.addElement("<html>Distributed Knowledge:<i>D</i><sub>G</sub>(&psi;), The belief/uncertain of <i>&psi;</i> can be inferred by a user </html>"); 
+        
+        aspects_list = new javax.swing.JList<>(aspectdata);
+        aspects_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+
+        if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.NONE){
+        	aspects_list.setSelectedIndex(0);
+        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EG){
+        	aspects_list.setSelectedIndex(1);
+        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEG){
+        	aspects_list.setSelectedIndex(2);
+        }
+//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEEG){
+//        	aspects_list.setSelectedIndex(3);
+//        }
+        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
+        	aspects_list.setSelectedIndex(3);
+        }
+//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
+//        	aspects_list.setSelectedIndex(4);
+//        }
+//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.DG){
+//        	aspects_list.setSelectedIndex(5);
+//        }
+        else{
+        	aspects_list.setSelectedIndex(0);
+        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
+        	ServerAssertionsFactory.clearAllAgentAssertions();
+			PSatClient.netSerialiseConfigInstance();
+        }
+        
         aspects_sp.setViewportView(aspects_list);
         aspects_list.addListSelectionListener(new ListSelectionListener(){
 
@@ -261,35 +290,6 @@ class PrConfig extends javax.swing.JPanel {
 			}        	
         });
         
-        if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.NONE){
-        	aspects_list.setSelectedIndex(0);
-        }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EG){
-        	aspects_list.setSelectedIndex(1);
-        }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEG){
-        	aspects_list.setSelectedIndex(2);
-        }
-//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EEEG){
-//        	aspects_list.setSelectedIndex(3);
-//        }
-        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
-        	aspects_list.setSelectedIndex(3);
-        }
-//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
-//        	aspects_list.setSelectedIndex(4);
-//        }
-//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.DG){
-//        	aspects_list.setSelectedIndex(5);
-//        }
-        else{
-        	aspects_list.setSelectedIndex(0);
-        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
-        	ServerAssertionsFactory.clearAllAgentAssertions();
-			PSatClient.netSerialiseConfigInstance();
-        }
-                
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(

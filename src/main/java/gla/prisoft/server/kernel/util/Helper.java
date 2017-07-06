@@ -29,7 +29,21 @@ public class Helper {
 		return tempo;
 	}
 	
-	public static String[] addStringToArray(String [] stringArray, String s){
+	public static String[] addUniqueStringToArray(String [] stringArray, String s){
+		boolean unique = true;
+		if(s == null){
+			return stringArray;
+		}
+		for(String sx:stringArray){
+			if(sx.equals(s)){
+				unique = false;
+			}
+		}
+		
+		if(!unique){
+			return stringArray;
+		}
+		
 		String [] tempo = new String[stringArray.length +1];
 		
 		for(int i=0;i<stringArray.length;i++){
@@ -38,26 +52,5 @@ public class Helper {
 		tempo[stringArray.length] = s;
 		
 		return tempo;
-	}
-	
-	public static String [] generatePermutations(String[] s,int i,int k,String[] buff) {
-		String [] permutations = new String[0];
-        if(i<k) {
-            for(int j=0;j<s.length;j++) {
-
-                buff[i] = s[j];
-                generatePermutations(s,i+1,k,buff);
-            }
-        }       
-        else {
-        	String seq = "";
-	        for(String ss:buff){
-	            seq = seq+ss+" ";
-	        }
-	        permutations = addStringToArray(permutations, seq) ;
-        }
-        
-        return permutations;
-    }
-	
+	}	
 }

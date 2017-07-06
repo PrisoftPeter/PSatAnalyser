@@ -26,17 +26,18 @@ import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
+import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KLink;
 import gla.prisoft.shared.KNode;
 
 public class GMLGraphLoader {
 	private Graph g;
 
-	public void loadGraph(ServerConfigInstance instance, File gfile) {
+	public void loadGraph(ServerConfigInstance instance,ConfigInstance cinstance, File gfile) {
 
 		String ext = FilenameUtils.getExtension(gfile.getAbsolutePath());
 		if(ext.equals("GraphML")){
-	    	new ServerKNetworkGraph().createNetworkFromGraphML(gfile.getAbsolutePath(), instance);
+	    	new ServerKNetworkGraph().createNetworkFromGraphML(gfile.getAbsolutePath(), instance, cinstance);
 			
 		}
 		else{

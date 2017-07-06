@@ -584,7 +584,7 @@ public class Display extends JFrame {
 				PSatClient.netAutoGenAgents();		
 				updateNetworkPage();
 				setDefaultSourceTargetForSequenceGraph(); //
-				loadPossibleSequences();
+				//loadPossibleSequences();
 				runGraphStatistics();
 				updateProgressComponent(100,"");
 			}			
@@ -2455,51 +2455,7 @@ public class Display extends JFrame {
 		queryThread.start();
 	}
 	
-	private static void loadPossibleSequences(){
-		ArrayList<String> sequences = new ArrayList<String>();
-		String [] agentNames = PSatClient.netGetAgentNames();
-	    
-		 String[] seq = new String[agentNames.length];
-	     int k = agentNames.length;
-	     for(int i=1;i<=k;i++) {
-	        Helper.generatePermutations(agentNames,0,i,seq);
-	     }
-	     int j=0;
-	     for(String s: seq){
-	    	 System.out.println(s);
-	    	 if(s != null){
-		    	 j = j+1; 
-	    	 }
-	     }
-	     if(j == agentNames.length){
-	    	 Set<String> set = new HashSet<String>();
-	    	 for(String s:seq){
-	    		 set.add(s);
-	    	 }
-
-	    	 if(set.size() == seq.length){ //no duplicates
-	    		 
-	    	 }
-	     }
 		
-	     
-	     
-	     pathsListModel.removeAllElements();
- 		//selectedAgentPaths = new ArrayList<String>();	
-     	
- 		ArrayList<String> al = new ArrayList<String>();
-     	for (String path: PSatAPI.instance.listPathsData) {
-         	pathsListModel.addElement(path);
-         	al.add(path);
-         }
-     	PSatAPI.instance.selectedAgentPaths = al;
-     	PSatClient.netSerialiseConfigInstance();
-     	
-			listbox.setBackground(Color.WHITE);
-			listbox.revalidate();
-			listbox.repaint();
-	}
-	
 	public static double RoundTo2Decimals(double val) {
 		if(Double.isNaN(val)){
 			return val;

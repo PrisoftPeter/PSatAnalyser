@@ -558,20 +558,12 @@ public class ServerAssertionsFactory implements Serializable{
 	}
 	
 	public static void clearAllAgentAssertions(){
-		if(PSatAPI.instance.selectedAgentPaths != null){
-			for(String path: PSatAPI.instance.selectedAgentPaths){
-				String pathAgents1[] =path.split(": ");
-				//String pathId = pathAgents1[0];
-				String pathAgents2 = pathAgents1[1];
-				String[] pathAgents =pathAgents2.split(" ");
-				
-				for(String agentName:pathAgents){
-					Agent a = PSatClient.netGetAgent(agentName);
-					a.resetAssertionInstances();
-					a.resetRoles();
-					PSatClient.netWriteAgent(a);
-					
-				}
+		if(PSatAPI.instance.agentCollectionNames != null){
+			for(String agentName: PSatAPI.instance.agentCollectionNames){
+				Agent a = PSatClient.netGetAgent(agentName);
+				a.resetAssertionInstances();
+				a.resetRoles();
+				PSatClient.netWriteAgent(a);
 			}
 		}		
 	}

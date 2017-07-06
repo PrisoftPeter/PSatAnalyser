@@ -3,7 +3,6 @@ package gla.prisoft.server.kernel.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-//import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -18,6 +17,7 @@ import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KLink;
 import gla.prisoft.shared.KNode;
+import gla.prisoft.shared.NetworkType;
 
 
 public class PathsInGraph {
@@ -103,7 +103,11 @@ public class PathsInGraph {
 			
 			i = i+1;
 		}
-				
+		
+		if(ginstance.networkType == NetworkType.SEQUENTIAL){
+			paths = additionalSequencePaths(ginstance,paths);
+		}
+		
 		return paths;
 	}
 	
@@ -389,6 +393,10 @@ public class PathsInGraph {
 			pcounter = pcounter+1;
 		}
 		
+		if(ginstance.networkType == NetworkType.SEQUENTIAL){
+			paths = additionalSequencePaths(ginstance,paths);
+		}
+		
 		return paths_update;
 	}
 	
@@ -501,8 +509,70 @@ public class PathsInGraph {
 		}
 		Arrays.sort(paths);
 		
+		if(ginstance.networkType == NetworkType.SEQUENTIAL){
+			paths = additionalSequencePaths(ginstance,paths);
+		}
+		
 		return paths;
 		
 	}
+	
+	private static String [] additionalSequencePaths(ConfigInstance ginstance,String[] paths){
+
+		if(paths.length ==0){
+			return paths;
+		}
+		//add other possible sequence permutation	
+		otherpossiblesequences = new String[0];
+		if(paths[0].contains(":")){
+			paths[0]= paths[0].split(": ")[1];
+		}
+		String [] agentn = paths[0].split(" ");			
+		String [] agentNames = new String[0];
+		for(String s:agentn){
+			if(s != null && s.length()>0){
+				agentNames = Helper.addUniqueStringToArray(agentNames, s);
+			}
+		}
+        permute(java.util.Arrays.asList(agentNames), 0);
+        for(String ss:otherpossiblesequences){
+    		ss = ss.replace("[", "");
+    		ss = ss.replace("]", "");
+    		String ssa[] = ss.split(",");
+    		
+    		String seq = " ";
+			for(String se:ssa){
+				seq = seq+se;
+			}
+			
+    		if(ginstance.is_role_run){
+    			if(ssa[0].equals(ginstance.sourceAgentName)){        				
+					paths = Helper.addUniqueStringToArray(paths, seq);
+				}
+	        }
+    		else{
+    			if(ssa[0].trim().equals(ginstance.sourceAgentName) && ssa[ssa.length-1].trim().equals(ginstance.targetAgentName)){
+					paths = Helper.addUniqueStringToArray(paths, ss);
+				}
+    		}        		
+		}	
+        
+        return paths;
+	}
+	
+	private static String[] otherpossiblesequences;	
+	static void permute(java.util.List<String> arr, int k){
+        for(int i = k; i < arr.size(); i++){
+            java.util.Collections.swap(arr, i, k);
+            permute(arr, k+1);
+            java.util.Collections.swap(arr, k, i);
+        }
+        if (k == arr.size() -1){
+        	otherpossiblesequences = Helper.addUniqueStringToArray(otherpossiblesequences, java.util.Arrays.toString(arr.toArray()));
+        }
+    }
+	
+	
+		
 }
 

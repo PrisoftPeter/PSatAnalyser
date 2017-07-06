@@ -192,10 +192,17 @@ public class ClientKNetworkGraph {
             		    String path = entry.getKey();
             		    double value = entry.getValue();
             		    if(value >= Display.sliderValue){
-            		    	String pathAgents1[] =path.split(": ");
-                			String pathAgents2 = pathAgents1[1];
-                			String [] selectedAgentPath =pathAgents2.split(" ");
-                			
+            		    	
+            		    	String [] selectedAgentPath =null;
+                			if(path.contains(":")){
+                				String pathAgents1[] =path.split(": ");
+                    			String pathAgents2 = pathAgents1[1];
+                    			selectedAgentPath =pathAgents2.split(" ");
+                			}
+                			else{
+                				selectedAgentPath =path.split(" ");
+                			}
+                			                			
                 			for(Object ename:selectedAgentPath){
                         		String name = ename.toString();
                             	if(node.toString().equals(name)){
@@ -207,9 +214,16 @@ public class ClientKNetworkGraph {
             	}
             	else if(PSatAPI.instance.selectedAgentPaths !=null){
             		for(String spath: PSatAPI.instance.selectedAgentPaths){
-            			String pathAgents1[] =spath.split(": ");
-            			String pathAgents2 = pathAgents1[1];
-            			String [] selectedAgentPath =pathAgents2.split(" ");
+            			String [] selectedAgentPath =null;
+            			if(spath.contains(":")){
+            				String pathAgents1[] =spath.split(": ");
+                			String pathAgents2 = pathAgents1[1];
+                			selectedAgentPath =pathAgents2.split(" ");
+            			}
+            			else{
+            				selectedAgentPath =spath.split(" ");
+            			}
+            			
             			
             			for(Object ename:selectedAgentPath){
                     		String name = ename.toString();
@@ -273,9 +287,15 @@ public class ClientKNetworkGraph {
       		
       		
       		for(String spath: tempPaths){
-      			String pathAgents1[] =spath.split(": ");
-      			String pathAgents2 = pathAgents1[1];
-      			String [] selectedAgentPath =pathAgents2.split(" ");
+      			String [] selectedAgentPath = null;
+      			if(spath.contains(":")){
+      				String pathAgents1[] =spath.split(": ");
+          			String pathAgents2 = pathAgents1[1];
+          			selectedAgentPath =pathAgents2.split(" ");
+      			}
+      			else{
+      				selectedAgentPath =spath.split(" ");
+      			}
       			
       			if(selectedAgentPath != null && tickenedLinks !=null){        			
           			for(KLink t_link:tickenedLinks){
@@ -346,9 +366,15 @@ public class ClientKNetworkGraph {
           		}
           		
       			for(String spath: tempPaths){
-        			String pathAgents1[] =spath.split(": ");
-        			String pathAgents2 = pathAgents1[1];
-        			String [] selectedAgentPath =pathAgents2.split(" ");
+      				String [] selectedAgentPath = null;
+      				if(spath.contains(":")){
+      					String pathAgents1[] =spath.split(": ");
+            			String pathAgents2 = pathAgents1[1];
+            			selectedAgentPath =pathAgents2.split(" ");
+      				}
+      				else{
+      					selectedAgentPath =spath.split(" ");
+      				}
         			
         			if(selectedAgentPath != null && coloredLinks!=null){        			
             			for(KLink t_link:coloredLinks){
@@ -425,9 +451,15 @@ public class ClientKNetworkGraph {
           		}
       			
       			for(String spath: tempPaths){
-        			String pathAgents1[] =spath.split(": ");
-        			String pathAgents2 = pathAgents1[1];
-        			String [] selectedAgentPath =pathAgents2.split(" ");
+      				String [] selectedAgentPath = null;
+      				if(spath.contains(":")){
+      					String pathAgents1[] =spath.split(": ");
+            			String pathAgents2 = pathAgents1[1];
+            			selectedAgentPath =pathAgents2.split(" ");
+      				}
+      				else{
+      					selectedAgentPath =spath.split(" ");
+      				}
         			
         			if(selectedAgentPath !=null){
                 		for(Object ename:selectedAgentPath){
