@@ -96,21 +96,31 @@ public class ServerMemoryFactory {
 			}
 
 			for(String agentName1:p2){
-				boolean exist1 = false;
-				for(String agentName:sinstance.validAgents){
-					if(agentName.equals(agentName1)){
-						exist1  = true;
-						break;
+				boolean validagentName = false;
+				if(agentName1 != null){
+					agentName1 = agentName1.trim();
+					if(agentName1.length()>0){
+						validagentName = true;
 					}
 				}
-				if(!exist1){
-					String temp [] = new String[sinstance.validAgents.length+1];
-					for(int i=0;i<sinstance.validAgents.length;i++){
-						temp[i] = sinstance.validAgents[i];
+				if(validagentName){
+					boolean exist1 = false;
+					for(String agentName:sinstance.validAgents){
+						if(agentName.equals(agentName1)){
+							exist1  = true;
+							break;
+						}
 					}
-					temp[sinstance.validAgents.length] = agentName1;
-					sinstance.validAgents = temp;
+					if(!exist1){
+						String temp [] = new String[sinstance.validAgents.length+1];
+						for(int i=0;i<sinstance.validAgents.length;i++){
+							temp[i] = sinstance.validAgents[i];
+						}
+						temp[sinstance.validAgents.length] = agentName1;
+						sinstance.validAgents = temp;
+					}
 				}
+				
 			}							
 		}
 	}

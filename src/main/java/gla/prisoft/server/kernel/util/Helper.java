@@ -35,7 +35,7 @@ public class Helper {
 			return stringArray;
 		}
 		for(String sx:stringArray){
-			if(sx.equals(s)){
+			if(sx.trim().equals(s.trim())){
 				unique = false;
 			}
 		}

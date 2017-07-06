@@ -91,7 +91,7 @@ public class PathsInGraph {
 		
 		int i = 1;
 		for(String path: tpaths){
-			String path_desc = i+":"+path;
+			String path_desc = i+": "+path;
 			
 			String temp [] =new String[paths.length+1];
 			for(int j=0;j<paths.length;j++){
@@ -105,7 +105,18 @@ public class PathsInGraph {
 		}
 		
 		if(ginstance.networkType == NetworkType.SEQUENTIAL){
-			paths = additionalSequencePaths(ginstance,paths);
+			int j =1;
+			String[] pathsadd = new String[0];
+			String[] newpaths = new String[0]; 
+			pathsadd = additionalSequencePaths(ginstance,paths);
+			for(String apath:pathsadd){
+				String path_desc = j+":"+apath;
+				newpaths = Helper.addUniqueStringToArray(newpaths, path_desc);
+				
+				j = j+1;
+			}
+			return newpaths;
+			
 		}
 		
 		return paths;
@@ -546,13 +557,13 @@ public class PathsInGraph {
 			}
 			
     		if(ginstance.is_role_run){
-    			if(ssa[0].equals(ginstance.sourceAgentName)){        				
+    			if(ssa[0].equals(ginstance.sourceAgentName)){       
 					paths = Helper.addUniqueStringToArray(paths, seq);
 				}
 	        }
     		else{
     			if(ssa[0].trim().equals(ginstance.sourceAgentName) && ssa[ssa.length-1].trim().equals(ginstance.targetAgentName)){
-					paths = Helper.addUniqueStringToArray(paths, ss);
+					paths = Helper.addUniqueStringToArray(paths, seq);
 				}
     		}        		
 		}	
