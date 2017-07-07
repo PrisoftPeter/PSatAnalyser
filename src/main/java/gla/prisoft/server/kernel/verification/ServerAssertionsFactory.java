@@ -14,6 +14,7 @@ import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.knowledge.ServerMemoryFactory;
 import gla.prisoft.server.kernel.knowledge.worlds.*;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
+import gla.prisoft.server.session.Config;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.AssertionRole;
@@ -558,37 +559,34 @@ public class ServerAssertionsFactory implements Serializable{
 	}
 	
 	public static void clearAllAgentAssertions(){
-		if(PSatAPI.instance.agentCollectionNames != null){
-			for(String agentName: PSatAPI.instance.agentCollectionNames){
-				Agent a = PSatClient.netGetAgent(agentName);
-				a.resetAssertionInstances();
-				a.resetRoles();
-				PSatClient.netWriteAgent(a);
-			}
+		ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(PSatAPI.instance.sessionid);
+		String [] agentNames = ServerAgentFactory.getAgentNames(sinstance);
+		
+		for(String agentName: agentNames){
+			Agent a = PSatClient.netGetAgent(agentName);
+			a.resetAssertionInstances();
+			a.resetRoles();
+			PSatClient.netWriteAgent(a);
 		}		
 	}
 	
 	public static int getTotalNoOfAssertionsForAllAgents(){
 		int count = 0;
-		for(String path: PSatAPI.instance.selectedAgentPaths){
-			String pathAgents1[] =path.split(": ");
-			//String pathId = pathAgents1[0];
-			String pathAgents2 = pathAgents1[1];
-			String[] pathAgents =pathAgents2.split(" ");
-			
-			for(String agentName:pathAgents){
-				Agent a = PSatClient.netGetAgent(agentName);
-				if(PSatAPI.instance.is_role_run){
-					if(a.getRoles() != null){
-						count = count + a.getRoles().length;
-					}
+		ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(PSatAPI.instance.sessionid);
+		String [] agentNames = ServerAgentFactory.getAgentNames(sinstance);
+		
+		for(String agentName: agentNames){
+			Agent a = PSatClient.netGetAgent(agentName);
+			if(PSatAPI.instance.is_role_run){
+				if(a.getRoles() != null){
+					count = count + a.getRoles().length;
 				}
-				else{
-					if(a.getAssertionInstances() != null){
-						count = count + a.getAssertionInstances().length;
-					}
-				}				
 			}
+			else{
+				if(a.getAssertionInstances() != null){
+					count = count + a.getAssertionInstances().length;
+				}
+			}	
 		}
 		return count;
 	}

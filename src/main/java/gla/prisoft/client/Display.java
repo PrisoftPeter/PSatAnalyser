@@ -54,14 +54,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Set;
 
 import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
 
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 
@@ -82,7 +81,6 @@ import gla.prisoft.client.kernel.display.util.KleinbergSmallWorldSettings;
 import gla.prisoft.client.kernel.display.util.PreferentialAttachmentSettings;
 import gla.prisoft.client.session.ClientConfig;
 import gla.prisoft.server.PSatAPI;
-import gla.prisoft.server.kernel.util.Helper;
 import gla.prisoft.server.kernel.verification.ServerAssertionsFactory;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.NetworkType;
@@ -657,7 +655,7 @@ public class Display extends JFrame {
 					    return;
 					}
 					if(ServerAssertionsFactory.getTotalNoOfAssertionsForAllAgents() ==0){
-						JOptionPane.showMessageDialog(Display.iframeNet, "No privacy requirement specified...",  "Priva", JOptionPane.NO_OPTION);
+						JOptionPane.showMessageDialog(Display.iframeNet, "No privacy requirement specified...",  "Privacy Requirements", JOptionPane.NO_OPTION);
 					    return;
 					}
 					startTrainMaxAnalysisButton.setIcon(stopNormalIcon);
@@ -772,7 +770,8 @@ public class Display extends JFrame {
 				listbox = new JList(pathsListModel);
 				listbox.setFont(new Font("Verdana", Font.PLAIN, 10));
 				listbox.setBackground(new Color(255,255,240));
-				listbox.setCellRenderer(new PathsListCellRenderer());		
+				listbox.setCellRenderer(new PathsListCellRenderer());	
+				listbox.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				listbox.addListSelectionListener(new ListSelectionListener(){
 
 					public void valueChanged(ListSelectionEvent e) {
@@ -787,15 +786,25 @@ public class Display extends JFrame {
 						}
 						PSatAPI.instance.selectedAgentPaths = saps;
 						PSatClient.netSerialiseConfigInstance();
-
-			            if(PSatAPI.instance.selectedAgentPaths.size() >0){
-			            	ClientKNetworkGraph.resetColoredLinks();
-							ClientKNetworkGraph.resetColoredNodes();
-							
-							updateNetworkNode();		
-							activateRun(true);
-			            }
 						
+						if(PSatAPI.instance.selectedAgentPaths.size() >0){
+							if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){
+								ServerAssertionsFactory.clearAllAgentAssertions();
+								PSatClient.netSerialiseConfigInstance();
+								
+								//reload sequence graph for new path
+								PSatClient.netRegenerateSequence(saps.get(0));
+								createFrameNetworkPage();
+							}
+							else{
+								ClientKNetworkGraph.resetColoredLinks();
+								ClientKNetworkGraph.resetColoredNodes();
+									
+								updateNetworkNode();	
+							}
+							
+							activateRun(true);				            
+				         }
 					}			
 				});
 				
@@ -816,6 +825,13 @@ public class Display extends JFrame {
 	
 	public static InternalFrame iframeNet;
 	private void createFrameNetworkPage(){
+		if(iframeNet !=null){
+			try {
+				iframeNet.setClosed(true);
+			} catch (PropertyVetoException e) {
+				e.printStackTrace();
+			}
+		}
 		iframeNet = new InternalFrame("Network",610,390,true,false,true,true,19,0);
 				
 		JComponent networkPane = createNetworkPage();

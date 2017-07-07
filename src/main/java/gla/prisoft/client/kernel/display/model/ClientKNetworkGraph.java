@@ -248,7 +248,18 @@ public class ClientKNetworkGraph {
         Transformer<KLink, Stroke> edgeStroke = new Transformer<KLink, Stroke>() {
 //          float dash[] = { 10.0f };
           public Stroke transform(KLink link) {
-
+        	 boolean linkexist = false;
+        	 Collection<KLink> klinks = g.getEdges();
+        	 for(KLink l: klinks){
+        		 if(l.toString().equals(link.toString())){
+        			 linkexist = true;
+        		 }
+        	 }
+        	 
+        	 if(!linkexist){
+        		 return null;
+        	 }
+        	  
           	Collection<KNode> in = g.getIncidentVertices(link);
           	KNode source = (KNode)in.toArray()[0];
       		KNode dest = (KNode)in.toArray()[1];
@@ -330,6 +341,18 @@ public class ClientKNetworkGraph {
 //            	PSatClient.netDeseraliseConfigInstance();
             	
             	KLink link = (KLink)i;
+            	
+            	boolean linkexist = false;
+	           	 Collection<KLink> klinks = g.getEdges();
+	           	 for(KLink l: klinks){
+	           		 if(l.toString().equals(link.toString())){
+	           			 linkexist = true;
+	           		 }
+	           	 }
+	           	 
+	           	 if(!linkexist){
+	           		 return null;
+	           	 }           	 
             	
         		Collection<KNode> in = g.getIncidentVertices(link);
         		KNode source = (KNode)in.toArray()[0];

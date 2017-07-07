@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 //import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Properties;
 //import java.util.Map;
 import java.util.Random;
 
+import gla.prisoft.client.kernel.display.model.ClientKNetworkGraph;
 import gla.prisoft.client.session.ClientServerBroker;
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.util.GMLGraphLoader;
@@ -215,7 +217,46 @@ public class ServerKNetworkGraph implements Serializable{
 //    }
     
 
-    
+    public void createNewSequence(ServerConfigInstance instance, String path){
+
+//    	g = new DirectedSparseMultigraph<KNode, KLink>();
+    	instance.g = new UndirectedSparseMultigraph<KNode, KLink>();
+    	
+    	if(path.contains(":")){
+    		path = path.split(":")[1];
+    	}
+    	
+    	ArrayList<Agent> pathAgents = new ArrayList<Agent>();
+    	String agentNames [] = path.split(" ");
+    	for(String agentName: agentNames){
+    		if(agentName.trim().length()>0){
+    			Agent agent = ServerAgentFactory.getAgent(agentName.trim(), instance);
+    			if(agent != null){
+    				pathAgents.add(agent);
+            		KNode node = new KNode(agent.getAgentName());
+                	addKNode(node);
+    			}        			
+    		}    		
+    	}
+    	
+        // Add directed edges along with the vertices to the graph
+    	for(int i=1; i<pathAgents.size();i++){
+    		Agent agent_t = pathAgents.get(i);
+    		Agent agent_s = pathAgents.get(i-1);
+    		
+    		KNode knode_t = getKNode(agent_t.getAgentName());
+    		KNode knode_s = getKNode(agent_s.getAgentName());
+    		if(knode_t!=null && knode_s !=null){
+    			KLink link = new KLink(1.0, 10,edgeCount++);
+    			instance.g.addEdge(link,knode_s, knode_t, EdgeType.UNDIRECTED);
+    		}
+    		
+    	}
+    	
+        Config.serialiseServerConfigInstance(instance.sessionid, instance);
+        ClientKNetworkGraph.g = instance.g;
+        writeGraphGML(instance);
+    }
    
     
 	public void createGraph(ServerConfigInstance instance) {
@@ -382,7 +423,7 @@ public class ServerKNetworkGraph implements Serializable{
     
     public void createSequentialGraph(ConfigInstance instance,ServerConfigInstance serverInstance){
 
-		serverInstance.agents = new Agent[0];
+    	serverInstance.agents = new Agent[0];
 		ServerAgentFactory.clearAgents(serverInstance);
 		
 		try {

@@ -63,9 +63,7 @@ public class InformationFlows {
 	private static ArrayList<String> processedSequences;
 		
 	public static ArrayList<SafeZone> safeZones;
-	
-//	private ViabilitySpectrum spectrum;
-	
+		
 	public boolean sat_treshold_reached = false;
 	public boolean containRequest = false;
 	public boolean containConsent = false;
@@ -73,46 +71,17 @@ public class InformationFlows {
 				
 	public boolean run(List<String> paths, ServerConfigInstance sinstance,ConfigInstance instance){
     	PSatAPI.fvindex = 0;
-//    	String sessionid = sinstance.sessionid;	
 		
 		if(sinstance.serverSatSerializer == null){
 			sinstance.serverSatSerializer = new ServerSatSerializer();
 		}
 		sinstance.serverSatSerializer.resetLongSatVals();
-		
-//		if(instance.isTraining){
-//			sinstance.serverSatSerializer.createTrainingSatPathStore(sinstance, instance);			
-//		}
-//		else{
-//			instance.maxPathSats = new HashMap<String, Double>();
-//			Properties ppties1 = new Properties();
-//			ppties1.setProperty("instanceproperty", "maxPathSats");
-//			ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties1, instance.maxPathSats);
-//
-//			sinstance.serverSatSerializer.createAnalysisSatPathStore(instance,sinstance);		
-//		}
-		
+				
 		executionTimes = new ArrayList<Long>();
 		doRun(paths, sinstance, instance);	
 		
-//		if(!instance.isModeEntropy){
-//			double pathsSatMean = sumglobalsat/countglobalsat;
-//			if(!Double.isNaN(pathsSatMean)){
-//				new Double(ConfigInstance.df.format(pathsSatMean));			
-//			}		
-//			sinstance.serverSatSerializer.displayPathsSatMeanSummary(pathsSatMean, sessionid);	
-//		}
-//		
-//		long executionTimesSum = 0;
-//		for(long l:executionTimes){
-//			executionTimesSum = executionTimesSum+l;
-//		}	
-//			
-//		ClientServerBroker.messageEvent("updateLogPage", "TotalProtocolExecutionTime: "+executionTimesSum+" milliseconds"+"₦"+false, null, null);
-//		ClientServerBroker.messageEvent("updateLogPage", "**Path Analysis Complete**"+"₦"+false, null, null);
 		ClientServerBroker.messageEvent("updateProgressComponent", 100+"₦"+"", null, null);
 		
-//		Display.window.createDecisionBarViewPage(new BarChart());
 		return true;
 	}
 
@@ -261,9 +230,9 @@ public class InformationFlows {
 		ppties.setProperty("instanceproperty", "selectedAgentPath");
 		ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties, pathAgents);
 
-		ClientServerBroker.messageEvent("ClientKNetworkGraph.resetColoredLinks()", "", null,null);
-		ClientServerBroker.messageEvent("ClientKNetworkGraph.resetColoredNodes()", "", null,null);
-		ClientServerBroker.messageEvent("Display.updateNetworkNode()", "", null,null);
+//		ClientServerBroker.messageEvent("ClientKNetworkGraph.resetColoredLinks()", "", null,null);
+//		ClientServerBroker.messageEvent("ClientKNetworkGraph.resetColoredNodes()", "", null,null);
+//		ClientServerBroker.messageEvent("Display.updateNetworkNode()", "", null,null); 
 				
 		
         int n = evaluationProtocols.length; 

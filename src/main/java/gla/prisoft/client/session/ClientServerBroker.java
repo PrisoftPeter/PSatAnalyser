@@ -63,6 +63,12 @@ public class ClientServerBroker{
 							netGenNewSessionDone = true;
 						}
 					}
+					else if(actionType.equals("PSatClient.netRegenerateSequence()")){
+						String path = actionValue;
+						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
+						sinstance.kgraph.createNewSequence(sinstance, path);
+						netRegenerateSequenceDone = true;
+					}
 					else if(actionType.equals("PSatClient.netGetSession()")){
 						String tsessionid = actionValue;
 						ConfigInstance tinstance = Config.deserialiseConfigInstance(tsessionid);																		
@@ -708,6 +714,7 @@ public class ClientServerBroker{
 	public static boolean netDiameterDone = false;
 	public static boolean netGenNewSessionDone = false;
 	public static boolean netGetSessionDone = false;
-	public static boolean netMutateEdgesDone = false;	
+	public static boolean netMutateEdgesDone = false;
+	public static boolean netRegenerateSequenceDone = false;
 
 }
