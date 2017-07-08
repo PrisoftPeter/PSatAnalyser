@@ -24,6 +24,7 @@ import java.util.Random;
 import gla.prisoft.client.kernel.display.model.ClientKNetworkGraph;
 import gla.prisoft.client.session.ClientServerBroker;
 import gla.prisoft.server.PSatAPI;
+import gla.prisoft.server.kernel.knowledge.ServerMemoryFactory;
 import gla.prisoft.server.kernel.util.GMLGraphLoader;
 import gla.prisoft.server.kernel.util.ResourceLoader;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
@@ -34,6 +35,7 @@ import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KLink;
 import gla.prisoft.shared.KNode;
+import gla.prisoft.shared.NetworkType;
 import edu.uci.ics.jung.algorithms.generators.random.BarabasiAlbertGenerator;
 import edu.uci.ics.jung.algorithms.generators.random.EppsteinPowerLawGenerator;
 import edu.uci.ics.jung.algorithms.generators.random.KleinbergSmallWorldGenerator;
@@ -271,8 +273,17 @@ public class ServerKNetworkGraph implements Serializable{
         }
         
         // Add directed edges along with the vertices to the graph
+    	String seq = "";
         for(Agent agent:instance.agents){
         	KNode eknode = getKNode(agent.getAgentName());
+        	
+        	boolean seqcontained = false;
+        	if(seq.contains(agent.getAgentName())){
+        		seqcontained = true;
+        	}
+        	if(!seqcontained){
+        		seq = seq+agent.getAgentName()+" ";	
+        	}
         	
         	if(eknode !=null){
         		if(agent.getOtherKnownAgentNames().length >0){
@@ -284,6 +295,8 @@ public class ServerKNetworkGraph implements Serializable{
                 			KLink link = new KLink(1.0, 10,edgeCount++);
 //                			g.addEdge(link,eknode, conknode, EdgeType.DIRECTED);
                 			instance.g.addEdge(link,eknode, conknode, EdgeType.UNDIRECTED);
+                			
+                			seq = seq+connection+" ";
                 		}
                 	}
         		}
@@ -293,6 +306,14 @@ public class ServerKNetworkGraph implements Serializable{
             	
         	}
         }         
+        
+        if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){
+        	if(seq.length()>0){
+            	PSatAPI.instance.selectedPath = seq;
+            	ServerMemoryFactory.seq=seq;
+            	Config.serialiseConfigInstance(PSatAPI.instance.sessionid, PSatAPI.instance);
+        	}
+        }
         writeGraphGML(instance);
         
     }

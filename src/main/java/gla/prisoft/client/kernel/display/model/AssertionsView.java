@@ -84,7 +84,7 @@ public class AssertionsView extends Container {
 //			int n= JOptionPane.showOptionDialog(Display.iframeNet,message,"AssertionRole:"+agentName, JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 //
 //			if (n == JOptionPane.YES_OPTION){
-//				if(Display.instance.is_generating_memory_store){
+//				if(Display.instance.busy){
 //					JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...", "Wait!", JOptionPane.NO_OPTION);
 //					return;
 //				}
@@ -104,8 +104,8 @@ public class AssertionsView extends Container {
 //
 //			}
 			
-			if(PSatAPI.instance.is_generating_memory_store){
-				JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...", "Wait!", JOptionPane.NO_OPTION);
+			if(PSatAPI.instance.busy){
+				JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
 				return;
 			}
 			PSatAPI.instance.selfAgentName = agentName;

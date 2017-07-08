@@ -54,7 +54,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
@@ -265,9 +264,8 @@ public class Display extends JFrame {
 		menuNewSession.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				//check server if generating memory store
-				if(PSatAPI.instance.is_generating_memory_store){
-				    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-
+				if(PSatAPI.instance.busy){
+					JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
 					return;
 				}
 				reinitialise();
@@ -318,9 +316,8 @@ public class Display extends JFrame {
 			final JMenuItem menu_sessions = new JMenuItem(session,datastoreNatIcon);
 			menu_sessions.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
-					if(PSatAPI.instance.is_generating_memory_store){
-					    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-
+					if(PSatAPI.instance.busy){
+						JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
 						return;
 					}
 					Display.graphloaded = false;
@@ -368,9 +365,8 @@ public class Display extends JFrame {
 		menuItemppties.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				//check server if generating memory store
-				if(PSatAPI.instance.is_generating_memory_store){
-				    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-
+				if(PSatAPI.instance.busy){
+					JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
 					return;
 				}
 				configProperties();
@@ -646,9 +642,9 @@ public class Display extends JFrame {
 				}
 				else{
 					
-					if(PSatAPI.instance.is_generating_memory_store){
-					    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-					    return;
+					if(PSatAPI.instance.busy){
+						JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+						return;
 					}
 					if(PSatAPI.instance.evaluatedProtocols == null ||PSatAPI.instance.evaluatedProtocols.length==0){
 						JOptionPane.showMessageDialog(Display.iframeNet, "No disclosure protocol selected...",  "Disclosure Protocol", JOptionPane.NO_OPTION);
@@ -714,7 +710,7 @@ public class Display extends JFrame {
 				
 		Thread queryThread = new Thread() {
 			public void run() {					
-				PSatAPI.instance.noPaths = PSatAPI.instance.selectedAgentPaths.size();
+//				PSatAPI.instance.noPaths = PSatAPI.instance.selectedAgentPaths.size();
 				PSatAPI.instance.isTraining = true;
 				PSatAPI.instance.currentPrivacyGoal = new HashMap<String, Double>();
 				if(PSatAPI.instance.originalPrivacyGoal == null){
@@ -775,36 +771,45 @@ public class Display extends JFrame {
 				listbox.addListSelectionListener(new ListSelectionListener(){
 
 					public void valueChanged(ListSelectionEvent e) {
-						if(PSatAPI.instance.is_generating_memory_store){
-						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-		        			return;
-		        		}
-						List<String> ll = listbox.getSelectedValuesList();
-						ArrayList<String> saps = new ArrayList<String>();
-						for(String s:ll){
-							saps.add(s);
+						if(PSatAPI.instance.busy){
+							Display.updateLogPage("processing Sequence:"+PSatAPI.instance.selectedPath, true);
+							return;
 						}
-						PSatAPI.instance.selectedAgentPaths = saps;
-						PSatClient.netSerialiseConfigInstance();
-						
-						if(PSatAPI.instance.selectedAgentPaths.size() >0){
-							if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){
-								ServerAssertionsFactory.clearAllAgentAssertions();
-								PSatClient.netSerialiseConfigInstance();
-								
-								//reload sequence graph for new path
-								PSatClient.netRegenerateSequence(saps.get(0));
-								createFrameNetworkPage();
-							}
-							else{
-								ClientKNetworkGraph.resetColoredLinks();
-								ClientKNetworkGraph.resetColoredNodes();
+//						
+						Thread queryThread = new Thread() {
+							public void run() {
+								Display.updateProgressComponent(-1, "");
+								PSatAPI.instance.busy = true;
+
+								String selectedpath = listbox.getSelectedValue();
+								if(selectedpath !=null && selectedpath.trim().length()>0){
+									PSatAPI.instance.selectedPath = selectedpath;
+									PSatClient.netSerialiseConfigInstance();
+
+									if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){
+										ServerAssertionsFactory.clearAllAgentAssertions();
+										PSatClient.netSerialiseConfigInstance();
+										
+										//reload sequence graph for new path
+										PSatClient.netRegenerateSequence(selectedpath);
+										createFrameNetworkPage();
+									}
+									else{
+										ClientKNetworkGraph.resetColoredLinks();
+										ClientKNetworkGraph.resetColoredNodes();
+											
+										updateNetworkNode();	
+									}
 									
-								updateNetworkNode();	
+									activateRun(true);				
+								}
+								
+								Display.updateProgressComponent(100, "");
+								PSatAPI.instance.busy = false;
+
 							}
-							
-							activateRun(true);				            
-				         }
+						};
+						queryThread.start();
 					}			
 				});
 				
@@ -1245,8 +1250,8 @@ public class Display extends JFrame {
 	public static ClientAssertionsFactory afactory;
 	public static AssertionsView ksView;
 	public static void updateAssertionsPage(final String agentName,  final String command){
-		if(PSatAPI.instance.is_generating_memory_store){
-		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
+		if(PSatAPI.instance.busy){
+			JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
 			return;
 		}
 		Agent agent = PSatClient.netGetAgent(agentName);
@@ -1327,8 +1332,8 @@ public class Display extends JFrame {
 		
 	public static void updateNetworkPage(){
 		
-		if(PSatAPI.instance.is_generating_memory_store){
-		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
+		if(PSatAPI.instance.busy){
+			JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
 			return;
 		}
 		Thread queryThread = new Thread() {
@@ -1360,8 +1365,8 @@ public class Display extends JFrame {
 	public static void updateNetworkNode(){
 		Display.isTresholdSlider = false;
 
-		if(PSatAPI.instance.is_generating_memory_store){
-		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
+		if(PSatAPI.instance.busy){
+			JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
 			return;
 		}
 		Thread queryThread = new Thread() {
@@ -1410,7 +1415,7 @@ public class Display extends JFrame {
 			
 			PSatAPI.instance.listPathsData = new String[0];
 			Display.pathsListModel.removeAllElements();
-			PSatAPI.instance.selectedAgentPaths = null;
+			PSatAPI.instance.selectedPath = null;
 			Display.prPanel.removeAll();
 						
 			PSatAPI.instance.sourceAgentName = sequencesourcetarget.getProperty("source");
@@ -1455,9 +1460,8 @@ public class Display extends JFrame {
 	}
 	public static void updatePathsList(){
 		
-		if(PSatAPI.instance.is_generating_memory_store){
-		    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-
+		if(PSatAPI.instance.busy){
+			JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
 			return;
 		}
 //		if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){
@@ -1466,17 +1470,17 @@ public class Display extends JFrame {
 //		else
 			if(PSatAPI.instance.is_role_run){
 			PSatAPI.instance.listPathsData = PSatClient.netFindKNearestneighbours();
-			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
-			for(String s:PSatAPI.instance.listPathsData){
-				PSatAPI.instance.selectedAgentPaths.add(s);
-			}
+//			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
+//			for(String s:PSatAPI.instance.listPathsData){
+//				PSatAPI.instance.selectedAgentPaths.add(s);
+//			}
 		}
 		else{
 			PSatAPI.instance.listPathsData = PSatClient.netGetPaths(); 
-			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
-			for(String s:PSatAPI.instance.listPathsData){
-				PSatAPI.instance.selectedAgentPaths.add(s);
-			}
+//			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
+//			for(String s:PSatAPI.instance.listPathsData){
+//				PSatAPI.instance.selectedAgentPaths.add(s);
+//			}
 		}	
 		if(PSatAPI.instance.listPathsData.length == 0){
 			Display.updateLogPage("no path matching setup distance of source from target(s)", true);
@@ -1490,12 +1494,12 @@ public class Display extends JFrame {
             	pathsListModel.removeAllElements();
         		//selectedAgentPaths = new ArrayList<String>();	
             	
-        		ArrayList<String> al = new ArrayList<String>();
+//        		ArrayList<String> al = new ArrayList<String>();
             	for (String path: PSatAPI.instance.listPathsData) {
                 	pathsListModel.addElement(path);
-                	al.add(path);
+//                	al.add(path);
                 }
-            	PSatAPI.instance.selectedAgentPaths = al;
+//            	PSatAPI.instance.selectedAgentPaths = al;
             	PSatClient.netSerialiseConfigInstance();
             	
 				listbox.setBackground(Color.WHITE);
@@ -1512,7 +1516,6 @@ public class Display extends JFrame {
 									PSatAPI.instance.old_k = PSatAPI.instance.k;
 									PSatClient.netSerialiseConfigInstance();
 									Display.updateProgressComponent(100, "");
-
 								}
 							};
 							queryThreadx.start();
@@ -2443,7 +2446,7 @@ public class Display extends JFrame {
 		//datastore_file_path = null;
 		PSatAPI.instance.sourceAgentName = null;
 		PSatAPI.instance.targetAgentName = null;
-		PSatAPI.instance.selectedAgentPaths = null;
+		PSatAPI.instance.selectedPath = null;
 		PSatAPI.instance.listPathsData = new String[0];
 		pathsListModel.removeAllElements();
 		if(PSatAPI.instance.sourceAgentName ==null || PSatAPI.instance.targetAgentName == null){

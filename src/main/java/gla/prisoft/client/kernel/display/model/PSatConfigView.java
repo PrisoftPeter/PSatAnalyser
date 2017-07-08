@@ -68,7 +68,7 @@ class PrConfig extends javax.swing.JPanel {
 	        	PSatAPI.instance.is_role_run = true;
 	        	PSatAPI.instance.listPathsData = new String[0];
 				Display.pathsListModel.removeAllElements();
-				PSatAPI.instance.selectedAgentPaths = null;
+				PSatAPI.instance.selectedPath = null;
 				Display.prPanel.removeAll();
 				PSatAPI.instance.sourceAgentName = null;
 				PSatAPI.instance.subjectName = null;
@@ -92,7 +92,7 @@ class PrConfig extends javax.swing.JPanel {
 	        	PSatAPI.instance.is_role_run = false;
 	        	PSatAPI.instance.listPathsData = new String[0];
 				Display.pathsListModel.removeAllElements();
-				PSatAPI.instance.selectedAgentPaths = null;
+				PSatAPI.instance.selectedPath = null;
 				Display.prPanel.removeAll();
 				PSatAPI.instance.sourceAgentName = null;
 				PSatAPI.instance.subjectName = null;

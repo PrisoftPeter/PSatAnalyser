@@ -18,7 +18,7 @@ public class ServerConfigInstance implements Serializable{
 	public String sessionid;
 	
 	//server specific variables
-	public boolean is_generating_memory_store;
+	public boolean busy;
 	public ServerSatSerializer serverSatSerializer;
 	public boolean learningMaxSubs = false;	
 	public UndirectedGraph<KNode, KLink> g;

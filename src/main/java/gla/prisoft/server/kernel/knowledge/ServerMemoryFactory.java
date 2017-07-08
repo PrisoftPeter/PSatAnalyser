@@ -51,7 +51,7 @@ public class ServerMemoryFactory {
 
 		Agent self = ServerAgentFactory.getAgent(selfName, sinstance);
 		if(sinstance.validAgents == null){
-			setValidAgents(sinstance, instance);
+			setValidAgents(sinstance);
 		}
 		new Memory(self, instance.sourceAgentName, sinstance, instance).resetKnowledge(sinstance);
 		self.addToCreatedMemoryStores(instance.sourceAgentName);
@@ -73,19 +73,24 @@ public class ServerMemoryFactory {
 //		noMemoryStores = 0;			
 //	}
 	
-	public static void setValidAgents(ServerConfigInstance sinstance,ConfigInstance instance){
+	public static String seq;
+	public static void setValidAgents(ServerConfigInstance sinstance){
 
-		if(instance.subjectName !=null){
+		if(PSatAPI.instance.subjectName !=null){
 			sinstance.validAgents = new String[1];
-			sinstance.validAgents[0] = instance.subjectName;
+			sinstance.validAgents[0] = PSatAPI.instance.subjectName;
 		}
 		else{
 			sinstance.validAgents = new String[0];
 		}
 		
 		//select all unique agents from paths list
-		for(String path:instance.selectedAgentPaths){
-			path = path.replace(",", "");
+//		for(String path:instance.selectedAgentPaths){
+//			String path = PSatAPI.instance.selectedPath;
+			String path = seq;
+			if(path.contains(",")){
+				path = path.replace(",", "");
+			}
 			String[] p2 =null;
 			if(path.contains(":")){
 				String[] p1 = path.split(": ");
@@ -122,28 +127,35 @@ public class ServerMemoryFactory {
 				}
 				
 			}							
-		}
+//		}
 	}
 	
 
 	public static boolean newMemoryStore(ServerConfigInstance sinstance,ConfigInstance instance){
 		boolean done = false;
-
-//		Display.updateLogPage("generating possible worlds statespace...", false);
+		
 		if(instance == null){
 			instance = PSatAPI.instance;
 		}
-		instance.is_generating_memory_store = true;
+		
+		if(instance.sourceAgentName == null || instance.sourceAgentName.trim().length() == 0){
+			ClientServerBroker.messageEvent("updateProgressComponent", 100+"₦"+"",null,null);
+			PSatAPI.instance.busy = false;
+			return done;
+		}
+//		Display.updateLogPage("generating possible worlds statespace...", false);
+		
+		instance.busy = true;
 		Properties ppties1 = new Properties();
-		ppties1.setProperty("instanceproperty", "is_generating_memory_store");
-		ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties1, instance.is_generating_memory_store);
+		ppties1.setProperty("instanceproperty", "busy");
+		ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties1, instance.busy);
 		
 		Config.serialiseConfigInstance(sinstance.sessionid, instance);
 		
 		if(instance.is_dynamic_memory_store){
 			ClientServerBroker.messageEvent("updateProgressComponent", -1+"₦"+"", null,null);
 			
-			setValidAgents(sinstance, instance);
+			setValidAgents(sinstance);
 			
 			double coverage = ((double)sinstance.validAgents.length/(double)sinstance.agents.length)*100;
 			coverage = (double)(Math.round(coverage*100))/100;
@@ -192,14 +204,14 @@ public class ServerMemoryFactory {
 				}			
 			}
 		}
-		instance.is_generating_memory_store = false;
+		instance.busy = false;
 		Config.serialiseConfigInstance(instance.sessionid, instance);
 		PSatAPI.instance =instance;
 		ClientServerBroker.messageEvent("updateProgressComponent", 100+"₦"+"",null,null);
 		
 		Properties ppties3 = new Properties();
-		ppties3.setProperty("instanceproperty", "is_generating_memory_store");
-		ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties3, instance.is_generating_memory_store);
+		ppties3.setProperty("instanceproperty", "busy");
+		ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties3, instance.busy);
 		
 		done = true;
 		return done;

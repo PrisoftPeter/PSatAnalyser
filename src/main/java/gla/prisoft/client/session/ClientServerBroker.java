@@ -148,7 +148,7 @@ public class ClientServerBroker{
 						}
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 
-						boolean fin = new InformationFlows().run(instance.selectedAgentPaths, sinstance,instance);
+						boolean fin = new InformationFlows().run(instance.selectedPath, sinstance,instance);
 						
 						if(fin){
 							PSatClient.pathsAnalysed = true;
@@ -582,8 +582,8 @@ public class ClientServerBroker{
 							PSatAPI.instance.processedPossibleWorldsPaths = processedPossibleWorldsPaths;
 							PSatClient.netSerialiseConfigInstance();
 						}
-						else if(propertyToUpdate.equals("is_generating_memory_store")){
-							PSatAPI.instance.is_generating_memory_store = (Boolean)obj;
+						else if(propertyToUpdate.equals("busy")){
+							PSatAPI.instance.busy = (Boolean)obj;
 						}
 						else if(propertyToUpdate.equals("selectedAgentPath")){
 							PSatAPI.instance.selectedAgentPath = (String[])obj;

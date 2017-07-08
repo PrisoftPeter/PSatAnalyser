@@ -102,9 +102,9 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
                			JMenuItem configMenu = new JMenuItem(storePath);
                			configMenu.addActionListener(new ActionListener(){
         					public void actionPerformed(ActionEvent e) {
-        						if(PSatAPI.instance.is_generating_memory_store){
-        						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-                        			return;
+        						if(PSatAPI.instance.busy){
+        							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+        							return;
         						}
         						Thread queryThread = new Thread() {
         							public void run() {
@@ -180,9 +180,9 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
            		rolesMenu.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						
-						if(PSatAPI.instance.is_generating_memory_store){
-						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-                			return;
+						if(PSatAPI.instance.busy){
+							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+							return;
 						}
 						
 						isrequirements = true;
@@ -205,9 +205,9 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
        			JMenuItem instanceMenu = new JMenuItem("instance-based specification",instanceIcon);       			
        			instanceMenu.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
-						if(PSatAPI.instance.is_generating_memory_store){
-						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-                			return;
+						if(PSatAPI.instance.busy){
+							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+							return;
 						}
 						
 						isrequirements = true;
@@ -289,9 +289,9 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
             	
             	sourceMenuItem.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
-						if(PSatAPI.instance.is_generating_memory_store){
-						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-                			return;
+						if(PSatAPI.instance.busy){
+							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+							return;
 						}
 						Display.updateProgressComponent(-1, "");
 						if(PSatAPI.instance.selfAgentName !=null && !PSatAPI.instance.selfAgentName.equals(pickV.id)){
@@ -299,9 +299,8 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 							
 							PSatAPI.instance.listPathsData = new String[0];
 							Display.pathsListModel.removeAllElements();
-							PSatAPI.instance.selectedAgentPaths = null;
-							Display.prPanel.removeAll();
-							
+							PSatAPI.instance.selectedPath = null;
+							Display.prPanel.removeAll();							
 						}
 						else{
 							PSatAPI.instance.is_new_principal = false;
@@ -311,6 +310,11 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 						PSatAPI.instance.selfAgentName = pickV.id;
 									
 						PSatClient.netSerialiseConfigInstance();
+
+						if(PSatAPI.instance.is_role_run){
+							Display.updatePathsList();								
+//							Display.updateNetworkNode();
+						}
 						
 						Thread queryThread = new Thread() {
 							public void run() {
@@ -356,9 +360,9 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
            		}
             	targetMenuItem.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
-						if(PSatAPI.instance.is_generating_memory_store){
-						    JOptionPane.showMessageDialog(Display.iframeNet, "Memory Stores generation in progress...",  "Wait!", JOptionPane.NO_OPTION);
-                			return;
+						if(PSatAPI.instance.busy){
+							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+							return;
 						}
 						PSatAPI.instance.targetAgentName = pickV.id;
 						PSatClient.netSerialiseConfigInstance();
@@ -386,7 +390,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 							
 							PSatAPI.instance.listPathsData = new String[0];
 							Display.pathsListModel.removeAllElements();
-							PSatAPI.instance.selectedAgentPaths = null;
+							PSatAPI.instance.selectedPath = null;
 							Display.prPanel.removeAll();
 							
 							Display.updatePathsList();

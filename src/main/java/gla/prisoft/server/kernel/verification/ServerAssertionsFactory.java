@@ -560,14 +560,20 @@ public class ServerAssertionsFactory implements Serializable{
 	
 	public static void clearAllAgentAssertions(){
 		ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(PSatAPI.instance.sessionid);
-		String [] agentNames = ServerAgentFactory.getAgentNames(sinstance);
 		
-		for(String agentName: agentNames){
-			Agent a = PSatClient.netGetAgent(agentName);
+		for(Agent a:sinstance.agents){
 			a.resetAssertionInstances();
 			a.resetRoles();
 			PSatClient.netWriteAgent(a);
-		}		
+		}
+		
+//		String [] agentNames = ServerAgentFactory.getAgentNames(sinstance);
+//		for(String agentName: agentNames){
+//			Agent a = PSatClient.netGetAgent(agentName);
+//			a.resetAssertionInstances();
+//			a.resetRoles();
+//			PSatClient.netWriteAgent(a);
+//		}		
 	}
 	
 	public static int getTotalNoOfAssertionsForAllAgents(){

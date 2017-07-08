@@ -17,7 +17,8 @@ public class ConfigInstance implements Serializable{
 	public String targetAgentName;
 	public String subjectName;
 	public String selfAgentName;
-	public ArrayList<String> selectedAgentPaths;
+//	public ArrayList<String> selectedAgentPaths;
+	public String selectedPath;
 	public ArrayList<String> agentCollectionNames = new ArrayList<String>();
 	public String [] selectedAgentPath;
 
@@ -89,7 +90,7 @@ public class ConfigInstance implements Serializable{
 	public HashMap<Integer, Integer> PossibleKnowledgeSubstutitions = new HashMap<Integer, Integer>();
 	public CombinationStrategy combinationStrategy = CombinationStrategy.MAXIMUM; //TODO: check for privacy goals maximisation paper using minmax algorithm
 	
-	public int noPaths;
+//	public int noPaths;
 	public String currentPath;
 	
 	public KnowledgeBase knowledgeBase;
@@ -111,7 +112,8 @@ public class ConfigInstance implements Serializable{
 	public String roleTypeRaw = "";
 	
 	public String sessionid;
-	public boolean is_generating_memory_store;
+	public boolean busy;
+	public String busymessage = "sorry still processing...";
 
 	public boolean learningMaxSubs = false;	
 	

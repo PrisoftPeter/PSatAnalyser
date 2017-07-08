@@ -212,30 +212,30 @@ public class ClientKNetworkGraph {
             		    }
             		}            		
             	}
-            	else if(PSatAPI.instance.selectedAgentPaths !=null){
-            		for(String spath: PSatAPI.instance.selectedAgentPaths){
-            			String [] selectedAgentPath =null;
-            			if(spath.contains(":")){
-            				String pathAgents1[] =spath.split(": ");
-                			String pathAgents2 = pathAgents1[1];
-                			selectedAgentPath =pathAgents2.split(" ");
-            			}
-            			else{
-            				selectedAgentPath =spath.split(" ");
-            			}
-            			
-            			
-            			for(Object ename:selectedAgentPath){
-                    		String name = ename.toString();
-                        	if(node.toString().equals(name)){
-//                        		return new Color(30, 77, 43);
-                        		if(PSatAPI.instance.is_role_run){
-                        			return Color.GRAY; 
-                        		}
-                        		
-                        	}
+            	else if(PSatAPI.instance.selectedPath !=null){
+
+            		String spath = PSatAPI.instance.selectedPath;
+        			String [] selectedAgentPath =null;
+        			if(spath.contains(":")){
+        				String pathAgents1[] =spath.split(": ");
+            			String pathAgents2 = pathAgents1[1];
+            			selectedAgentPath =pathAgents2.split(" ");
+        			}
+        			else{
+        				selectedAgentPath =spath.split(" ");
+        			}
+        			
+        			
+        			for(Object ename:selectedAgentPath){
+                		String name = ename.toString();
+                    	if(node.toString().equals(name)){
+//                    		return new Color(30, 77, 43);
+                    		if(PSatAPI.instance.is_role_run){
+                    			return Color.GRAY; 
+                    		}
+                    		
                     	}
-            		}            		
+                	}          		
             	}             		
 //        		return Color.RED;
         		return Color.WHITE; 
@@ -289,11 +289,11 @@ public class ClientKNetworkGraph {
         		} 
         		
         	}
-      		else if(PSatAPI.instance.selectedAgentPaths == null){
+      		else if(PSatAPI.instance.selectedPath == null){
           			return null;          		
       		}
       		else{
-      			tempPaths = PSatAPI.instance.selectedAgentPaths;
+      			tempPaths.add(PSatAPI.instance.selectedPath);
       		}
       		
       		
@@ -384,8 +384,8 @@ public class ClientKNetworkGraph {
             		} 
             		
             	}
-          		else if(PSatAPI.instance.selectedAgentPaths != null){
-          			tempPaths = PSatAPI.instance.selectedAgentPaths;          		
+          		else if(PSatAPI.instance.selectedPath != null){
+          			tempPaths.add(PSatAPI.instance.selectedPath);          		
           		}
           		
       			for(String spath: tempPaths){
@@ -469,8 +469,8 @@ public class ClientKNetworkGraph {
             		} 
             		
             	}
-          		else if(PSatAPI.instance.selectedAgentPaths != null){
-          			tempPaths = PSatAPI.instance.selectedAgentPaths;          		
+          		else if(PSatAPI.instance.selectedPath != null){
+          			tempPaths.add(PSatAPI.instance.selectedPath);          		
           		}
       			
       			for(String spath: tempPaths){

@@ -49,13 +49,16 @@ public class Memory implements Serializable{
 		createAssertionsStorePath(instance.sessionid);
 		
 		Agent subject =ServerAgentFactory.getAgent(subjectName, instance);
-		for(Attribute attribute: subject.getPersonalAttributes()){
-			tempAttribute = attribute;
-			
-	        int r = 2;
-	        int n = otheragents.length;
-	        runAgentCombination(otheragents, n, r);
-		}		
+		if(subject != null){
+			for(Attribute attribute: subject.getPersonalAttributes()){
+				tempAttribute = attribute;
+				
+		        int r = 2;
+		        int n = otheragents.length;
+		        runAgentCombination(otheragents, n, r);
+			}
+		}
+				
 	}
 	
 	private boolean substituteEntropyLearning(World oldworld, World newworld, String processName){
