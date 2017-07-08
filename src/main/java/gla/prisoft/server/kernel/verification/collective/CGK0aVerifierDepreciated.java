@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.knowledge.Memory;
-import gla.prisoft.server.kernel.knowledge.worlds.K0a;
+import gla.prisoft.server.kernel.knowledge.worlds.K0aDepreciated;
 import gla.prisoft.server.kernel.knowledge.worlds.K1a;
 import gla.prisoft.server.kernel.knowledge.worlds.K21a;
 import gla.prisoft.server.kernel.knowledge.worlds.K31a;
@@ -16,7 +16,7 @@ import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 
-public class CGK0aVerifier {
+public class CGK0aVerifierDepreciated {
 	//Common knowledge of f (every user knows that ever user beliefs f)
 	public static double verify(Agent subject, Agent sender, Agent recipient, ServerConfigInstance sinstance,
 			ConfigInstance instance, Attribute message,ArrayList<Agent> agentsInPath){
@@ -33,7 +33,7 @@ public class CGK0aVerifier {
 		boolean verifyinsender = true;
 		boolean verifyinrecipient = true;
 		
-		K0a k0a = new K0a(message);
+		K0aDepreciated k0a = new K0aDepreciated(message);
 
 		if(verifyinsubject){
 			Agent self = subject;

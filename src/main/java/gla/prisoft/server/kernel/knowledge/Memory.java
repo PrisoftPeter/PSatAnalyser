@@ -150,8 +150,9 @@ public class Memory implements Serializable{
 //			addToAssertionsStore(new K0a(tempAttribute));
 //			addToAssertionsStore(new K0(tempAttribute));
 //		}
-		addToAssertionsStore(new K0a(tempAttribute));
-		addToAssertionsStore(new K0(tempAttribute));
+		
+//		addToAssertionsStore(new K0a(tempAttribute));
+//		addToAssertionsStore(new K0(tempAttribute));
 		
 		addToMemoryStore(new K1(self, tempAttribute));
 		addToAssertionsStore(new K1a(self, tempAttribute));
@@ -873,13 +874,14 @@ public class Memory implements Serializable{
 	        FileOutputStream fileOut = new FileOutputStream(fileName);
 	        ObjectOutputStream out = new ObjectOutputStream(fileOut);
 	        
-	        if(world instanceof K0a){
-	        	out.writeObject((K0a)world);
-			}
-	        else if(world instanceof K0){
-	        	out.writeObject((K0)world);
-			}
-	        else if(world instanceof K1){
+//	        if(world instanceof K0a){
+//	        	out.writeObject((K0a)world);
+//			}
+//	        else if(world instanceof K0){
+//	        	out.writeObject((K0)world);
+//			}
+//	        else 
+	        if(world instanceof K1){
 	        	out.writeObject((K1)world);
 			}
 			else if(world instanceof K1a){

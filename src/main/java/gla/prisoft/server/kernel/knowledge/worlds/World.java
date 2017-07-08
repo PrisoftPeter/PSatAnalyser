@@ -25,15 +25,16 @@ public abstract class World implements Serializable {
 	public static World createWorld(KnowledgeBase knowledgeBase, String type, 
 									Agent subject, Agent sender, Agent recipient, Attribute att){
 		
-		if(type.equals(K0.htmlType1)){
-			K0 w1 = new K0(att);
-			return w1;
-		}
-		else if(type.equals(K0a.htmlType1)){
-			K0a w1 = new K0a(att);
-			return w1;
-		}
-		else if(type.equals(K1.htmlType1)){
+//		if(type.equals(K0.htmlType1)){
+//			K0 w1 = new K0(att);
+//			return w1;
+//		}
+//		else if(type.equals(K0a.htmlType1)){
+//			K0a w1 = new K0a(att);
+//			return w1;
+//		}
+//		else 
+		if(type.equals(K1.htmlType1)){
 			if(knowledgeBase.equals(KnowledgeBase.SUBJECT)){
 				K1 w1 = new K1(subject, att);
 				return w1;

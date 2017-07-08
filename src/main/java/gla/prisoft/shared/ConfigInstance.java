@@ -50,7 +50,7 @@ public class ConfigInstance implements Serializable{
 	public String listPathsData[];
 	public int kNeighbours;
 	
-	public boolean is_role_run =true;
+	public boolean is_role_run =false;
 	public boolean is_dynamic_memory_store = true;
 	public boolean log_knowledge_transformation = false;
 	public boolean log_viable_disclosure_protocols = true;

@@ -22,8 +22,6 @@ import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.kernel.util.ServerSatSerializer;
 import gla.prisoft.server.kernel.verification.SATResult;
 import gla.prisoft.server.kernel.verification.ServerAssertionsFactory;
-import gla.prisoft.server.kernel.verification.collective.CGK0Verifier;
-import gla.prisoft.server.kernel.verification.collective.CGK0aVerifier;
 import gla.prisoft.server.kernel.verification.collective.CGK1Verifier;
 import gla.prisoft.server.kernel.verification.collective.CGK1aVerifier;
 import gla.prisoft.server.kernel.verification.collective.CGK21CGK22Verifier;
@@ -1278,15 +1276,16 @@ public class ServerMemoryFactory {
 		HashMap<World, Double> satvalues =new HashMap<World, Double>();
 		
 		for(World w: applicableReqs){
-			if(w instanceof K0){
-				double satvalue = CGK0Verifier.verify(subject, sender, recipient, sinstance,instance, message, agentsInPath);
-				satvalues.put(w, satvalue);
-			}
-			else if(w instanceof K0a){
-				double satvalue = CGK0aVerifier.verify(subject, sender, recipient, sinstance,instance, message,agentsInPath);
-				satvalues.put(w, satvalue);
-			}
-			else if(w instanceof K1){
+//			if(w instanceof K0){
+//				double satvalue = CGK0Verifier.verify(subject, sender, recipient, sinstance,instance, message, agentsInPath);
+//				satvalues.put(w, satvalue);
+//			}
+//			else if(w instanceof K0a){
+//				double satvalue = CGK0aVerifier.verify(subject, sender, recipient, sinstance,instance, message,agentsInPath);
+//				satvalues.put(w, satvalue);
+//			}
+//			else 
+			if(w instanceof K1){
 				double satvalue = CGK1Verifier.verify(subject, sender, recipient, sinstance,instance, (K1)w,agentsInPath);
 				satvalues.put(w, satvalue);
 			}
@@ -1535,9 +1534,9 @@ public class ServerMemoryFactory {
 			//verification of applicable assertions based on selected collective strategy
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE){
 				for(int i=0;i<applicableReqs.length;i++){
-					if(applicableReqs[i] instanceof K0 || applicableReqs[i] instanceof K0a){
-						continue;
-					}
+//					if(applicableReqs[i] instanceof K0 || applicableReqs[i] instanceof K0a){
+//						continue;
+//					}
 
 					if(!sinstance.serverSatSerializer.requirementHtmlDesc.contains(applicableReqs[i].toLimitHtmlString())){
 						if(sinstance.serverSatSerializer.requirementHtmlDesc.length() >0){
@@ -1751,10 +1750,11 @@ public class ServerMemoryFactory {
 	
 			
 	public static boolean isInstanceApplicable(World world, String selfAgentName, String subjectName, String senderName, String recipientName){
-		if(world instanceof K0 || world instanceof K0a || world instanceof K0b){
-			return true;
-		}
-		else if(!(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE)){
+//		if(world instanceof K0 || world instanceof K0a || world instanceof K0b){
+//			return true;
+//		}
+//		else 
+		if(!(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE)){
 			return true;
 		}
 		else if(world instanceof K1 || world instanceof K1a || world instanceof K1b){
@@ -2069,8 +2069,9 @@ public class ServerMemoryFactory {
 //			addToAssertionRolesStore(new K0a(h),selfAgentName, sinstance);
 //			addToAssertionRolesStore(new K0(h),selfAgentName, sinstance);
 //		}
-		addToAssertionRolesStore(new K0a(h),selfAgentName, sinstance);
-		addToAssertionRolesStore(new K0(h),selfAgentName, sinstance);
+		
+//		addToAssertionRolesStore(new K0a(h),selfAgentName, sinstance);
+//		addToAssertionRolesStore(new K0(h),selfAgentName, sinstance);
 		
 		addToAssertionRolesStore(new K1a(self, h),selfAgentName, sinstance);
 		addToAssertionRolesStore(new K1(self, h),selfAgentName, sinstance);

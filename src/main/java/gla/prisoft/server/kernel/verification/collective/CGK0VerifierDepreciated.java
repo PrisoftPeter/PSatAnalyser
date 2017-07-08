@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.knowledge.Memory;
-import gla.prisoft.server.kernel.knowledge.worlds.K0;
+import gla.prisoft.server.kernel.knowledge.worlds.K0Depreciated;
 import gla.prisoft.server.kernel.knowledge.worlds.K1;
 import gla.prisoft.server.kernel.knowledge.worlds.K21;
 import gla.prisoft.server.kernel.knowledge.worlds.K31;
@@ -16,7 +16,7 @@ import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 
-public class CGK0Verifier {
+public class CGK0VerifierDepreciated {
 	//Common knowledge of f uncertainty (every user knows that ever user is uncertain of f)
 	public static double verify(Agent subject, Agent sender, Agent recipient, ServerConfigInstance sinstance,
 			ConfigInstance instance, Attribute message,ArrayList<Agent> agentsInPath){
@@ -32,7 +32,7 @@ public class CGK0Verifier {
 		boolean verifyinsubject = true;
 		boolean verifyinsender = true;
 		boolean verifyinrecipient = true;
-		K0 k0 = new K0(message);
+		K0Depreciated k0 = new K0Depreciated(message);
 		if(verifyinsubject){
 			Agent self = subject;
 			Memory m = new Memory(self, subject.getAgentName(), sinstance, instance);

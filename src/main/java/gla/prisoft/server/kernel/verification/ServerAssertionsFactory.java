@@ -77,16 +77,17 @@ public class ServerAssertionsFactory implements Serializable{
 					World w = (World) in.readObject();
 					
 					if(instance.is_role_run){
-						if(w instanceof K0a){
-							w = new K0a(h);
-						}
-						else if(w instanceof K0b){
-							w = new K0b(h);
-						}
-						else if(w instanceof K0){
-							w = new K0(h);
-						}
-						else if(w instanceof K1){
+//						if(w instanceof K0a){
+//							w = new K0a(h);
+//						}
+//						else if(w instanceof K0b){
+//							w = new K0b(h);
+//						}
+//						else if(w instanceof K0){
+//							w = new K0(h);
+//						}
+//						else 
+						if(w instanceof K1){
 							w = new K1(self, h);
 						}
 						else if(w instanceof K1a){
@@ -236,19 +237,20 @@ public class ServerAssertionsFactory implements Serializable{
 					
 					if(instance.is_role_run){
 
-						if(w instanceof K0a){
-							w = new K0a(h);
-							roleType = w.htmlType;
-						}
-						else if(w instanceof K0b){
-							w = new K0b(h);
-							roleType = w.htmlType;
-						}
-						else if(w instanceof K0){
-							w = new K0(h);
-							roleType = w.htmlType;
-						}
-						else if(w instanceof K1){
+//						if(w instanceof K0a){
+//							w = new K0a(h);
+//							roleType = w.htmlType;
+//						}
+//						else if(w instanceof K0b){
+//							w = new K0b(h);
+//							roleType = w.htmlType;
+//						}
+//						else if(w instanceof K0){
+//							w = new K0(h);
+//							roleType = w.htmlType;
+//						}
+//						else 
+						if(w instanceof K1){
 							w = new K1(self, h);
 							roleType = w.htmlType;
 						}
@@ -480,80 +482,80 @@ public class ServerAssertionsFactory implements Serializable{
 		}
 		
 		//reorder constructs
-		if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE){
-			ArrayList<Properties> pptiesarray = new ArrayList<Properties>();
-			for(Properties ppty: properties){
-				if(instance.is_role_run){
-					if(!ppty.get("genericFormula").equals(new K0a(new Attribute()).toHtmlString())){
-						if(!ppty.get("genericFormula").equals(new K0(new Attribute()).toHtmlString())){
-							pptiesarray.add(ppty);
-						}
-					}
-				}
-				else{
-					if(!ppty.get("w").equals(new K0a(new Attribute()).toHtmlString())){
-						if(!ppty.get("w").equals(new K0(new Attribute()).toHtmlString())){
-							pptiesarray.add(ppty);
-						}
-					}					   
-				}
-			}
-			
-			properties = new Properties[pptiesarray.size()];
-			properties = pptiesarray.toArray(properties);
-		}
-		else{
-			ArrayList<Properties> k0pptiesarray = new ArrayList<Properties>();
-			ArrayList<Properties> otherpptiesarray = new ArrayList<Properties>();
-
-			for(Properties ppty: properties){
-				if(instance.is_role_run){
-					
-					if(ppty.get("roleType").equals("<html><i>k</i><sub>0a</sub></html>")){//K0a
-						ppty.setProperty("a_counter", "");
-						k0pptiesarray.add(ppty);						
-					}
-					else if(ppty.get("roleType").equals("<html><b>K</b><sub>0</sub></html>")){ //K0
-						ppty.setProperty("a_counter", "");
-						k0pptiesarray.add(ppty);
-					}
-					else{
-						otherpptiesarray.add(ppty);
-					}
-				}
-				else{					
-					if(ppty.get("w").equals(new K0a(new Attribute()).toHtmlString())){
-						ppty.setProperty("a_counter", "");
-						k0pptiesarray.add(ppty);						
-					}
-					else if(ppty.get("w").equals(new K0(new Attribute()).toHtmlString())){
-						ppty.setProperty("a_counter", "");
-						k0pptiesarray.add(ppty);	
-					}
-					else{
-						otherpptiesarray.add(ppty);
-					}
-				}
-			}
-			
-			Properties k0ppties[] = new Properties[k0pptiesarray.size()];
-			k0ppties = k0pptiesarray.toArray(k0ppties);
-			
-			Properties otherppties[] = new Properties[otherpptiesarray.size()];		
-			otherppties = otherpptiesarray.toArray(otherppties);
-			
-			Properties combinedppties[] = new Properties[k0ppties.length+otherppties.length];
-			int ocounter = 0;
-			for(Properties p:k0ppties){
-				combinedppties[ocounter] = p;
-				ocounter = ocounter+1;
-			}
-			for(Properties p:otherppties){
-				combinedppties[ocounter] = p;
-				ocounter = ocounter+1;
-			}
-			properties = combinedppties;
-		}
+//		if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.NONE){
+//			ArrayList<Properties> pptiesarray = new ArrayList<Properties>();
+//			for(Properties ppty: properties){
+//				if(instance.is_role_run){
+//					if(!ppty.get("genericFormula").equals(new K0a(new Attribute()).toHtmlString())){
+//						if(!ppty.get("genericFormula").equals(new K0(new Attribute()).toHtmlString())){
+//							pptiesarray.add(ppty);
+//						}
+//					}
+//				}
+//				else{
+//					if(!ppty.get("w").equals(new K0a(new Attribute()).toHtmlString())){
+//						if(!ppty.get("w").equals(new K0(new Attribute()).toHtmlString())){
+//							pptiesarray.add(ppty);
+//						}
+//					}					   
+//				}
+//			}
+//			
+//			properties = new Properties[pptiesarray.size()];
+//			properties = pptiesarray.toArray(properties);
+//		}
+//		else{
+//			ArrayList<Properties> k0pptiesarray = new ArrayList<Properties>();
+//			ArrayList<Properties> otherpptiesarray = new ArrayList<Properties>();
+//
+//			for(Properties ppty: properties){
+//				if(instance.is_role_run){
+//					
+//					if(ppty.get("roleType").equals("<html><i>k</i><sub>0a</sub></html>")){//K0a
+//						ppty.setProperty("a_counter", "");
+//						k0pptiesarray.add(ppty);						
+//					}
+//					else if(ppty.get("roleType").equals("<html><b>K</b><sub>0</sub></html>")){ //K0
+//						ppty.setProperty("a_counter", "");
+//						k0pptiesarray.add(ppty);
+//					}
+//					else{
+//						otherpptiesarray.add(ppty);
+//					}
+//				}
+//				else{					
+//					if(ppty.get("w").equals(new K0a(new Attribute()).toHtmlString())){
+//						ppty.setProperty("a_counter", "");
+//						k0pptiesarray.add(ppty);						
+//					}
+//					else if(ppty.get("w").equals(new K0(new Attribute()).toHtmlString())){
+//						ppty.setProperty("a_counter", "");
+//						k0pptiesarray.add(ppty);	
+//					}
+//					else{
+//						otherpptiesarray.add(ppty);
+//					}
+//				}
+//			}
+//			
+//			Properties k0ppties[] = new Properties[k0pptiesarray.size()];
+//			k0ppties = k0pptiesarray.toArray(k0ppties);
+//			
+//			Properties otherppties[] = new Properties[otherpptiesarray.size()];		
+//			otherppties = otherpptiesarray.toArray(otherppties);
+//			
+//			Properties combinedppties[] = new Properties[k0ppties.length+otherppties.length];
+//			int ocounter = 0;
+//			for(Properties p:k0ppties){
+//				combinedppties[ocounter] = p;
+//				ocounter = ocounter+1;
+//			}
+//			for(Properties p:otherppties){
+//				combinedppties[ocounter] = p;
+//				ocounter = ocounter+1;
+//			}
+//			properties = combinedppties;
+//		}
 		return properties;
 		
 	}
@@ -660,16 +662,17 @@ public class ServerAssertionsFactory implements Serializable{
 					World w = (World) in.readObject();
 					if(w.toHtmlString().equals(httpstring)){
 												
-						if(w instanceof K0a){
-							assertion = new K0a(h);
-						}
-						else if(w instanceof K0b){
-							assertion = new K0b(h);
-						}
-						else if(w instanceof K0){
-							assertion = new K0(h);
-						}
-						else if(w instanceof K1){
+//						if(w instanceof K0a){
+//							assertion = new K0a(h);
+//						}
+//						else if(w instanceof K0b){
+//							assertion = new K0b(h);
+//						}
+//						else if(w instanceof K0){
+//							assertion = new K0(h);
+//						}
+//						else 
+						if(w instanceof K1){
 							assertion = new K1(self, h);
 						}
 						else if(w instanceof K1a){
@@ -770,10 +773,11 @@ public class ServerAssertionsFactory implements Serializable{
 	
 	public boolean isUncertainWorld(World w){
 		
-		if(w instanceof K0a){
-			return false;
-		}
-		else if(w instanceof K1){
+//		if(w instanceof K0a){
+//			return false;
+//		}
+//		else 
+		if(w instanceof K1){
 			return true;
 		}
 		else if(w instanceof K21){

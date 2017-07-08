@@ -5,13 +5,13 @@ import java.io.Serializable;
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.Attribute;
 
-public class K0a extends World implements Serializable {
+public class K0aDepreciated extends World implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Agent self;
 	private Attribute att;
 	public static String htmlType1;
 		
-	public K0a(Attribute att){
+	public K0aDepreciated(Attribute att){
 		super.type = "K0a";
 		super.htmlType = "<i>k</i><sub>0a</sub>";
 		htmlType1 = super.htmlType;
