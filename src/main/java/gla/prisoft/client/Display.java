@@ -170,7 +170,7 @@ public class Display extends JFrame {
 	 */
 	public Display(String sessionid, boolean reloading) {
 		super("");
-
+		
 		try {
 			UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
 		} catch (UnsupportedLookAndFeelException e1) {
@@ -265,7 +265,7 @@ public class Display extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//check server if generating memory store
 				if(PSatAPI.instance.busy){
-					JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+					Display.updateLogPage("...", true);
 					return;
 				}
 				reinitialise();
@@ -317,7 +317,7 @@ public class Display extends JFrame {
 			menu_sessions.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					if(PSatAPI.instance.busy){
-						JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+						Display.updateLogPage("...", true);
 						return;
 					}
 					Display.graphloaded = false;
@@ -366,7 +366,7 @@ public class Display extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//check server if generating memory store
 				if(PSatAPI.instance.busy){
-					JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+					Display.updateLogPage("...", true);
 					return;
 				}
 				configProperties();
@@ -643,7 +643,7 @@ public class Display extends JFrame {
 				else{
 					
 					if(PSatAPI.instance.busy){
-						JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+						Display.updateLogPage("...", true);
 						return;
 					}
 					if(PSatAPI.instance.evaluatedProtocols == null ||PSatAPI.instance.evaluatedProtocols.length==0){
@@ -972,6 +972,7 @@ public class Display extends JFrame {
 		   loadingsession = false;
 			   
 		   ckgraph = new ClientKNetworkGraph();
+		   PSatAPI.instance.busy = false;
 		   
 		}
 		catch (UnknownHostException ex){
@@ -1251,7 +1252,7 @@ public class Display extends JFrame {
 	public static AssertionsView ksView;
 	public static void updateAssertionsPage(final String agentName,  final String command){
 		if(PSatAPI.instance.busy){
-			JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+			Display.updateLogPage("...", true);
 			return;
 		}
 		Agent agent = PSatClient.netGetAgent(agentName);
@@ -1333,7 +1334,7 @@ public class Display extends JFrame {
 	public static void updateNetworkPage(){
 		
 		if(PSatAPI.instance.busy){
-			JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+			Display.updateLogPage("...", true);
 			return;
 		}
 		Thread queryThread = new Thread() {
@@ -1366,7 +1367,7 @@ public class Display extends JFrame {
 		Display.isTresholdSlider = false;
 
 		if(PSatAPI.instance.busy){
-			JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+			Display.updateLogPage("...", true);
 			return;
 		}
 		Thread queryThread = new Thread() {
@@ -1461,7 +1462,7 @@ public class Display extends JFrame {
 	public static void updatePathsList(){
 		
 		if(PSatAPI.instance.busy){
-			JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+			Display.updateLogPage("...", true);
 			return;
 		}
 //		if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){

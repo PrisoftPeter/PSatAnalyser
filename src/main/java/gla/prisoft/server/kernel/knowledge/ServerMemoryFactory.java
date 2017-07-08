@@ -88,45 +88,57 @@ public class ServerMemoryFactory {
 //		for(String path:instance.selectedAgentPaths){
 //			String path = PSatAPI.instance.selectedPath;
 			String path = seq;
-			if(path.contains(",")){
-				path = path.replace(",", "");
-			}
-			String[] p2 =null;
-			if(path.contains(":")){
-				String[] p1 = path.split(": ");
-				p2 = p1[1].split(" ");
+			if(path != null){
+				if(path.contains(",")){
+					path = path.replace(",", "");
+				}
+				String[] p2 =null;
+				if(path.contains(":")){
+					String[] p1 = path.split(": ");
+					p2 = p1[1].split(" ");
+				}
+				else{
+					p2 = path.split(" ");
+				}
+
+				for(String agentName1:p2){
+					boolean validagentName = false;
+					if(agentName1 != null){
+						agentName1 = agentName1.trim();
+						if(agentName1.length()>0){
+							validagentName = true;
+						}
+					}
+					if(validagentName){
+						boolean exist1 = false;
+						for(String agentName:sinstance.validAgents){
+							if(agentName.equals(agentName1)){
+								exist1  = true;
+								break;
+							}
+						}
+						if(!exist1){
+							String temp [] = new String[sinstance.validAgents.length+1];
+							for(int i=0;i<sinstance.validAgents.length;i++){
+								temp[i] = sinstance.validAgents[i];
+							}
+							temp[sinstance.validAgents.length] = agentName1;
+							sinstance.validAgents = temp;
+						}
+					}					
+				}	
 			}
 			else{
-				p2 = path.split(" ");
+				for(Agent a:sinstance.agents){
+					String temp [] = new String[sinstance.validAgents.length+1];
+					for(int i=0;i<sinstance.validAgents.length;i++){
+						temp[i] = sinstance.validAgents[i];
+					}
+					temp[sinstance.validAgents.length] = a.getAgentName();
+					sinstance.validAgents = temp;
+				}
 			}
-
-			for(String agentName1:p2){
-				boolean validagentName = false;
-				if(agentName1 != null){
-					agentName1 = agentName1.trim();
-					if(agentName1.length()>0){
-						validagentName = true;
-					}
-				}
-				if(validagentName){
-					boolean exist1 = false;
-					for(String agentName:sinstance.validAgents){
-						if(agentName.equals(agentName1)){
-							exist1  = true;
-							break;
-						}
-					}
-					if(!exist1){
-						String temp [] = new String[sinstance.validAgents.length+1];
-						for(int i=0;i<sinstance.validAgents.length;i++){
-							temp[i] = sinstance.validAgents[i];
-						}
-						temp[sinstance.validAgents.length] = agentName1;
-						sinstance.validAgents = temp;
-					}
-				}
-				
-			}							
+									
 //		}
 	}
 	

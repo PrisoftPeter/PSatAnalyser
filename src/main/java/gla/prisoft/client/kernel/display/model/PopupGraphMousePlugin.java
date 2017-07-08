@@ -103,7 +103,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
                			configMenu.addActionListener(new ActionListener(){
         					public void actionPerformed(ActionEvent e) {
         						if(PSatAPI.instance.busy){
-        							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+        							Display.updateLogPage("...", true);
         							return;
         						}
         						Thread queryThread = new Thread() {
@@ -181,7 +181,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 					public void actionPerformed(ActionEvent e) {
 						
 						if(PSatAPI.instance.busy){
-							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+							Display.updateLogPage("...", true);
 							return;
 						}
 						
@@ -206,7 +206,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
        			instanceMenu.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						if(PSatAPI.instance.busy){
-							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+							Display.updateLogPage("...", true);
 							return;
 						}
 						
@@ -290,7 +290,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
             	sourceMenuItem.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						if(PSatAPI.instance.busy){
-							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+							Display.updateLogPage("...", true);
 							return;
 						}
 						Display.updateProgressComponent(-1, "");
@@ -313,7 +313,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
 
 						if(PSatAPI.instance.is_role_run){
 							Display.updatePathsList();								
-//							Display.updateNetworkNode();
+							Display.updateNetworkNode();
 						}
 						
 						Thread queryThread = new Thread() {
@@ -361,7 +361,7 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
             	targetMenuItem.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						if(PSatAPI.instance.busy){
-							JOptionPane.showMessageDialog(Display.iframeNet, PSatAPI.instance.busymessage, "Wait!", JOptionPane.NO_OPTION);
+							Display.updateLogPage("...", true);
 							return;
 						}
 						PSatAPI.instance.targetAgentName = pickV.id;
