@@ -317,6 +317,42 @@ public class ServerKNetworkGraph implements Serializable{
         writeGraphGML(instance);
         
     }
+	
+	public static String getSeq(){
+		String seq = "";
+		ServerConfigInstance instance = Config.deserialiseServerConfigInstance(PSatAPI.instance.sessionid);
+		
+		Collection<KNode> knodes = instance.g.getVertices();
+		KNode source = null;
+		for(KNode knode:knodes){
+			if(knode.toString().equals(PSatAPI.instance.sourceAgentName)){
+				source = knode;
+				seq = seq+knode.toString()+" ";
+				break;
+			}
+		}
+		
+		KNode nextnode = source;
+		boolean end = false;
+		while(!end){
+			Collection<KNode> neighburs = instance.g.getNeighbors(nextnode);
+			if(neighburs.size()>0){
+				boolean allcontained = true;
+				for(KNode knode:neighburs){
+					if(!seq.contains(knode.toString())){
+						seq = seq+knode.toString()+" ";
+						nextnode = knode;
+						allcontained = false;
+					}
+				}
+				if(allcontained){
+					end = true;
+				}
+			}
+		}
+		return seq;
+	}
+	
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	private void writeGraphGML(ServerConfigInstance instance) {
 

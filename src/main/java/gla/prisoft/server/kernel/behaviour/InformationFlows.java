@@ -25,6 +25,7 @@ import gla.prisoft.server.kernel.knowledge.ServerMemoryFactory;
 import gla.prisoft.server.kernel.knowledge.worlds.World;
 import gla.prisoft.server.kernel.util.SafeZone;
 import gla.prisoft.server.kernel.util.ServerAgentFactory;
+import gla.prisoft.server.kernel.util.ServerKNetworkGraph;
 import gla.prisoft.server.kernel.util.ServerSatSerializer;
 import gla.prisoft.server.kernel.verification.SATResult;
 import gla.prisoft.server.session.Config;
@@ -172,7 +173,9 @@ public class InformationFlows {
 //		else{
 			//do selected paths
 			ClientServerBroker.messageEvent("updateProgressComponent", -1+"₦"+"", null,null);
-
+			if(path == null){
+				path = ServerKNetworkGraph.getSeq();
+			}
 //			int pathsIndex =0;
 			if(path != null && path.trim().length()>0){
 				PSatAPI.isnextpath = true;
@@ -1048,15 +1051,23 @@ public class InformationFlows {
 	
 	
 	public static void resetGlobalGoalForAllPathAgents(ConfigInstance instance,String path, double newgoalvalue){
-		String pathAgents1[] =path.split(": ");
-		//String pathId = pathAgents1[0];
-		String pathAgents2 = pathAgents1[1];
-		String[] pathAgents =pathAgents2.split(" ");
+		
+		String[] pathAgents = null;
+		if(path.contains(":")){
+			String pathAgents1[] =path.split(": ");
+			String pathAgents2 = pathAgents1[1];
+			pathAgents =pathAgents2.split(" ");
+		}
+		else{
+			pathAgents =path.split(" ");
+		}
 		
 		ArrayList<Agent> agentsInPath = new ArrayList<Agent>();
 		for(String agentName:pathAgents){
-			Agent a = PSatClient.netGetAgent(agentName);
-			agentsInPath.add(a);
+			if(agentName != null && agentName.trim().length()>0){
+				Agent a = PSatClient.netGetAgent(agentName.trim());
+				agentsInPath.add(a);
+			}
 		}
 		
 		if(instance.isModePick){

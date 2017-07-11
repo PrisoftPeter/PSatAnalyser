@@ -171,13 +171,16 @@ public class ServerMemoryFactory {
 			coverage = (double)(Math.round(coverage*100))/100;
 			String response_info = "";
 			if(instance.is_role_run){
-				response_info = "@n-nearest neighbours="+instance.k+			
-				  	   " sat(pr) role affects "+sinstance.validAgents.length+" objects and covers "+coverage+"% of network";
+//				response_info = "@n-nearest neighbours="+instance.k+			
+//				  	   " sat(pr) role affects "+sinstance.validAgents.length+" objects and covers "+coverage+"% of network";
+				response_info = "@n-nearest neighbours="+instance.k;
 			}
 			else{
+//				response_info = "@source="+instance.sourceAgentName+", target="+instance.targetAgentName+
+//						" and "+instance.listPathsData.length+" paths generated, then sat(pr) instance affects "+sinstance.validAgents.length+
+//						" objects and covers "+coverage+"% of network";
 				response_info = "@source="+instance.sourceAgentName+", target="+instance.targetAgentName+
-						" and "+instance.listPathsData.length+" paths generated, then sat(pr) instance affects "+sinstance.validAgents.length+
-						" objects and covers "+coverage+"% of network";
+						" and "+instance.listPathsData.length+" paths generated";
 			}
 			ClientServerBroker.messageEvent("updateLogPage", response_info+"₦"+false, null,null);
 			ClientServerBroker.messageEvent("updateProgressComponent", -1+"₦"+"",null,null);
