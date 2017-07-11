@@ -384,7 +384,7 @@ public class Display extends JFrame {
 
 						String s = "Version: (1.0.2) \n"+
 								   "PSat is a Platform for analying the satisfaction of privacy requirements along information-flow paths.\n"+
-								   "Developed at PriSoft Lab, School of Computing Science, University of Glasgow.\n"+
+								   "Developed at School of Computing Science, University of Glasgow.\n"+
 								   "All rights reserved.";
 						
 						JOptionPane.showMessageDialog(iframeToolBar,s," ", JOptionPane.PLAIN_MESSAGE,prisoftIcon);

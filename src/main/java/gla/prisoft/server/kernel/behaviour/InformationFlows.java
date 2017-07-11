@@ -117,114 +117,57 @@ public class InformationFlows {
 		}
 		evaluationProtocols = temp;
 		
-//		if(selectedPaths.size() == instance.listPathsData.length){
-//			//do all paths
-//			if(instance.listPathsData == null){
-//				ClientServerBroker.messageEvent("Display.updatePathsList()", "", null, null);
-//			}
-//
-//			ClientServerBroker.messageEvent("updateProgressComponent", -1+"₦"+"", null,null);
-//
-//			int listIndex =0;
-//			for(String path:instance.listPathsData){
-//				PSatAPI.isnextpath = true;
-//				PSatAPI.higherOrderKs = new HashMap<World, ArrayList<World>>();
-//				
-//				sat_treshold_reached = false;
-//				containRequest = false;
-//				containConsent = false;
-//				containNotice = false;
-//				
-//				String pathAgents1[] =path.split(": ");
-//				String pathId = pathAgents1[0];
-//				String pathAgents2 = pathAgents1[1];
-//				pathAgents =pathAgents2.split(" ");
-//				
-//				sinstance.serverSatSerializer.currentPath = path;
-//				PSatAPI.instance.currentPath = path;
-////				sinstance.serverSatSerializer.createBeliefUncertaintyLevelFile(instance.subjectName, instance, sinstance);
-//
-//				ClientServerBroker.messageEvent("Display.listbox.setSelectedIndex()", ""+listIndex, null,null);
-//				listIndex = listIndex +1;
-//				
-//				if(instance.isTraining){
-//					ClientServerBroker.messageEvent("Display.trainMaxTimeSeriesChart.addMarker()", pathId, null, null);
-//				}
-//				
-//				else{
-//					ClientServerBroker.messageEvent("Display.analysisMaxTimeSeriesChart.addMarker()", pathId, null,null);
-//				}
-//				
-//				if(instance.isTraining){
-//					
-////					spectrum = new ViabilitySpectrum(path,pathId, pathAgents);						
-//					
-//					doLocalTrainingRun(path,evaluationProtocols, sinstance, instance);
-//					
-////					ViabilitySpectrum.serializeSpectrum(spectrum, instance);	
-//				}
-//					
-//				
-//				instance.completness = ((double)listIndex/(double)instance.listPathsData.length)*100;
-//				ClientServerBroker.messageEvent("updateProgressComponent", new Double(instance.completness).intValue()+"₦"+ConfigInstance.df.format(instance.completness)+"%", null, null);
-//				ClientServerBroker.messageEvent("info.apathcompleted", null, null,null);				
-//			}		
-//		}
-//		else{
-			//do selected paths
-			ClientServerBroker.messageEvent("updateProgressComponent", -1+"₦"+"", null,null);
-			if(path == null){
-				path = ServerKNetworkGraph.getSeq();
+		ClientServerBroker.messageEvent("updateProgressComponent", -1+"₦"+"", null,null);
+		if(path == null){
+			path = ServerKNetworkGraph.getSeq();
+		}
+//		int pathsIndex =0;
+		if(path != null && path.trim().length()>0){
+			PSatAPI.isnextpath = true;
+			PSatAPI.higherOrderKs = new HashMap<World, ArrayList<World>>();
+			
+			sat_treshold_reached = false;
+			containRequest = false;
+			containConsent = false;
+			containNotice = false;
+			
+			String pathId = "1";
+			if(path.contains(":")){
+				String pathAgents1[] =path.split(": ");
+				pathId = pathAgents1[0];
+				String pathAgents2 = pathAgents1[1];
+				pathAgents =pathAgents2.split(" ");
 			}
-//			int pathsIndex =0;
-			if(path != null && path.trim().length()>0){
-				PSatAPI.isnextpath = true;
-				PSatAPI.higherOrderKs = new HashMap<World, ArrayList<World>>();
-				
-				sat_treshold_reached = false;
-				containRequest = false;
-				containConsent = false;
-				containNotice = false;
-				
-				String pathId = "1";
-				if(path.contains(":")){
-					String pathAgents1[] =path.split(": ");
-					pathId = pathAgents1[0];
-					String pathAgents2 = pathAgents1[1];
-					pathAgents =pathAgents2.split(" ");
-				}
-				else{
-					pathAgents =path.split(" ");
-				}
-				
-				
-				PSatAPI.instance.currentPath = path;
-				PSatClient.netSerialiseConfigInstance();
-				if(instance.isTraining){
-					ClientServerBroker.messageEvent("Display.trainMaxTimeSeriesChart.addMarker()", pathId, null,null);
-				}
-				
-				else{
-					ClientServerBroker.messageEvent("Display.analysisMaxTimeSeriesChart.addMarker()", pathId, null,null);
-				}
-				
-				if(instance.isTraining){
-//					spectrum = new ViabilitySpectrum(selectedPath,pathId, pathAgents);						
-
-					doLocalTrainingRun(path,evaluationProtocols, sinstance, instance);
-					
-//					ViabilitySpectrum.serializeSpectrum(spectrum, instance);
-				}							
-				
-//				pathsIndex = pathsIndex +1;
-//				instance.completness = ((double)pathsIndex/(double)selectedPaths.size())*100;
-				instance.completness = 100;
-				ClientServerBroker.messageEvent("updateProgressComponent", new Double(instance.completness).intValue()+"₦"+ConfigInstance.df.format(instance.completness)+"%", null,null);
-				ClientServerBroker.messageEvent("info.apathcompleted", null, null,null);				
-
+			else{
+				pathAgents =path.split(" ");
 			}
+			
+			
+			PSatAPI.instance.currentPath = path;
+			PSatClient.netSerialiseConfigInstance();
+			if(instance.isTraining){
+				ClientServerBroker.messageEvent("Display.trainMaxTimeSeriesChart.addMarker()", pathId, null,null);
+			}
+			
+			else{
+				ClientServerBroker.messageEvent("Display.analysisMaxTimeSeriesChart.addMarker()", pathId, null,null);
+			}
+			
+			if(instance.isTraining){
+//				spectrum = new ViabilitySpectrum(selectedPath,pathId, pathAgents);						
 
-//		}
+				doLocalTrainingRun(path,evaluationProtocols, sinstance, instance);
+				
+//				ViabilitySpectrum.serializeSpectrum(spectrum, instance);
+			}							
+			
+//			pathsIndex = pathsIndex +1;
+//			instance.completness = ((double)pathsIndex/(double)selectedPaths.size())*100;
+			instance.completness = 100;
+			ClientServerBroker.messageEvent("updateProgressComponent", new Double(instance.completness).intValue()+"₦"+ConfigInstance.df.format(instance.completness)+"%", null,null);
+			ClientServerBroker.messageEvent("info.apathcompleted", null, null,null);				
+
+		}
 		
 	}
 	
