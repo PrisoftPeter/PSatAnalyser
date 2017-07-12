@@ -72,7 +72,9 @@ public class ClientServerBroker{
 					else if(actionType.equals("PSatClient.netGetSession()")){
 						String tsessionid = actionValue;
 						ConfigInstance tinstance = Config.deserialiseConfigInstance(tsessionid);																		
-						
+						if(tinstance == null){
+							tinstance = PSatAPI.instance;
+						}
 						if(Display.hostname.equals(sendersSessionId)){
 							PSatClient.rinstance = tinstance;
 							Display.hostname = tinstance.sessionid;
