@@ -44,6 +44,8 @@ import gla.prisoft.server.PSatAPI;
 import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.KLink;
 import gla.prisoft.shared.KNode;
+import gla.prisoft.shared.NetworkType;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
@@ -58,7 +60,8 @@ public class ClientKNetworkGraph {
 //	public static int edgeCount = 0;
 	
 //	private DirectedGraph<KNode, KLink> g;
-	public static UndirectedGraph<KNode, KLink> g;	
+	public static UndirectedGraph<KNode, KLink> g;
+	
 	public static KNode [] networkNodes;
 	
 	private static ArrayList<KLink> coloredLinks;
@@ -148,7 +151,14 @@ public class ClientKNetworkGraph {
 			
 //			vs = new VisualizationViewer(new KKLayout(g), new Dimension(800, 400));
 		
-		Layout layout1 = new FRLayout(g);
+		Layout layout1 = null;
+		if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){
+			layout1 = new CircleLayout(g);
+		}
+		else{
+			layout1 = new FRLayout(g);
+		}
+			
 		layout1.setSize(new Dimension(800,600));
 		
 		vs = new VisualizationViewer(layout1); 

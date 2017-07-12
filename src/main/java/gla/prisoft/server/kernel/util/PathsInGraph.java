@@ -441,7 +441,6 @@ public class PathsInGraph {
 	
 	public String [] extractPaths(UndirectedGraph<KNode, KLink> g, KNode currentNode,
 									String [] paths, String tempPath, int tempk, ServerConfigInstance instance,ConfigInstance ginstance){
-		
 		Collection <KNode> neighbors = g.getNeighbors(currentNode);
 		
 		tempPath = tempPath+" "+currentNode.toString();

@@ -858,13 +858,13 @@ public class InformationFlows {
 		}
 		ProtocolPerm(path,inputs, currentFocus + 1, sat_output, sinstance, instance);
 
-		for (int i = currentFocus + 1; i < inputs.length; i++) {
-			String temp = inputs[currentFocus];
-			inputs[currentFocus] = inputs[i];
-			inputs[i] = temp;
-			ProtocolPerm(path,inputs, currentFocus + 1, sat_output, sinstance, instance);
-
-		}		
+//		for (int i = currentFocus + 1; i < inputs.length; i++) {
+//			String temp = inputs[currentFocus];
+//			inputs[currentFocus] = inputs[i];
+//			inputs[i] = temp;
+//			ProtocolPerm(path,inputs, currentFocus + 1, sat_output, sinstance, instance);
+//
+//		}		
 		
 	}
 	

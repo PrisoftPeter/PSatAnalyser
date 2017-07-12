@@ -49,7 +49,6 @@ public class PSatAPI {
 			htmlcgdesc = htmlcgdesc.replace("</html>", "&#8712; A #:"+countTotal+"<br></html>");
 			Display.updateLogPage(htmlcgdesc, false);
 			
-			
 		}	
 	}
 	public static void addHighOrderImplication(World highorder, World loworder){
