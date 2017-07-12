@@ -545,7 +545,7 @@ public class PathsInGraph {
 				agentNames = Helper.addUniqueStringToArray(agentNames, s);
 			}
 		}
-        permute(java.util.Arrays.asList(agentNames), 0);
+        permute(java.util.Arrays.asList(agentNames), 0,ginstance);
         for(String ss:otherpossiblesequences){
     		ss = ss.replace("[", "");
     		ss = ss.replace("]", "");
@@ -572,18 +572,34 @@ public class PathsInGraph {
 	}
 	
 	private static String[] otherpossiblesequences;	
-	static void permute(java.util.List<String> arr, int k){
+	static void permute(java.util.List<String> arr, int k, ConfigInstance ginstance){
+		if(otherpossiblesequences.length >= 100){ //maximum of 100 alternative possible sequences
+			return;
+		}
         for(int i = k; i < arr.size(); i++){
             java.util.Collections.swap(arr, i, k);
-            permute(arr, k+1);
+            permute(arr, k+1, ginstance);
             java.util.Collections.swap(arr, k, i);
         }
         if (k == arr.size() -1){
-        	otherpossiblesequences = Helper.addUniqueStringToArray(otherpossiblesequences, java.util.Arrays.toString(arr.toArray()));
+        	String seq = java.util.Arrays.toString(arr.toArray());
+        	seq = seq.replace("[", "");
+        	seq = seq.replace("]", "");
+        	String seqbreak[] = seq.split(",");
+        	String seqstart = seqbreak[0].trim();
+        	String seqend = seqbreak[seqbreak.length-1].trim();
+        	if(ginstance.is_role_run){
+        		seqstart = "";
+    			if(seqstart.equals(ginstance.sourceAgentName)){       
+    	        	otherpossiblesequences = Helper.addUniqueStringToArray(otherpossiblesequences, java.util.Arrays.toString(arr.toArray()));
+				}
+	        }
+    		else{
+    			if(seqstart.trim().equals(ginstance.sourceAgentName) && seqend.equals(ginstance.targetAgentName)){
+    	        	otherpossiblesequences = Helper.addUniqueStringToArray(otherpossiblesequences, java.util.Arrays.toString(arr.toArray()));
+				}
+    		}
         }
     }
-	
-	
-		
 }
 
