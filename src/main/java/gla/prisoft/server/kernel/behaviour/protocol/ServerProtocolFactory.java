@@ -30,14 +30,23 @@ public class ServerProtocolFactory {
 	private static final int NOTICE1R = 2;
 	private static final int NOTICE2R = 1;
 	
+//	private static final double WRNCPLEVEL =1;
+//	private static final double WNCPLEVEL =0.924;
+//	private static final double WRNPLEVEL =0.913;
+//	private static final double WRCPLEVEL =0.769;
+//	private static final double WNPLEVEL =0.769;
+//	private static final double WCPLEVEL =0.192;
+//	private static final double WRPLEVEL =0.00009;
+//	private static final double FPLEVEL =0.00007;	
+	
 	private static final double WRNCPLEVEL =1;
-	private static final double WNCPLEVEL =0.924;
-	private static final double WRNPLEVEL =0.913;
-	private static final double WRCPLEVEL =0.769;
-	private static final double WNPLEVEL =0.769;
-	private static final double WCPLEVEL =0.192;
-	private static final double WRPLEVEL =0.00009;
-	private static final double FPLEVEL =0.00007;	
+	private static final double WNCPLEVEL =1;
+	private static final double WRNPLEVEL =1;
+	private static final double WRCPLEVEL =1;
+	private static final double WNPLEVEL =1;
+	private static final double WCPLEVEL =1;
+	private static final double WRPLEVEL =1;
+	private static final double FPLEVEL =1;	
 	
 	public static String[] getEvaluatedProtocols(String sessionid){
 		ConfigInstance instance = Config.deserialiseConfigInstance(sessionid);
