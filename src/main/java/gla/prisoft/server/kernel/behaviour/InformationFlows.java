@@ -57,7 +57,7 @@ public class InformationFlows {
 	public static double countlocalsat;
 	public static double sumglobalsat;
 	public static double countglobalsat;
-	
+		
 	public ArrayList<Long> executionTimes;
 		
 	private static ArrayList<String> processedSequences;
@@ -70,6 +70,7 @@ public class InformationFlows {
 	public boolean containNotice = false;
 				
 	public boolean run(String path, ServerConfigInstance sinstance,ConfigInstance instance){
+		
     	PSatAPI.fvindex = 0;
 		
 		if(sinstance.serverSatSerializer == null){
@@ -946,17 +947,6 @@ public class InformationFlows {
 				vlocalgoals.add(recipient.getGlobalPrivacyGoal_v());
 			}
 		}
-//		else if(instance.isModeCommonKnowledge){
-//			if(subject.getDesiredCommonKnowledge() >0){
-//				vlocalgoals.add(subject.getGlobalPrivacyGoal_v());
-//			}
-//			if(sender.getDesiredCommonKnowledge() >0){
-//				vlocalgoals.add(sender.getGlobalPrivacyGoal_v());			
-//			}
-//			if(recipient.getDesiredCommonKnowledge() >0){
-//				vlocalgoals.add(recipient.getGlobalPrivacyGoal_v());
-//			}
-//		}
 		
 		double collectivevgoal = 0;
 
@@ -988,7 +978,7 @@ public class InformationFlows {
 
 		}
 
-		//TODO: apply minmax algorithm strategy		
+		//TODO: apply minmax algorithm strategy	
 		return collectivevgoal;
 	}
 	

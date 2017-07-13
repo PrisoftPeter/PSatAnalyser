@@ -61,6 +61,9 @@ public class LayeredBarChart extends javax.swing.JPanel {
     	uniqueFlows = uniqueFlowso.toArray(uniqueFlows);
     	
     	double currentGoal = FeasibilityView.sumCollectiveGoal/FeasibilityView.collectiveGoalCount;
+    	if(Double.isNaN(currentGoal)){
+    		currentGoal = 0;
+    	}
     	PSatAPI.instance.currentPrivacyGoal.put(PSatAPI.instance.currentPath, currentGoal);
     	String goalv = String.format("%.2f", currentGoal);
     	
@@ -105,12 +108,12 @@ public class LayeredBarChart extends javax.swing.JPanel {
     	    ArrayList<String> cat2Protocols = new ArrayList<String>();
     		int cat3count = 0;
     	    ArrayList<String> cat3Protocols = new ArrayList<String>();
-//    		int cat4count = 0;
-//    	    ArrayList<String> cat4Protocols = new ArrayList<String>();
-//    		int cat5count = 0;
-//    	    ArrayList<String> cat5Protocols = new ArrayList<String>();
-//    		int cat6count = 0;
-//    	    ArrayList<String> cat6Protocols = new ArrayList<String>();
+    		int cat4count = 0;
+    	    ArrayList<String> cat4Protocols = new ArrayList<String>();
+    		int cat5count = 0;
+    	    ArrayList<String> cat5Protocols = new ArrayList<String>();
+    		int cat6count = 0;
+    	    ArrayList<String> cat6Protocols = new ArrayList<String>();
     	    
     	    ArrayList<PSatTableResult> ptrs_uf = sortedptrs.get(uniqueFlows[i]);
     	    
@@ -140,21 +143,21 @@ public class LayeredBarChart extends javax.swing.JPanel {
     	    		cat3Protocols.add(pid);
     	    		flow.cat3Ptrs.add(ptr);
     	    	}
-//    	    	else if(ptr.getDecisionCategory()==DecisionCategory.CAT4){
-//    	    		cat4count = cat4count+1;
-//    	    		cat4Protocols.add(pid);
-//    	    		flow.cat4Ptrs.add(ptr);
-//    	    	}
-//    	    	else if(ptr.getDecisionCategory()==DecisionCategory.CAT5){
-//    	    		cat5count = cat5count+1;
-//    	    		cat5Protocols.add(pid);
-//    	    		flow.cat5Ptrs.add(ptr);
-//    	    	}
-//    	    	else if(ptr.getDecisionCategory()==DecisionCategory.CAT6){
-//    	    		cat6count = cat6count+1;
-//    	    		cat6Protocols.add(pid);
-//    	    		flow.cat6Ptrs.add(ptr);
-//    	    	} 	    	
+    	    	else if(ptr.getDecisionCategory()==DecisionCategory.CAT4){
+    	    		cat4count = cat4count+1;
+    	    		cat4Protocols.add(pid);
+    	    		flow.cat4Ptrs.add(ptr);
+    	    	}
+    	    	else if(ptr.getDecisionCategory()==DecisionCategory.CAT5){
+    	    		cat5count = cat5count+1;
+    	    		cat5Protocols.add(pid);
+    	    		flow.cat5Ptrs.add(ptr);
+    	    	}
+    	    	else if(ptr.getDecisionCategory()==DecisionCategory.CAT6){
+    	    		cat6count = cat6count+1;
+    	    		cat6Protocols.add(pid);
+    	    		flow.cat6Ptrs.add(ptr);
+    	    	} 	    	
     	    }
 //			data[i] = new double[]{cat1count,cat2count,cat3count,cat4count,cat5count,cat6count};
 			data[i] = new double[]{cat1count,cat2count,cat3count};
@@ -317,9 +320,9 @@ public class LayeredBarChart extends javax.swing.JPanel {
             ArrayList<PSatTableResult> cat1Ptrs = new ArrayList<PSatTableResult>();
             ArrayList<PSatTableResult> cat2Ptrs = new ArrayList<PSatTableResult>();
             ArrayList<PSatTableResult> cat3Ptrs = new ArrayList<PSatTableResult>();
-//            ArrayList<PSatTableResult> cat4Ptrs = new ArrayList<PSatTableResult>();
-//            ArrayList<PSatTableResult> cat5Ptrs = new ArrayList<PSatTableResult>();
-//            ArrayList<PSatTableResult> cat6Ptrs = new ArrayList<PSatTableResult>();
+            ArrayList<PSatTableResult> cat4Ptrs = new ArrayList<PSatTableResult>();
+            ArrayList<PSatTableResult> cat5Ptrs = new ArrayList<PSatTableResult>();
+            ArrayList<PSatTableResult> cat6Ptrs = new ArrayList<PSatTableResult>();
             
             for(PSatTableResult ptr:ptrs){
             	if(ptr.getDecisionCategory() == DecisionCategory.CAT1){
@@ -331,23 +334,23 @@ public class LayeredBarChart extends javax.swing.JPanel {
             	else if(ptr.getDecisionCategory() == DecisionCategory.CAT3){
             		cat3Ptrs.add(ptr);
             	}
-//            	else if(ptr.getDecisionCategory() == DecisionCategory.CAT4){
-//            		cat4Ptrs.add(ptr);
-//            	}
-//            	else if(ptr.getDecisionCategory() == DecisionCategory.CAT5){
-//            		cat5Ptrs.add(ptr);
-//            	}
-//            	else if(ptr.getDecisionCategory() == DecisionCategory.CAT6){
-//            		cat6Ptrs.add(ptr);
-//            	}
+            	else if(ptr.getDecisionCategory() == DecisionCategory.CAT4){
+            		cat4Ptrs.add(ptr);
+            	}
+            	else if(ptr.getDecisionCategory() == DecisionCategory.CAT5){
+            		cat5Ptrs.add(ptr);
+            	}
+            	else if(ptr.getDecisionCategory() == DecisionCategory.CAT6){
+            		cat6Ptrs.add(ptr);
+            	}
             }
             
             Collections.sort(cat1Ptrs, new PSatTableResultComparator());
             Collections.sort(cat2Ptrs, new PSatTableResultComparator());
             Collections.sort(cat3Ptrs, new PSatTableResultComparator());
-//            Collections.sort(cat4Ptrs, new PSatTableResultComparator());
-//            Collections.sort(cat5Ptrs, new PSatTableResultComparator());
-//            Collections.sort(cat6Ptrs, new PSatTableResultComparator());
+            Collections.sort(cat4Ptrs, new PSatTableResultComparator());
+            Collections.sort(cat5Ptrs, new PSatTableResultComparator());
+            Collections.sort(cat6Ptrs, new PSatTableResultComparator());
             
             for(PSatTableResult ptr:cat1Ptrs){ 
             	String pathsat_s = "";

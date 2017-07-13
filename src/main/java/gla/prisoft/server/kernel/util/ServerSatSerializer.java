@@ -219,15 +219,15 @@ public class ServerSatSerializer implements Serializable{
 			else if(path_sat >= collectiveGoalValue && feasibility > 1){
 				ptr_row.setDecisionCategory(DecisionCategory.CAT3);
 			}
-//			else if(path_sat < collectiveGoalValue && feasibility < 1){
-//				ptr_row.setDecisionCategory(DecisionCategory.CAT4);
-//			}
-//			else if(path_sat < collectiveGoalValue && feasibility == 1){
-//				ptr_row.setDecisionCategory(DecisionCategory.CAT5);
-//			}
-//			else if(path_sat < collectiveGoalValue && feasibility > 1){
-//				ptr_row.setDecisionCategory(DecisionCategory.CAT6);
-//			}
+			else if(path_sat < collectiveGoalValue && feasibility < 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT4);
+			}
+			else if(path_sat < collectiveGoalValue && feasibility == 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT5);
+			}
+			else if(path_sat < collectiveGoalValue && feasibility > 1){
+				ptr_row.setDecisionCategory(DecisionCategory.CAT6);
+			}
 		}		
 		
 		ptr_row.setSuSat(su_sat);
