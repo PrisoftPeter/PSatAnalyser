@@ -57,7 +57,7 @@ public class CGK41aCGK42aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent2.getAgentName().equals(subject.getAgentName())){
+				if(cg_agent2.getAgentName().equals(self.getAgentName())){
 					K1a k1a = new K1a(cg_agent2, message);
 					if(m.contains(k1a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
@@ -69,7 +69,7 @@ public class CGK41aCGK42aVerifier {
 			
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(subject.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31a k31a = new K31a(cg_agent1, cg_agent2, message);
 					if(m.contains(k31a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
@@ -99,7 +99,7 @@ public class CGK41aCGK42aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent2.getAgentName().equals(sender.getAgentName())){
+				if(cg_agent2.getAgentName().equals(self.getAgentName())){
 					K1a k1a = new K1a(cg_agent2, message);
 					if(m.contains(k1a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
@@ -111,7 +111,7 @@ public class CGK41aCGK42aVerifier {
 			
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(sender.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31a k31a = new K31a(cg_agent1, cg_agent2, message);
 					if(m.contains(k31a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
@@ -142,7 +142,7 @@ public class CGK41aCGK42aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent2.getAgentName().equals(recipient.getAgentName())){
+				if(cg_agent2.getAgentName().equals(self.getAgentName())){
 					K1a k1a = new K1a(cg_agent2, message);
 					if(m.contains(k1a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
@@ -154,7 +154,7 @@ public class CGK41aCGK42aVerifier {
 			
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(recipient.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31a k31a = new K31a(cg_agent1, cg_agent2, message);
 					if(m.contains(k31a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;

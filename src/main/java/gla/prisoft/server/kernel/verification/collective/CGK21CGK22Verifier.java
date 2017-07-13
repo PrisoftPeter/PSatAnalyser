@@ -54,7 +54,7 @@ public class CGK21CGK22Verifier {
 			
 			//implication 1: K1
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(subject.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K1 k1 = new K1(cg_reference, message);
 					if(m.contains(k1.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
@@ -66,7 +66,7 @@ public class CGK21CGK22Verifier {
 			
 			//implication 2: K31/K32
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(subject.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31 k31 = new K31(cg_agent1, cg_reference, message);
 					if(m.contains(k31.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
@@ -78,7 +78,7 @@ public class CGK21CGK22Verifier {
 			
 			//implication 3: K21/K22			
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(subject.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K21 k21 = new K21(self, cg_agent1, message);
 					if(m.contains(k21.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
@@ -96,7 +96,7 @@ public class CGK21CGK22Verifier {
 			
 			//implication 1: K1
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(sender.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K1 k1 = new K1(cg_reference, message);
 					if(m.contains(k1.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
@@ -108,7 +108,7 @@ public class CGK21CGK22Verifier {
 			
 			//implication 2: K31/32
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(sender.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31 k31 = new K31(cg_agent1, cg_reference, message);
 					if(m.contains(k31.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
@@ -120,7 +120,7 @@ public class CGK21CGK22Verifier {
 				
 			//implication 3: K21		
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(sender.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K21 k21 = new K21(self, cg_agent1, message);
 					if(m.contains(k21.toString())){
 						totalnoofsenderimplications = totalnoofsenderimplications+1;
@@ -139,7 +139,7 @@ public class CGK21CGK22Verifier {
 			
 			//implication 1: K1
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(recipient.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K1 k1 = new K1(cg_reference, message);
 					if(m.contains(k1.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
@@ -151,7 +151,7 @@ public class CGK21CGK22Verifier {
 			
 			//implication 2: K31
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(recipient.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31 k31 = new K31(cg_agent1, cg_reference, message);
 					if(m.contains(k31.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
@@ -163,7 +163,7 @@ public class CGK21CGK22Verifier {
 						
 			//implication 3: K21/K22			
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(recipient.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K21 k21 = new K21(self, cg_agent1, message);
 					if(m.contains(k21.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;

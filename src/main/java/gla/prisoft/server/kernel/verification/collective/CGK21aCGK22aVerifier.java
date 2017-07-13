@@ -56,7 +56,7 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(subject.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K1a k1a = new K1a(cg_reference, message);
 					if(m.contains(k1a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
@@ -68,7 +68,7 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(subject.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31a k31a = new K31a(cg_agent1, cg_reference, message);
 					if(m.contains(k31a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
@@ -80,7 +80,7 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 3: K21a			
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(subject.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K21a k21a = new K21a(self, cg_agent1, message);
 					if(m.contains(k21a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
@@ -98,7 +98,7 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(sender.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K1a k1a = new K1a(cg_reference, message);
 					if(m.contains(k1a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
@@ -110,7 +110,7 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(sender.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31a k31a = new K31a(cg_agent1, cg_reference, message);
 					if(m.contains(k31a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
@@ -122,7 +122,7 @@ public class CGK21aCGK22aVerifier {
 				
 			//implication 3: K21a			
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(sender.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K21a k21a = new K21a(self, cg_agent1, message);
 					if(m.contains(k21a.toString())){
 						totalnoofsenderimplications = totalnoofsenderimplications+1;
@@ -141,7 +141,7 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(recipient.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K1a k1a = new K1a(cg_reference, message);
 					if(m.contains(k1a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
@@ -153,7 +153,7 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_agent1.getAgentName().equals(recipient.getAgentName())){
+				if(cg_agent1.getAgentName().equals(self.getAgentName())){
 					K31a k31a = new K31a(cg_agent1, cg_reference, message);
 					if(m.contains(k31a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
@@ -165,7 +165,7 @@ public class CGK21aCGK22aVerifier {
 						
 			//implication 3: K21a			
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(recipient.getAgentName())){
+				if(cg_reference.getAgentName().equals(self.getAgentName())){
 					K21a k21a = new K21a(self, cg_agent1, message);
 					if(m.contains(k21a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
