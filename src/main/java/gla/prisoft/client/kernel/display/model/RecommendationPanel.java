@@ -133,7 +133,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 			}        	
         });        
         
-        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo2Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
+        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo3Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
 //        jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f", PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
         jLabel3.setText("#iterations="+Display.noiterations);//+" |"+detRecomputeText());
         jLabel4.setText("Original privacy goal(v):"+String.format("%.2f", PSatAPI.instance.originalPrivacyGoal.get(PSatAPI.instance.currentPath)));
