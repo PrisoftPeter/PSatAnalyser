@@ -221,7 +221,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
         			maxpathsatvalues = val;
         		}
         	}        	
-        	if(maxpathsatvalues < PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)){
+        	if((int)maxpathsatvalues < PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath).intValue()){
         		newgoalvalue = maxpathsatvalues;
         	}
         	else{
@@ -251,7 +251,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 				jButton1.setForeground(Color.BLACK);
 				jButton1.setBackground(new Color(232,93,57));
 		        jLabel3.setText("#iterations="+Display.noiterations+"| Convergence cannot be achieved with selected disclosure protocols");
-		        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo2Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
+		        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo3Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
 			}
     		else{
         		checkThread = new Thread() {
