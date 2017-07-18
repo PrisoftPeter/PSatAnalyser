@@ -133,7 +133,8 @@ public class RecommendationPanel extends javax.swing.JPanel {
 			}        	
         });        
         
-        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo3Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
+        jLabel2.setText("Optimal privacy goal(v'):"+PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath));
+//        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo3Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
 //        jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f", PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
         jLabel3.setText("#iterations="+Display.noiterations);//+" |"+detRecomputeText());
         jLabel4.setText("Original privacy goal(v):"+String.format("%.2f", PSatAPI.instance.originalPrivacyGoal.get(PSatAPI.instance.currentPath)));
@@ -251,7 +252,9 @@ public class RecommendationPanel extends javax.swing.JPanel {
 				jButton1.setForeground(Color.BLACK);
 				jButton1.setBackground(new Color(232,93,57));
 		        jLabel3.setText("#iterations="+Display.noiterations+"| Convergence cannot be achieved with selected disclosure protocols");
-		        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo3Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
+//		        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo3Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
+		        jLabel2.setText("Optimal privacy goal(v'):"+PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath));
+
 			}
     		else{
         		checkThread = new Thread() {

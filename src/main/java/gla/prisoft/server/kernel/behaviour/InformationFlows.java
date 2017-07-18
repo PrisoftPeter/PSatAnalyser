@@ -369,12 +369,24 @@ public class InformationFlows {
 			
 			if(!contained){ 
 				long startTime = System.nanoTime();	
+				double meancollectivegoalsum =0;
+				double meancollectivegoalcount = 0;
 				
 				for(int k=0;k<pathAgents.length;k++){
 					Agent a = ServerAgentFactory.getAgent(pathAgents[k], sinstance);
 					if(!a.containedInMemoryStores(instance.subjectName)){
 						ServerMemoryFactory.newMemoryStore(a.getAgentName(), sinstance,instance);
-					}					
+					}	
+					
+					//patchup
+					if(!(instance.collectiveStrategy == CollectiveStrategy.NONE)){
+						double cgoalv = retrieveCollectiveMeanGoal(instance, a);
+						if(cgoalv>0){
+							meancollectivegoalsum = meancollectivegoalsum+ cgoalv;
+							meancollectivegoalcount = meancollectivegoalcount+1;
+						}
+
+					}
 				}
 				
 				for(int k=0;k<pathAgents.length;k++){
@@ -684,7 +696,14 @@ public class InformationFlows {
 						double normalised_cost = instance.costTradeoff*(protocol_cost/max_protocol_cost);
 						
 												
-						double collectiveGoalValue = suggestCollectiveGoalValue( instance,  su,  s, r,instance.subjectName, senderName, recipientName); //v
+						double collectiveGoalValue = 0;
+						
+						if(instance.collectiveStrategy == CollectiveStrategy.NONE){
+							collectiveGoalValue	= suggestCollectiveGoalValue( instance,  su,  s, r,instance.subjectName, senderName, recipientName); //v
+						}
+						else{
+							collectiveGoalValue = meancollectivegoalsum/ meancollectivegoalcount;
+						}
 						
 						double benefit = 0;
 						if(pathSat == -1 ||collectiveGoalValue==0){ //when goal=0, feasibility is determined based on only cost
@@ -780,6 +799,73 @@ public class InformationFlows {
 		
 	}
 	
+	private double retrieveCollectiveMeanGoal(ConfigInstance instance, Agent agent){
+		
+		ArrayList<Double> vlocalgoals = new ArrayList<Double>();
+
+		if(instance.isModePick){
+			if(instance.is_role_run){
+				AssertionRole[] assertionRoles1 = agent.getRoles();
+				if(assertionRoles1 !=null){
+					for(AssertionRole ap:assertionRoles1){
+						vlocalgoals.add(ap.getGoalv());
+					}
+				}							
+			}
+			else{				
+				AssertionInstance[] assertionInstance1 = agent.getAssertionInstances();
+				if(assertionInstance1 !=null){
+					for(AssertionInstance ap:assertionInstance1){
+						vlocalgoals.add(ap.getGoalv());
+					}
+				}								
+			}				
+		}
+		else if(instance.isModeUncertainty){
+			if(agent.getKnowledgeLevels().length >0){
+				vlocalgoals.add(agent.getGlobalPrivacyGoal_v());
+			}
+		}	
+		else if(instance.isModeEntropy){
+			if(agent.getDesiredEntropy() >0){
+				vlocalgoals.add(agent.getGlobalPrivacyGoal_v());
+			}
+		}
+		
+		double collectivevgoal = 0;
+
+		//collective goal strategy
+		if(instance.combinationStrategy == CombinationStrategy.MINIMUM){
+			double vmingoal = 0;
+			for(double d:vlocalgoals){
+				if(d <vmingoal){
+					vmingoal = d;
+				}
+			}		
+			collectivevgoal = vmingoal;
+		}
+		else if(instance.combinationStrategy == CombinationStrategy.MAXIMUM){
+			double vmaxgoal = 0;
+			for(double d:vlocalgoals){
+				if(d >vmaxgoal){
+					vmaxgoal = d;
+				}
+			}		
+			collectivevgoal = vmaxgoal;
+		}
+		else if(instance.combinationStrategy == CombinationStrategy.AVERAGE){
+			double vsumgoals = 0;
+			for(double d:vlocalgoals){
+				vsumgoals = vsumgoals+d;
+			}		
+			collectivevgoal = vsumgoals/vlocalgoals.size();
+
+		}
+
+		//TODO: apply minmax algorithm strategy	
+		return collectivevgoal;
+	}
+	
 	private double suggestCollectiveGoalValue(ConfigInstance instance, Agent subject, Agent sender, Agent recipient, String subjectName, String senderName, String recipientName){
 		if(subject == null){
 			subject = PSatClient.netGetAgent(subjectName);
@@ -792,6 +878,7 @@ public class InformationFlows {
 		}
 		
 		ArrayList<Double> vlocalgoals = new ArrayList<Double>();
+		
 		if(instance.isModePick){
 			if(instance.is_role_run){
 				AssertionRole[] assertionRoles1 = subject.getRoles();

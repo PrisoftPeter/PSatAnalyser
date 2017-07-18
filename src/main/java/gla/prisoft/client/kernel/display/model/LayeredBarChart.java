@@ -65,7 +65,7 @@ public class LayeredBarChart extends javax.swing.JPanel {
     		currentGoal = 0;
     	}
     	PSatAPI.instance.currentPrivacyGoal.put(PSatAPI.instance.currentPath, currentGoal);
-    	String goalv = String.format("%.2f", currentGoal);
+    	String goalv = String.format("%.5f", currentGoal);
     	
         String reqDesc = FeasibilityView.prdesc;
         reqDesc= reqDesc.split(", COST")[0];
