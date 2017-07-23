@@ -1,6 +1,7 @@
 package gla.prisoft.server.kernel.verification.collective;
 
 import gla.prisoft.server.PSatAPI;
+import gla.prisoft.server.kernel.behaviour.InformationFlows;
 import gla.prisoft.server.kernel.knowledge.Memory;
 import gla.prisoft.server.kernel.knowledge.worlds.K1;
 import gla.prisoft.server.kernel.knowledge.worlds.K31;
@@ -51,6 +52,32 @@ public class CGK41CGK42Verifier {
 			cg_agent2 = cg.getAgent2();
 		}
 				
+		//analyse knowledge of only nodes that has been associated with information-flow
+		boolean kObjectsProcessed = false;
+		boolean cgagent1found = false;
+		boolean cgagent2found = false;
+		boolean cgreffound = false;
+		for(String objectName:InformationFlows.processedAgents){
+						
+			if(objectName.equals(cg_reference.getAgentName())){
+				cgreffound = true;
+			}
+			else if(objectName.equals(cg_agent1.getAgentName())){
+				cgagent1found = true;
+			}	
+			else if(objectName.equals(cg_agent2.getAgentName())){
+				cgagent2found = true;
+			}
+			if(cgagent2found && cgagent1found && cgreffound){
+				kObjectsProcessed = true;
+				break;
+			}
+		}
+		if(!kObjectsProcessed){
+			return Double.NaN;	
+		}
+		/////
+		
 		if(verifyinsubject){
 
 			Agent self = subject;

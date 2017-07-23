@@ -3,6 +3,7 @@ package gla.prisoft.server.kernel.verification.collective;
 import java.util.ArrayList;
 
 import gla.prisoft.server.PSatAPI;
+import gla.prisoft.server.kernel.behaviour.InformationFlows;
 import gla.prisoft.server.kernel.knowledge.Memory;
 import gla.prisoft.server.kernel.knowledge.worlds.K1a;
 import gla.prisoft.server.kernel.knowledge.worlds.K21a;
@@ -33,6 +34,19 @@ public class CGK1aVerifier {
 		
 		Attribute message = cg.getAttribute();
 		Agent cg_reference = cg.getSelf();
+		
+		//analyse knowledge of only nodes that has been associated with information-flow
+		boolean kObjectsProcessed = false;
+		for(String objectName:InformationFlows.processedAgents){
+			if(objectName.equals(cg_reference.getAgentName())){
+				kObjectsProcessed = true;
+				break;
+			}
+		}
+		if(!kObjectsProcessed){
+			return Double.NaN;	
+		}
+		/////
 				
 		if(verifyinsubject){
 			Agent self = subject;

@@ -59,6 +59,8 @@ public class InformationFlows {
 	public static double countglobalsat;
 		
 	public ArrayList<Long> executionTimes;
+	
+	public static ArrayList<String> processedAgents;
 		
 	private static ArrayList<String> processedSequences;
 		
@@ -432,11 +434,16 @@ public class InformationFlows {
 					ServerMemoryFactory.extractCollectiveAssertions(instance.subjectName, pathAgents, sinstance,instance);
 				}
 				
+				processedAgents = new ArrayList<String>();
+				processedAgents.add(instance.subjectName);
 				
 				for(int k=0;k<pathAgents.length-1;k++){										
 					
 					String senderName = pathAgents[k];
 					String recipientName = pathAgents[k+1];
+					
+					processedAgents.add(senderName);
+					processedAgents.add(recipientName);
 									
 					Agent s = null;
 					Agent r = null;
