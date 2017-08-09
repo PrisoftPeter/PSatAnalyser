@@ -15,7 +15,7 @@ import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 
-public class CGK1Verifier {
+public class CGK1InstanceVerifier {
 	//Common knowledge of K1
 	public static double verify(Agent subject, Agent sender, Agent recipient, ServerConfigInstance sinstance,
 			ConfigInstance instance, K1 cg,ArrayList<Agent> agentsInPath){

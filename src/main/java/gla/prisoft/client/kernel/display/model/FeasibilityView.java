@@ -247,6 +247,7 @@ public class FeasibilityView extends javax.swing.JPanel {
     		else{
         		prdesc = prdesc+ ptr.getRequirementHtmlFullDesc();
     		}
+    		prdesc= prdesc.replace("Pr=", "");
     		prdesc= prdesc.replace("<html>", " ");
     		prdesc= prdesc.replace("<body>", " ");
     		prdesc= prdesc.replace("</html>", " ");

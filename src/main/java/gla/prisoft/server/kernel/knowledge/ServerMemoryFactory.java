@@ -22,14 +22,22 @@ import gla.prisoft.server.kernel.util.ServerAgentFactory;
 import gla.prisoft.server.kernel.util.ServerSatSerializer;
 import gla.prisoft.server.kernel.verification.SATResult;
 import gla.prisoft.server.kernel.verification.ServerAssertionsFactory;
-import gla.prisoft.server.kernel.verification.collective.CGK1Verifier;
-import gla.prisoft.server.kernel.verification.collective.CGK1aVerifier;
-import gla.prisoft.server.kernel.verification.collective.CGK21CGK22Verifier;
-import gla.prisoft.server.kernel.verification.collective.CGK21aCGK22aVerifier;
-import gla.prisoft.server.kernel.verification.collective.CGK31CGK32Verifier;
-import gla.prisoft.server.kernel.verification.collective.CGK31aCGK32aVerifier;
-import gla.prisoft.server.kernel.verification.collective.CGK41CGK42Verifier;
-import gla.prisoft.server.kernel.verification.collective.CGK41aCGK42aVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK1InstanceVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK1RoleVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK1aInstanceVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK1aRoleVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK21CGK22InstanceVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK21CGK22RoleVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK21aCGK22aInstanceVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK21aCGK22aRoleVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK31CGK32InstanceVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK31CGK32RoleVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK31aCGK32aInstanceVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK31aCGK32aRoleVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK41CGK42InstanceVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK41CGK42RoleVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK41aCGK42aInstanceVerifier;
+import gla.prisoft.server.kernel.verification.collective.CGK41aCGK42aRoleVerifier;
 import gla.prisoft.server.session.Config;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
@@ -1289,35 +1297,83 @@ public class ServerMemoryFactory {
 //			}
 //			else 
 			if(w instanceof K1){
-				double satvalue = CGK1Verifier.verify(subject, sender, recipient, sinstance,instance, (K1)w,agentsInPath);
+				double satvalue =0;
+				if(PSatAPI.instance.is_role_run){
+					satvalue = CGK1RoleVerifier.verify(subject, sender, recipient, sinstance,instance, (K1)w,agentsInPath);
+				}
+				else{
+					satvalue = CGK1InstanceVerifier.verify(subject, sender, recipient, sinstance,instance, (K1)w,agentsInPath);
+				}
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K1a){
-				double satvalue = CGK1aVerifier.verify(subject, sender, recipient, sinstance,instance, (K1a)w, agentsInPath);
+				double satvalue = 0;
+				if(PSatAPI.instance.is_role_run){
+					satvalue = CGK1aRoleVerifier.verify(subject, sender, recipient, sinstance,instance, (K1a)w, agentsInPath);
+				}
+				else{
+					satvalue = CGK1aInstanceVerifier.verify(subject, sender, recipient, sinstance,instance, (K1a)w, agentsInPath);
+				}
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K31a | w instanceof K32a){
-				double satvalue = CGK31aCGK32aVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				double satvalue =0;
+				if(PSatAPI.instance.is_role_run){
+					satvalue = CGK31aCGK32aRoleVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				}
+				else{
+					satvalue = CGK31aCGK32aInstanceVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				}
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K31 | w instanceof K32){
-				double satvalue = CGK31CGK32Verifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				double satvalue =0;
+				if(PSatAPI.instance.is_role_run){
+					satvalue = CGK31CGK32RoleVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				}
+				else{
+					satvalue = CGK31CGK32InstanceVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				}
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K21a | w instanceof K22a){
-				double satvalue = CGK21aCGK22aVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				double satvalue=0;
+				if(PSatAPI.instance.is_role_run){
+					satvalue = CGK21aCGK22aRoleVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				}
+				else{
+					satvalue = CGK21aCGK22aInstanceVerifier.verify(subject, sender, recipient, sinstance,instance, w, agentsInPath);
+				}
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K21 | w instanceof K22){
-				double satvalue = CGK21CGK22Verifier.verify(subject, sender, recipient, sinstance,instance, w);
+				double satvalue=0;
+				if(PSatAPI.instance.is_role_run){
+					satvalue = CGK21CGK22RoleVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				}
+				else{
+					satvalue = CGK21CGK22InstanceVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				}
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K41a | w instanceof K42a){
-				double satvalue = CGK41aCGK42aVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				double satvalue=0;
+				if(PSatAPI.instance.is_role_run){
+					satvalue = CGK41aCGK42aRoleVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				}
+				else{
+					satvalue = CGK41aCGK42aInstanceVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				}
 				satvalues.put(w, satvalue);
 			}
 			else if(w instanceof K41 | w instanceof K42){
-				double satvalue = CGK41CGK42Verifier.verify(subject, sender, recipient, sinstance,instance, w);
+				double satvalue=0;
+				if(PSatAPI.instance.is_role_run){
+					satvalue = CGK41CGK42RoleVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				}
+				else{
+					satvalue = CGK41CGK42InstanceVerifier.verify(subject, sender, recipient, sinstance,instance, w);
+				}
 				satvalues.put(w, satvalue);
 			}
 			

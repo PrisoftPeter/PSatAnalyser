@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import gla.prisoft.client.Display;
+import gla.prisoft.client.kernel.display.model.FeasibilityView;
 import gla.prisoft.server.kernel.knowledge.worlds.World;
 import gla.prisoft.shared.CollectiveMode;
 import gla.prisoft.shared.ConfigInstance;
@@ -17,6 +18,7 @@ public class PSatAPI {
 	public static String datastore_file_path ="datastore";
 	public static int fvindex;
 	public static boolean isnextpath;
+	public static boolean roleAssertionsPrinted;
 	public static HashMap<World, ArrayList<World>> higherOrderKs = new HashMap<World, ArrayList<World>>();
 	
 	
@@ -26,8 +28,27 @@ public class PSatAPI {
 		    World key = entry.getKey();
 		    ArrayList<World> value = entry.getValue();
 
-		    String htmlcgdesc = CollectiveMode.getModeLimitHtmlDesc(PSatAPI.instance.collectiveStrategy)+"("+key.toLimitHtmlString()+") &#8658; {";
+		    String htmlcgdesc ="";
+		    if(PSatAPI.instance.is_role_run){
+		    	if(roleAssertionsPrinted){
+		    		return;
+		    	}
+		    	htmlcgdesc = CollectiveMode.getModeLimitHtmlDesc(PSatAPI.instance.collectiveStrategy)+"("+FeasibilityView.prdesc+") &#8658; {";
+
+		    	htmlcgdesc= htmlcgdesc.replace("pr:  ", "");
+			    htmlcgdesc= htmlcgdesc.replace("Pr=", "");
+			    htmlcgdesc= htmlcgdesc.replace("<html>", " ");
+			    htmlcgdesc= htmlcgdesc.replace("<body>", " ");
+			    htmlcgdesc= htmlcgdesc.replace("</html>", " ");
+			    htmlcgdesc= htmlcgdesc.replace("</body>", " ");
+			    
+			    roleAssertionsPrinted = true;
+		    }
+		    else{
+		    	htmlcgdesc = CollectiveMode.getModeLimitHtmlDesc(PSatAPI.instance.collectiveStrategy)+"("+key.toLimitHtmlString()+") &#8658; {";
+		    }
 		    
+    		
 		    int count = 0;
 		    int countTotal = 0;
 		    for(Object loworder_o:value){

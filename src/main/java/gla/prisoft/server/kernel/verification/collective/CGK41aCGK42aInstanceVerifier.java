@@ -1,14 +1,12 @@
 package gla.prisoft.server.kernel.verification.collective;
 
-import java.util.ArrayList;
-
 import gla.prisoft.server.PSatAPI;
 import gla.prisoft.server.kernel.behaviour.InformationFlows;
 import gla.prisoft.server.kernel.knowledge.Memory;
 import gla.prisoft.server.kernel.knowledge.worlds.K1a;
-import gla.prisoft.server.kernel.knowledge.worlds.K21a;
-import gla.prisoft.server.kernel.knowledge.worlds.K22a;
 import gla.prisoft.server.kernel.knowledge.worlds.K31a;
+import gla.prisoft.server.kernel.knowledge.worlds.K41a;
+import gla.prisoft.server.kernel.knowledge.worlds.K42a;
 import gla.prisoft.server.kernel.knowledge.worlds.World;
 import gla.prisoft.server.session.ServerConfigInstance;
 import gla.prisoft.shared.Agent;
@@ -16,10 +14,10 @@ import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 
-public class CGK21aCGK22aVerifier {
-	//Common knowledge of K21a/K22a
+public class CGK41aCGK42aInstanceVerifier {
+	//Common knowledge of K41a/K42a
 	public static double verify(Agent subject, Agent sender, Agent recipient, ServerConfigInstance sinstance,
-			ConfigInstance instance, World w,ArrayList<Agent> agentsInPath){
+			ConfigInstance instance, World w){
 		
 		int totalnoofsubjectimplications =0;
 		int noofsubjectimplicationsverified = 0;
@@ -28,7 +26,7 @@ public class CGK21aCGK22aVerifier {
 		int totalnoofrecipientimplications =0;
 		int noofrecipientimplicationsverified = 0;
 				
-		//verify CK21a/CK22a implications in subject, sender and{or} recipient
+		//verify CK41a/CK42a implications in subject, sender and{or} recipient
 		boolean verifyinsubject = true;
 		boolean verifyinsender = true;
 		boolean verifyinrecipient = true;
@@ -36,32 +34,40 @@ public class CGK21aCGK22aVerifier {
 		Attribute message = null;
 		Agent cg_reference = null;
 		Agent cg_agent1 = null;
+		Agent cg_agent2 = null;
 		
-		if(w instanceof K21a){
-			K21a cg = (K21a)w;
+		if(w instanceof K41a){
+			K41a cg = (K41a)w;
 			message = cg.getAttribute();
 			cg_reference = cg.getSelf();
 			cg_agent1 = cg.getAgent1();
+			cg_agent2 = cg.getAgent2();
 		}
-		else if(w instanceof K22a){
-			K22a cg = (K22a)w;
+		else if(w instanceof K42a){
+			K42a cg = (K42a)w;
 			message = cg.getAttribute();
 			cg_reference = cg.getSelf();
-			cg_agent1 = cg.getAgent2();
+			cg_agent1 = cg.getAgent1();
+			cg_agent2 = cg.getAgent2();
 		}
 		
 		//analyse knowledge of only nodes that has been associated with information-flow
 		boolean kObjectsProcessed = false;
 		boolean cgagent1found = false;
+		boolean cgagent2found = false;
 		boolean cgreffound = false;
 		for(String objectName:InformationFlows.processedAgents){
+			
 			if(objectName.equals(cg_reference.getAgentName())){
 				cgreffound = true;
 			}
 			else if(objectName.equals(cg_agent1.getAgentName())){
 				cgagent1found = true;
-			}			
-			if(cgagent1found && cgreffound){
+			}	
+			else if(objectName.equals(cg_agent2.getAgentName())){
+				cgagent2found = true;
+			}
+			if(cgagent2found && cgagent1found && cgreffound){
 				kObjectsProcessed = true;
 				break;
 			}
@@ -71,7 +77,6 @@ public class CGK21aCGK22aVerifier {
 		}
 		/////
 		
-		
 		if(verifyinsubject){
 
 			Agent self = subject;
@@ -79,8 +84,8 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(self.getAgentName())){
-					K1a k1a = new K1a(cg_reference, message);
+				if(cg_agent2.getAgentName().equals(self.getAgentName())){
+					K1a k1a = new K1a(cg_agent2, message);
 					if(m.contains(k1a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
@@ -92,25 +97,25 @@ public class CGK21aCGK22aVerifier {
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
 				if(cg_agent1.getAgentName().equals(self.getAgentName())){
-					K31a k31a = new K31a(cg_agent1, cg_reference, message);
+					K31a k31a = new K31a(cg_agent1, cg_agent2, message);
 					if(m.contains(k31a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
 					PSatAPI.addHighOrderImplication(w, k31a);
 					totalnoofsubjectimplications = totalnoofsubjectimplications+1; 
 				}
-			}		
+			}	
 			
-			//implication 3: K21a			
+			//implication 5: K41a/K42a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(self.getAgentName())){
-					K21a k21a = new K21a(self, cg_agent1, message);
-					if(m.contains(k21a.toString())){
+				if(self.getAgentName().equals(cg_reference.getAgentName())){
+					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
+					if(m.contains(k41a.toString())){
 						noofsubjectimplicationsverified = noofsubjectimplicationsverified+1;
 					}
-					PSatAPI.addHighOrderImplication(w, k21a);
+					PSatAPI.addHighOrderImplication(w, k41a);
 					totalnoofsubjectimplications = totalnoofsubjectimplications+1;
-				}		
+				}
 			}	
 		}
 		
@@ -121,8 +126,8 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(self.getAgentName())){
-					K1a k1a = new K1a(cg_reference, message);
+				if(cg_agent2.getAgentName().equals(self.getAgentName())){
+					K1a k1a = new K1a(cg_agent2, message);
 					if(m.contains(k1a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
@@ -134,7 +139,7 @@ public class CGK21aCGK22aVerifier {
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
 				if(cg_agent1.getAgentName().equals(self.getAgentName())){
-					K31a k31a = new K31a(cg_agent1, cg_reference, message);
+					K31a k31a = new K31a(cg_agent1, cg_agent2, message);
 					if(m.contains(k31a.toString())){
 						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
@@ -143,16 +148,16 @@ public class CGK21aCGK22aVerifier {
 				}
 			}
 				
-			//implication 3: K21a			
+			//implication 5: K41a/K42a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(self.getAgentName())){
-					K21a k21a = new K21a(self, cg_agent1, message);
-					if(m.contains(k21a.toString())){
-						totalnoofsenderimplications = totalnoofsenderimplications+1;
+				if(self.getAgentName().equals(cg_reference.getAgentName())){
+					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
+					if(m.contains(k41a.toString())){
+						noofsenderimplicationsverified = noofsenderimplicationsverified+1;
 					}
-					PSatAPI.addHighOrderImplication(w, k21a);
-					totalnoofsenderimplications = totalnoofsenderimplications+1;
-				}		
+					PSatAPI.addHighOrderImplication(w, k41a);
+					totalnoofsenderimplications = totalnoofsenderimplications+1; 
+				}
 			}					
 					
 		}
@@ -164,8 +169,8 @@ public class CGK21aCGK22aVerifier {
 			
 			//implication 1: K1a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(self.getAgentName())){
-					K1a k1a = new K1a(cg_reference, message);
+				if(cg_agent2.getAgentName().equals(self.getAgentName())){
+					K1a k1a = new K1a(cg_agent2, message);
 					if(m.contains(k1a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
@@ -177,25 +182,25 @@ public class CGK21aCGK22aVerifier {
 			//implication 2: K31a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
 				if(cg_agent1.getAgentName().equals(self.getAgentName())){
-					K31a k31a = new K31a(cg_agent1, cg_reference, message);
+					K31a k31a = new K31a(cg_agent1, cg_agent2, message);
 					if(m.contains(k31a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
 					PSatAPI.addHighOrderImplication(w, k31a);
 					totalnoofrecipientimplications = totalnoofrecipientimplications+1; 
 				}
-			}
-						
-			//implication 3: K21a			
+			}						
+			
+			//implication 5: K41a/K42a
 			if(PSatAPI.instance.collectiveStrategy == CollectiveStrategy.CG){
-				if(cg_reference.getAgentName().equals(self.getAgentName())){
-					K21a k21a = new K21a(self, cg_agent1, message);
-					if(m.contains(k21a.toString())){
+				if(self.getAgentName().equals(cg_reference.getAgentName())){
+					K41a k41a = new K41a(self, cg_agent1, cg_agent2, message);
+					if(m.contains(k41a.toString())){
 						noofrecipientimplicationsverified = noofrecipientimplicationsverified+1;
 					}
-					PSatAPI.addHighOrderImplication(w, k21a);
+					PSatAPI.addHighOrderImplication(w, k41a);
 					totalnoofrecipientimplications = totalnoofrecipientimplications+1;
-				}		
+				}
 			}
 		}
 						

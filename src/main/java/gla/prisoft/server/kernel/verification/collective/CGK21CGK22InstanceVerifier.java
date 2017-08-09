@@ -14,7 +14,7 @@ import gla.prisoft.shared.Attribute;
 import gla.prisoft.shared.CollectiveStrategy;
 import gla.prisoft.shared.ConfigInstance;
 
-public class CGK21CGK22Verifier {
+public class CGK21CGK22InstanceVerifier {
 	//Common knowledge of K21/K22
 	public static double verify(Agent subject, Agent sender, Agent recipient, ServerConfigInstance sinstance,
 			ConfigInstance instance, World w){

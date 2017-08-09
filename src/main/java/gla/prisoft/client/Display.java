@@ -712,6 +712,7 @@ public class Display extends JFrame {
 			public void run() {					
 //				PSatAPI.instance.noPaths = PSatAPI.instance.selectedAgentPaths.size();
 				PSatAPI.instance.isTraining = true;
+				PSatAPI.roleAssertionsPrinted = false;
 				PSatAPI.instance.currentPrivacyGoal = new HashMap<String, Double>();
 				if(PSatAPI.instance.originalPrivacyGoal == null){
 					PSatAPI.instance.originalPrivacyGoal = new HashMap<String, Double>();							
