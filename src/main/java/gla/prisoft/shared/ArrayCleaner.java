@@ -3,7 +3,7 @@ package gla.prisoft.shared;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import gla.prisoft.server.kernel.knowledge.worlds.World;
+import gla.server.kernel.knowledge.worlds.World;
 
 public class ArrayCleaner {
 
