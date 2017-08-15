@@ -179,8 +179,15 @@ public class ServerSatSerializer implements Serializable{
 		ptr_row.setRowType(RowType.MF);
 		
 		ptr_row.setPath(path);
-		ptr_row.setFlowColumn("<html>"+senderName+"&#10142;"+recipientName+"</html>");
-		ptr_row.setFlow(senderName+"->"+recipientName);
+		if(System.getProperty("os.name").contains(new String("window").toLowerCase())){
+			ptr_row.setFlowColumn("<html>"+senderName+"->"+recipientName+"</html>");
+			ptr_row.setFlow(senderName+"->"+recipientName);
+        }
+        else{
+        	ptr_row.setFlowColumn("<html>"+senderName+"&#10142;"+recipientName+"</html>");
+    		ptr_row.setFlow(senderName+"->"+recipientName);
+        }
+		
 		ptr_row.setProtocolColumn("<html>"+protocolDesc+"</html>");
 		ptr_row.setProtocol(protocolDesc);
 		

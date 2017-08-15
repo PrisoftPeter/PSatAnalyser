@@ -133,7 +133,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 			}        	
         });        
         
-        jLabel2.setText("Optimal privacy goal(v'):"+PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath));
+        jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f",PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
 //        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo3Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
 //        jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f", PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
         jLabel3.setText("#iterations="+Display.noiterations);//+" |"+detRecomputeText());
@@ -253,7 +253,7 @@ public class RecommendationPanel extends javax.swing.JPanel {
 				jButton1.setBackground(new Color(232,93,57));
 		        jLabel3.setText("#iterations="+Display.noiterations+"| Convergence cannot be achieved with selected disclosure protocols");
 //		        jLabel2.setText("Optimal privacy goal(v'):"+Display.RoundTo3Decimals(PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
-		        jLabel2.setText("Optimal privacy goal(v'):"+PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath));
+		        jLabel2.setText("Optimal privacy goal(v'):"+String.format("%.2f",PSatAPI.instance.currentPrivacyGoal.get(PSatAPI.instance.currentPath)));
 
 			}
     		else{
@@ -331,7 +331,13 @@ public class RecommendationPanel extends javax.swing.JPanel {
 
 				        	recs = getPathProtocolRecommendations();
 				    		for(Recommendation rec:recs){
-				        		String flow = "<html>"+rec.sendername+"&rarr;"+rec.recipientname+"</html>";
+				        		String flow = "";
+				                if(System.getProperty("os.name").contains(new String("window").toLowerCase())){
+				                	flow ="<html>"+rec.sendername+"->"+rec.recipientname+"</html>";
+				                }
+				                else{
+				                	flow ="<html>"+rec.sendername+"&rarr;"+rec.recipientname+"</html>";
+				                }
 				        		String protocols = "<html>"+rec.recommendedprotocols+"</html>";
 				        		model.addRow(new Object[]{flow,protocols,rec.decisioncats,rec.dof});
 				        		model.fireTableDataChanged();

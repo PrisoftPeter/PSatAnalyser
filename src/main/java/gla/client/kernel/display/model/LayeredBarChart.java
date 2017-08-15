@@ -65,7 +65,7 @@ public class LayeredBarChart extends javax.swing.JPanel {
     		currentGoal = 0;
     	}
     	PSatAPI.instance.currentPrivacyGoal.put(PSatAPI.instance.currentPath, currentGoal);
-    	String goalv = String.format("%.5f", currentGoal);
+    	String goalv = String.format("%.2f", currentGoal);
     	
         String reqDesc = FeasibilityView.prdesc;
         reqDesc= reqDesc.split(", COST")[0];
@@ -198,7 +198,8 @@ public class LayeredBarChart extends javax.swing.JPanel {
         JPanel layeredbarchart = new JPanel();
         
         final CategoryAxis categoryAxis = new CategoryAxis("Decisions");
-        final ValueAxis valueAxis = new NumberAxis("# of α");
+        final ValueAxis valueAxis =new NumberAxis("# of disclosure protocols");
+        //valueAxis =new NumberAxis("# of α");
         try {
 			valueAxis.setRange(0, catt);
 		} catch (java.lang.IllegalArgumentException e) {
