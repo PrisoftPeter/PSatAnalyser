@@ -71,17 +71,14 @@ public class InformationFlows {
 	public boolean containConsent = false;
 	public boolean containNotice = false;
 				
-	public boolean run(String path, ServerConfigInstance sinstance,ConfigInstance instance){
+	public boolean run(String path, ConfigInstance instance){
 		
     	PSatAPI.fvindex = 0;
 		
-		if(sinstance.serverSatSerializer == null){
-			sinstance.serverSatSerializer = new ServerSatSerializer();
-		}
-		sinstance.serverSatSerializer.resetLongSatVals();
+		instance.satSerializer.resetLongSatVals();
 				
 		executionTimes = new ArrayList<Long>();
-		doRun(path, sinstance, instance);	
+		doRun(path, instance, instance);	
 		
 		ClientServerBroker.messageEvent("updateProgressComponent", 100+"₦"+"", null, null);
 		

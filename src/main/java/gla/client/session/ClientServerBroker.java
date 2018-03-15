@@ -18,17 +18,14 @@ import gla.prisoft.shared.KNode;
 import gla.prisoft.shared.PSatTableResult;
 import gla.server.PSatAPI;
 import gla.server.kernel.behaviour.InformationFlows;
-import gla.server.kernel.behaviour.protocol.ServerProtocolFactory;
 import gla.server.kernel.knowledge.ServerMemoryFactory;
 import gla.server.kernel.knowledge.worlds.World;
 import gla.server.kernel.util.GraphAnalyser;
 import gla.server.kernel.util.PathsInGraph;
 import gla.server.kernel.util.ServerAgentFactory;
 import gla.server.kernel.util.ServerKNetworkGraph;
-import gla.server.kernel.util.ServerSatSerializer;
 import gla.server.kernel.verification.ServerAssertionsFactory;
 import gla.server.session.Config;
-import gla.server.session.ServerConfigInstance;
 
 public class ClientServerBroker{
 	
@@ -44,6 +41,7 @@ public class ClientServerBroker{
 				
 				if(obj == null){					
 					if(actionType.equals("PSatClient.netGenNewSession()")){
+						//Transferred
 						String tsessionid = UUID.randomUUID().toString();
 						ConfigInstance tinstance = new ConfigInstance();
 						ServerProtocolFactory.initProtocolSuite(tinstance);
@@ -64,12 +62,14 @@ public class ClientServerBroker{
 						}
 					}
 					else if(actionType.equals("PSatClient.netRegenerateSequence()")){
+						//transferred
 						String path = actionValue;
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						sinstance.kgraph.createNewSequence(sinstance, path);
 						netRegenerateSequenceDone = true;
 					}
 					else if(actionType.equals("PSatClient.netGetSession()")){
+						//transferred
 						String tsessionid = actionValue;
 						ConfigInstance tinstance = Config.deserialiseConfigInstance(tsessionid);																		
 						if(tinstance == null){
@@ -82,6 +82,7 @@ public class ClientServerBroker{
 						}	
 					}
 					else if(actionType.equals("PSatClient.getpathagentnames()")){
+						//transferred
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 
 						ArrayList<String> pathAgentNames = sinstance.pathAgentNames;
@@ -92,6 +93,7 @@ public class ClientServerBroker{
 						netGetPathAgentNamesDone = true;
 					}
 					else if(actionType.equals("PSatClient.netGetAgent()")){
+						//transferred
 						String agentname = actionValue;
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						if(sinstance == null){
@@ -103,6 +105,7 @@ public class ClientServerBroker{
 						netGetAgentDone = true;
 					}
 					else if(actionType.equals("PSatClient.netGetAgentNames()")){
+						//transferred
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						String [] agentnames = ServerAgentFactory.getAgentNames(sinstance);
 												
@@ -111,12 +114,14 @@ public class ClientServerBroker{
 						Config.serialiseServerConfigInstance(sinstance.sessionid, sinstance);
 					}
 					else if(actionType.equals("PSatClient.getAllPossibleNames()")){
+						//transferred
 						String[] names = ServerAgentFactory.getAllPossibleNames();
 						
 						PSatClient.allpossibleagentnames = names;
 						netGetAllPossibleNamesDone = true;
 					}
 					else if(actionType.equals("PSatClient.retrieveRolePicks()")){
+						//transferred
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);						
 						String selfAgentName = instance.selfAgentName;
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
@@ -144,6 +149,7 @@ public class ClientServerBroker{
 //						netCreateAnalysisVaibleProtocolRatioStoreDone = true;
 //					}
 					else if(actionType.equals("PSatClient.netAnalysePaths()")){	
+						//transferred
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 						if(instance == null){
 							instance = Config.deserialiseConfigInstance(sendersSessionId);
@@ -163,6 +169,7 @@ public class ClientServerBroker{
 						netAnalysePathsDone = true;
 					}
 					else if(actionType.equals("PSatClient.netAutoGenAgents()")){	
+						//transferred
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 						boolean fin = ServerAgentFactory.autoGenAgents(sinstance, instance);
@@ -178,6 +185,7 @@ public class ClientServerBroker{
 						netAutoGenAgentsDone = true;
 					}
 					else if(actionType.equals("PSatClient.netDeserialiseProcessPossibleWorldsPathToFile()")){
+						//transferred
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 						Config.deserialiseProcessPossibleWorldsPathToFile(instance);
 						Config.serialiseConfigInstance(instance.sessionid, instance);
@@ -197,7 +205,8 @@ public class ClientServerBroker{
 						}
 						netEmptySerialisedContentDone = true;
 					}
-					else if(actionType.equals("PSatClient.netFindKNearestneighbours()")){	
+					else if(actionType.equals("PSatClient.netFindKNearestneighbours()")){
+						//transferred
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 
@@ -224,7 +233,7 @@ public class ClientServerBroker{
 						netGetPathsDone = true;
 					}
 					else if(actionType.equals("PSatClient.netNewMemoryStoreMultiple()")){	
-						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
+						ConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 
 						boolean done = ServerMemoryFactory.newMemoryStore(sinstance,instance);
@@ -370,7 +379,7 @@ public class ClientServerBroker{
 				else{
 					
 					if(actionType.equals("PSatClient.netWriteAgent()")){
-						
+						//transferred
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						boolean done = ServerAgentFactory.writeAgent((Agent)obj, sinstance);	
 						if(done){
@@ -422,6 +431,7 @@ public class ClientServerBroker{
 						
 					}
 					else if(actionType.equals("PSatClient.netNewMemoryStoreSingle()")){	
+						//transferred
 						ServerConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 						ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 

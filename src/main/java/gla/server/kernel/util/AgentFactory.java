@@ -27,12 +27,11 @@ import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.NetworkType;
 import gla.server.PSatAPI;
 import gla.server.session.Config;
-import gla.server.session.ServerConfigInstance;
 
-public class ServerAgentFactory  implements Serializable{
+public class AgentFactory  implements Serializable{
 	private static final long serialVersionUID = -6788783348838083929L;
 		
-	public static void genAgents(ServerConfigInstance instance){
+	public static void genAgents(ConfigInstance instance){
 		
 		instance.agents = new Agent[0];
 		if(instance.kgraph == null){			
@@ -41,7 +40,7 @@ public class ServerAgentFactory  implements Serializable{
 		instance.kgraph.createGraph(instance);
 	}
 	
-	public static boolean initGraph(ServerConfigInstance instance){
+	public static boolean initGraph(ConfigInstance instance){
 		boolean done = false;
 		if(!(instance.sessionid == null)){
 			
@@ -58,7 +57,7 @@ public class ServerAgentFactory  implements Serializable{
 		return done;		
 	}
 	
-	public static boolean addAgent(Agent agent, ServerConfigInstance sinstance){
+	public static boolean addAgent(Agent agent, ConfigInstance sinstance){
 		
 		boolean added = false;
 		boolean exist = false;
@@ -97,7 +96,7 @@ public class ServerAgentFactory  implements Serializable{
 		return added;
 	}
 			
-	public static void removeAgent(String agentName, ServerConfigInstance instance){
+	public static void removeAgent(String agentName, ConfigInstance instance){
 		
 		boolean exist = false;
 		for(Agent e: instance.agents){
@@ -119,7 +118,7 @@ public class ServerAgentFactory  implements Serializable{
 		}		
 	}
 		
-	public static int getAgentIndex(String agentName, ServerConfigInstance instance){
+	public static int getAgentIndex(String agentName, ConfigInstance instance){
 		int index =-1;
 		for(int i=0;i<instance.agents.length;i++){
 			if(instance.agents[i].getAgentName().equals(agentName)){
@@ -164,7 +163,7 @@ public class ServerAgentFactory  implements Serializable{
 		}
 	}
 	
-	public static void autoGenAgentsTest(ServerConfigInstance instance){
+	public static void autoGenAgentsTest(ConfigInstance instance){
 		genAgents(instance);
 	}
 	
@@ -182,17 +181,17 @@ public class ServerAgentFactory  implements Serializable{
 		return agent;
 	}
 	
-	public static boolean autoGenAgents(ServerConfigInstance instance,ConfigInstance ginstance ){
+	public static boolean autoGenAgents(ConfigInstance instance){
 		boolean successful = true;
 
 		
-		if(ginstance.networkType != NetworkType.CUSTOM){
+		if(instance.networkType != NetworkType.CUSTOM){
 			instance.kgraph = new ServerKNetworkGraph();
 		}
 		
-		if(ginstance.networkType == NetworkType.BARABASIALBERT){
+		if(instance.networkType == NetworkType.BARABASIALBERT){
 						
-			if(ginstance.numEdgesToAttach ==0 ||ginstance.init_no_seeds==0|| ginstance.no_iterations ==0){	
+			if(instance.numEdgesToAttach ==0 ||instance.init_no_seeds==0|| instance.no_iterations ==0){	
 				ClientServerBroker.messageEvent("updateLogPage", "ClientAgentFactory: call- PreferentialAttachmentSettings.configure()"+"₦"+true,null,null);
 				successful = false;
 			}
@@ -201,13 +200,13 @@ public class ServerAgentFactory  implements Serializable{
 				clearAgents(instance);
 				
 				instance.kgraph = new ServerKNetworkGraph();
-				instance.kgraph.createBarabasiAlbertGraph(ginstance.init_no_seeds, ginstance.numEdgesToAttach, ginstance.no_agents, ginstance.no_iterations, instance, ginstance);
+				instance.kgraph.createBarabasiAlbertGraph(instance.init_no_seeds, instance.numEdgesToAttach, instance.no_agents, instance.no_iterations, instance);
 			}
 			
 		}
-		else if(ginstance.networkType == NetworkType.EPPESTEINPOWERLAW){
+		else if(instance.networkType == NetworkType.EPPESTEINPOWERLAW){
 			
-			if(ginstance.no_edges ==0 ||ginstance.degreeExponent ==0){
+			if(instance.no_edges ==0 ||instance.degreeExponent ==0){
 				ClientServerBroker.messageEvent("updateLogPage", "ClientAgentFactory: call- EppsteinPowerLawSettings.configure()"+"₦"+true,null,null);
 				successful = false;
 			}
@@ -216,12 +215,12 @@ public class ServerAgentFactory  implements Serializable{
 				clearAgents(instance);
 				
 				instance.kgraph = new ServerKNetworkGraph();
-				instance.kgraph.createEppsteinPowerLawGraph(ginstance.no_agents, ginstance.no_edges, ginstance.degreeExponent, instance, ginstance);
+				instance.kgraph.createEppsteinPowerLawGraph(instance.no_agents, instance.no_edges, instance.degreeExponent, instance);
 			}
 			
 		}
-		else if(ginstance.networkType == NetworkType.KLEINBERGSMALLWORLD){
-			if(ginstance.no_edges ==0 ||ginstance.clusteringExponent ==0){
+		else if(instance.networkType == NetworkType.KLEINBERGSMALLWORLD){
+			if(instance.no_edges ==0 ||instance.clusteringExponent ==0){
 				ClientServerBroker.messageEvent("updateLogPage","ClientAgentFactory: call- KleinbergSmallWorldSettings.configure()"+"₦"+true,null,null);
 				successful = false;
 			}
@@ -230,21 +229,21 @@ public class ServerAgentFactory  implements Serializable{
 				clearAgents(instance);
 				
 				instance.kgraph = new ServerKNetworkGraph();
-				instance.kgraph.createKleinbergSmallWorldGraph(ginstance.no_agents, ginstance.no_edges, ginstance.clusteringExponent, instance, ginstance);
+				instance.kgraph.createKleinbergSmallWorldGraph(instance.no_agents, instance.no_edges, instance.clusteringExponent, instance);
 			}
 		}		
-		else if(ginstance.networkType == NetworkType.SEQUENTIAL){
+		else if(instance.networkType == NetworkType.SEQUENTIAL){
 			instance.kgraph = new ServerKNetworkGraph();			
-			instance.kgraph.createSequentialGraph(ginstance, instance);
+			instance.kgraph.createSequentialGraph(instance);
 		}
-		else if(ginstance.networkType == NetworkType.RANDOM){
+		else if(instance.networkType == NetworkType.RANDOM){
 			instance.kgraph = new ServerKNetworkGraph();
-			instance.kgraph.createRandomGraph(instance, ginstance);
+			instance.kgraph.createRandomGraph(instance);
 		}
-		else if(ginstance.networkType == NetworkType.NODESONLY){
+		else if(instance.networkType == NetworkType.NODESONLY){
 			instance.kgraph = new ServerKNetworkGraph();
 
-			instance.kgraph.createNodesOnlyGraph(instance, ginstance);
+			instance.kgraph.createNodesOnlyGraph(instance);
 
 		}
 //		else if(ginstance.networkType == NetworkType.CUSTOM){
@@ -265,7 +264,7 @@ public class ServerAgentFactory  implements Serializable{
 		return successful;
 	}
 	
-	public static void serialiseAllAgents(ServerConfigInstance instance){
+	public static void serialiseAllAgents(ConfigInstance instance){
 		
 		for(Agent e:instance.agents){
 			writeAgent(e, instance);
@@ -274,7 +273,7 @@ public class ServerAgentFactory  implements Serializable{
 	}
 	
 	
-	public static void serialiseAllAgentsAsTemplate(ServerConfigInstance instance){
+	public static void serialiseAllAgentsAsTemplate(ConfigInstance instance){
 		
 		JFileChooser chooser = new JFileChooser(".");
         FileNameExtensionFilter xFilter = new FileNameExtensionFilter("kcore network templates (*.kcore)", "kcore");
@@ -296,7 +295,7 @@ public class ServerAgentFactory  implements Serializable{
 	    }	
 	}
 		
-	public static boolean writeAgent(Agent agent, ServerConfigInstance sinstance){
+	public static boolean writeAgent(Agent agent, ConfigInstance sinstance){
 		boolean exist = false;
 		for(Agent e: sinstance.agents){
 			if(e.getAgentName().equals(agent.getAgentName())){
@@ -391,7 +390,7 @@ public class ServerAgentFactory  implements Serializable{
 	    }
 	}
 	
-	public static void loadAgents(ServerConfigInstance instance){
+	public static void loadAgents(ConfigInstance instance){
 
 		String sessionid = instance.sessionid;
 		clearAgents(instance);
@@ -427,7 +426,7 @@ public class ServerAgentFactory  implements Serializable{
 		}
 	}
 
-	public static void listAgents(ServerConfigInstance instance) {
+	public static void listAgents(ConfigInstance instance) {
 		if(instance.agents != null){
 			for(int i=0;i<instance.agents.length;i++){
 				System.out.println("("+i+") "+instance.agents[i].getAgentName());
@@ -438,12 +437,12 @@ public class ServerAgentFactory  implements Serializable{
 		}
 	}
 	
-	public static void clearAgents(ServerConfigInstance instance){
+	public static void clearAgents(ConfigInstance instance){
 		instance.agents = new Agent[0];
 	}
 	
 	
-	public static String[] getAgentNames(ServerConfigInstance instance){
+	public static String[] getAgentNames(ConfigInstance instance){
 
 		String [] agentNames = new String[instance.agents.length];
 		for(int i=0;i<instance.agents.length;i++){
@@ -453,7 +452,7 @@ public class ServerAgentFactory  implements Serializable{
 		return agentNames;
 	}
 	
-	public static String[] getOtherAgentNames(String exceptAgentName, ServerConfigInstance instance){
+	public static String[] getOtherAgentNames(String exceptAgentName, ConfigInstance instance){
 		
 		String [] agentNames = new String[instance.agents.length-1];
 		int j =0;
@@ -468,13 +467,12 @@ public class ServerAgentFactory  implements Serializable{
 		return agentNames;
 	}
 	
-	public static String[] getOtherAgentNamesAlongPath(String exceptAgentName,
-														ServerConfigInstance sinstance, ConfigInstance instance){
+	public static String[] getOtherAgentNamesAlongPath(String exceptAgentName,ConfigInstance sinstance, ConfigInstance instance){
 
 		String [] agentNames = new String[instance.selectedAgentPath.length-1];
 		int j =0;
 		for(String agentName: instance.selectedAgentPath){
-			Agent a = ServerAgentFactory.getAgent(agentName, sinstance);
+			Agent a = AgentFactory.getAgent(agentName, sinstance);
 			if(!a.getAgentName().equals(exceptAgentName)){
 				agentNames[j] = a.getAgentName();
 				j = j+1;
@@ -483,7 +481,7 @@ public class ServerAgentFactory  implements Serializable{
 		return agentNames;
 	}
 	
-	public static Agent getAgent(String agentName, ServerConfigInstance instance){
+	public static Agent getAgent(String agentName, ConfigInstance instance){
 
 		Agent agent = null;
 		for(int i=0;i<instance.agents.length;i++){
@@ -534,13 +532,13 @@ public class ServerAgentFactory  implements Serializable{
 		return names;
 	}
 	
-	public static void clearPersonalAttributesFromPathAgents(ServerConfigInstance sinstance, ConfigInstance instance){
+	public static void clearPersonalAttributesFromPathAgents(ConfigInstance sinstance, ConfigInstance instance){
 		//clear agent personal attributes for initial path
 		Agent agent = getAgent(instance.sourceAgentName, sinstance);
 		agent.resetPersonalAttributes();
 		writeAgent(agent, sinstance);	
 	}
-	public static void setSourcePersonalAttributeForPath(ServerConfigInstance sinstance, ConfigInstance instance){
+	public static void setSourcePersonalAttributeForPath(ConfigInstance sinstance, ConfigInstance instance){
 		Agent agent = getAgent(instance.sourceAgentName, sinstance);
 		
 		Attribute h = new Attribute();
@@ -553,7 +551,7 @@ public class ServerAgentFactory  implements Serializable{
 		writeAgent(agent, sinstance);
 	}
 	
-	public static void setAgentsPersonalAttributes(ServerConfigInstance instance){
+	public static void setAgentsPersonalAttributes(ConfigInstance instance){
 		for(String agentName: getAgentNames(instance)){
 			Agent agent = getAgent(agentName, instance);
 			

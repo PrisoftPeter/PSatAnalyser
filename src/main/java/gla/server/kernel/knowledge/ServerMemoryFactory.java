@@ -27,6 +27,7 @@ import gla.prisoft.shared.KnowledgeBase;
 import gla.prisoft.shared.KnowledgeLevel;
 import gla.server.PSatAPI;
 import gla.server.kernel.knowledge.worlds.*;
+import gla.server.kernel.util.AgentFactory;
 import gla.server.kernel.util.Helper;
 import gla.server.kernel.util.ServerAgentFactory;
 import gla.server.kernel.util.ServerSatSerializer;
@@ -53,13 +54,13 @@ import gla.server.session.ServerConfigInstance;
 
 public class ServerMemoryFactory {
 	
-	public static boolean newMemoryStore(String selfName, ServerConfigInstance sinstance,ConfigInstance instance){
+	public static boolean newMemoryStore(String selfName, ConfigInstance instance){
 
-		Agent self = ServerAgentFactory.getAgent(selfName, sinstance);
-		if(sinstance.validAgents == null){
-			setValidAgents(sinstance);
+		Agent self = AgentFactory.getAgent(selfName, instance);
+		if(instance.validAgents == null){
+			setValidAgents(instance);
 		}
-		new Memory(self, instance.sourceAgentName, sinstance, instance).resetKnowledge(sinstance);
+		new Memory(self, instance.sourceAgentName, instance, instance).resetKnowledge(instance);
 		self.addToCreatedMemoryStores(instance.sourceAgentName);
 		ServerAgentFactory.writeAgent(self, sinstance);
 		
@@ -149,7 +150,7 @@ public class ServerMemoryFactory {
 	}
 	
 
-	public static boolean newMemoryStore(ServerConfigInstance sinstance,ConfigInstance instance){
+	public static boolean newMemoryStore(ConfigInstance instance){
 		boolean done = false;
 		
 		if(instance == null){
@@ -168,14 +169,14 @@ public class ServerMemoryFactory {
 		ppties1.setProperty("instanceproperty", "busy");
 		ClientServerBroker.messageEvent("PSatClient.ConfigInstanceUpdateRequest()", null, ppties1, instance.busy);
 		
-		Config.serialiseConfigInstance(sinstance.sessionid, instance);
+		Config.serialiseConfigInstance(instance.sessionid, instance);
 		
 		if(instance.is_dynamic_memory_store){
 			ClientServerBroker.messageEvent("updateProgressComponent", -1+"₦"+"", null,null);
 			
-			setValidAgents(sinstance);
+			setValidAgents(instance);
 			
-			double coverage = ((double)sinstance.validAgents.length/(double)sinstance.agents.length)*100;
+			double coverage = ((double)instance.validAgents.length/(double)instance.agents.length)*100;
 			coverage = (double)(Math.round(coverage*100))/100;
 			String response_info = "";
 			if(instance.is_role_run){
@@ -195,15 +196,15 @@ public class ServerMemoryFactory {
 			
 			instance.noMemoryStores = 0;
 			
-			for(String agentName:sinstance.validAgents){
-				newMemoryStore(agentName, sinstance, instance);
+			for(String agentName:instance.validAgents){
+				newMemoryStore(agentName, instance);
 				instance.noMemoryStores =instance.noMemoryStores +1;
 
-				if(instance.noMemoryStores >= sinstance.validAgents.length){
+				if(instance.noMemoryStores >= instance.validAgents.length){
 					ClientServerBroker.messageEvent("updateProgressComponent", 100+"₦"+"",null,null);
 				}
 				else{
-					instance.completness = ((double)instance.noMemoryStores/(double)(sinstance.validAgents.length))*100;
+					instance.completness = ((double)instance.noMemoryStores/(double)(instance.validAgents.length))*100;
 					ClientServerBroker.messageEvent("updateProgressComponent", new Double(instance.completness).intValue()+"₦"+ConfigInstance.df.format(instance.completness)+"%",null,null);
 				}	
 			}
@@ -211,16 +212,16 @@ public class ServerMemoryFactory {
 		}
 		else{
 			instance.noMemoryStores = 0;
-			for(String agentname: ServerAgentFactory.getAgentNames(sinstance)){
+			for(String agentname: AgentFactory.getAgentNames(instance)){
 
-				newMemoryStore(agentname, sinstance, instance);
+				newMemoryStore(agentname, instance);
 				instance.noMemoryStores =instance.noMemoryStores +1;
 
-				if(instance.noMemoryStores >= sinstance.agents.length){
+				if(instance.noMemoryStores >= instance.agents.length){
 					ClientServerBroker.messageEvent("updateProgressComponent", 100+"₦"+"",null,null);					
 				}
 				else{
-					instance.completness = ((double)instance.noMemoryStores/(double)(sinstance.agents.length))*100;
+					instance.completness = ((double)instance.noMemoryStores/(double)(instance.agents.length))*100;
 					ClientServerBroker.messageEvent("updateProgressComponent", new Double(instance.completness).intValue()+"₦"+ConfigInstance.df.format(instance.completness)+"%",null,null);					
 				}			
 			}

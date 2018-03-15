@@ -18,6 +18,7 @@ import gla.prisoft.shared.KnowledgeLevel;
 import gla.server.PSatAPI;
 import gla.server.kernel.behaviour.InformationFlows;
 import gla.server.kernel.knowledge.worlds.*;
+import gla.server.kernel.util.AgentFactory;
 import gla.server.kernel.util.ServerAgentFactory;
 import gla.server.session.ServerConfigInstance;
 
@@ -32,11 +33,11 @@ public class Memory implements Serializable{
 	private String assertionsStorePath;
 	
 
-	public Memory(Agent self,String subjectName, ServerConfigInstance instance, ConfigInstance ginstance){
+	public Memory(Agent self,String subjectName,ConfigInstance instance){
 		this.self = self;
 		this.subjectName = subjectName;
 		otheragents = new Agent[0];
-		setOtherAgents(instance,ginstance);
+		setOtherAgents(instance);
 		createMemoryStorePath(instance.sessionid);
 		createAssertionsStorePath(instance.sessionid);
 	}
@@ -200,11 +201,11 @@ public class Memory implements Serializable{
 		}
 	}
 			
-	private void setOtherAgents(ServerConfigInstance sinstance,ConfigInstance instance){
+	private void setOtherAgents(ConfigInstance instance){
 
 		if(instance.is_dynamic_memory_store){
-			for(String agentName:sinstance.validAgents){
-				Agent agent = ServerAgentFactory.getAgent(agentName, sinstance);
+			for(String agentName:instance.validAgents){
+				Agent agent = AgentFactory.getAgent(agentName, instance);
 				if(!agent.getAgentName().equals(self.getAgentName())){
 					Agent [] tempoa = new Agent[otheragents.length+1];	
 					for(int i=0;i<otheragents.length;i++){
@@ -219,7 +220,7 @@ public class Memory implements Serializable{
 			int noagents = instance.noOfKnownAgentsGenerator.nextInt((instance.maxNoOfknowAgents - instance.minNoOfknowAgents) + 1) + instance.minNoOfknowAgents;
 			int k=0;
 			
-			for(Agent agent: sinstance.agents){
+			for(Agent agent: instance.agents){
 				if(k<noagents){
 					if(!agent.getAgentName().equals(self.getAgentName())){
 						Agent [] tempoa = new Agent[otheragents.length+1];	

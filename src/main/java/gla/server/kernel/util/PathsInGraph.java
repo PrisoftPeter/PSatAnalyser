@@ -26,11 +26,11 @@ public class PathsInGraph {
 
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static String [] getPaths(UndirectedGraph<KNode, KLink> g, ServerConfigInstance instance,ConfigInstance ginstance){
+	public static String [] getPaths(ConfigInstance instance){
 
 		String paths [] = new String[0]; 
 		
-		if(instance == null || ginstance == null){
+		if(instance == null){
 			return paths;
 		}
 
@@ -38,14 +38,14 @@ public class PathsInGraph {
 		
 		KNode source = null;
 		KNode target = null;
-		Collection<KNode> vertices = g.getVertices();
+		Collection<KNode> vertices = instance.g.getVertices();
 		
 		for(KNode vertice:vertices){
 			if(vertice !=null){
-				if(vertice.toString().equals(ginstance.sourceAgentName)){
+				if(vertice.toString().equals(instance.sourceAgentName)){
 					source = vertice;
 				}
-				else if(vertice.toString().equals(ginstance.targetAgentName)){
+				else if(vertice.toString().equals(instance.targetAgentName)){
 					target = vertice;
 				}
 				if(source != null && target != null){
@@ -54,8 +54,8 @@ public class PathsInGraph {
 			}			
 		}
 		
-		DFS<Integer> alg = new DFS(g,source,target, ginstance.max_analysis_path_length);
-		alg.Initialize(ginstance);
+		DFS<Integer> alg = new DFS(instance.g,source,target, instance.max_analysis_path_length);
+		alg.Initialize(instance);
 		List<ArrayList<KNode>> algpaths = alg.getPaths();		
 		//System.out.println(g.getVertices());
 		
@@ -104,11 +104,11 @@ public class PathsInGraph {
 			i = i+1;
 		}
 		
-		if(ginstance.networkType == NetworkType.SEQUENTIAL){
+		if(instance.networkType == NetworkType.SEQUENTIAL){
 			int j =1;
 			String[] pathsadd = new String[0];
 			String[] newpaths = new String[0]; 
-			pathsadd = additionalSequencePaths(ginstance,paths);
+			pathsadd = additionalSequencePaths(instance,paths);
 			for(String apath:pathsadd){
 				String path_desc = j+":"+apath;
 				newpaths = Helper.addUniqueStringToArray(newpaths, path_desc);
@@ -379,14 +379,14 @@ public class PathsInGraph {
 	
 	///	
 	
-	public String [] findKNearestNeighbours(UndirectedGraph<KNode, KLink> g, ServerConfigInstance instance,ConfigInstance ginstance){
+	public String [] findKNearestNeighbours(ConfigInstance instance){
 		String paths [] = new String[0]; 
 		
 		KNode source = null;
-		Collection<KNode> vertices = g.getVertices();
+		Collection<KNode> vertices = instance.g.getVertices();
 		
 		for(KNode vertice:vertices){
-			if(vertice.toString().equals(ginstance.selfAgentName)){
+			if(vertice.toString().equals(instance.selfAgentName)){
 				source = vertice;
 				break;
 			}
@@ -394,7 +394,7 @@ public class PathsInGraph {
 		
 		instance.pathAgentNames = new ArrayList<String>();
 		if(source != null){
-			paths = extractPaths(g,source,paths, "", 0, instance, ginstance);
+			paths = extractPaths(instance.g,source,paths, "", 0, instance);
 		}
 		
 		int pcounter = 1;
@@ -404,22 +404,22 @@ public class PathsInGraph {
 			pcounter = pcounter+1;
 		}
 		
-		if(ginstance.networkType == NetworkType.SEQUENTIAL){
-			paths = additionalSequencePaths(ginstance,paths);
+		if(instance.networkType == NetworkType.SEQUENTIAL){
+			paths = additionalSequencePaths(instance,paths);
 		}
 		
 		return paths_update;
 	}
 	
-	public Properties getSequenceSourceandTarget(UndirectedGraph<KNode, KLink> g, ServerConfigInstance instance,ConfigInstance ginstance){
+	public Properties getSequenceSourceandTarget(ConfigInstance instance){
 		Properties properties = new Properties();
 		
 		KNode source = null;
 		KNode target = null;
-		Collection<KNode> vertices = g.getVertices();
+		Collection<KNode> vertices = instance.g.getVertices();
 		
 		for(KNode vertice:vertices){
-			Collection<KLink>  edges = g.getIncidentEdges(vertice);
+			Collection<KLink>  edges = instance.g.getIncidentEdges(vertice);
 			if(edges.size() == 1){
 				if(source == null){
 					source = vertice;
@@ -439,8 +439,7 @@ public class PathsInGraph {
 		return properties;
 	}
 	
-	public String [] extractPaths(UndirectedGraph<KNode, KLink> g, KNode currentNode,
-									String [] paths, String tempPath, int tempk, ServerConfigInstance instance,ConfigInstance ginstance){
+	public String [] extractPaths(UndirectedGraph<KNode, KLink> g, KNode currentNode,String [] paths, String tempPath, int tempk,ConfigInstance instance){
 		Collection <KNode> neighbors = g.getNeighbors(currentNode);
 		
 		tempPath = tempPath+" "+currentNode.toString();
@@ -459,7 +458,7 @@ public class PathsInGraph {
 				
 		for(KNode nextNode: neighbors){
 			if(tempPath.contains(nextNode.toString())){
-				if(tempk == ginstance.k+1 || neighbors.size()==1){
+				if(tempk == instance.k+1 || neighbors.size()==1){
 					boolean contained = false;
 					for(String p:paths){
 						if(p.equals(tempPath)){
@@ -471,7 +470,7 @@ public class PathsInGraph {
 						for(int i=0;i<paths.length;i++){
 							tempPaths[i] = paths[i];
 						}
-						if(paths.length >= ginstance.max_no_analysis_paths){
+						if(paths.length >= instance.max_no_analysis_paths){
 							//do nothing
 						}
 						else{
@@ -480,12 +479,12 @@ public class PathsInGraph {
 						}							
 					}
 				}
-				if(paths.length >= ginstance.max_no_analysis_paths){
+				if(paths.length >= instance.max_no_analysis_paths){
 			    	break;
 			    }
 				continue;
 			}
-			if(tempk == ginstance.k+1){ //check that k nearest neighbor is reached
+			if(tempk == instance.k+1){ //check that k nearest neighbor is reached
 				boolean contained = false;
 				for(String p:paths){
 					if(p.equals(tempPath)){
@@ -497,7 +496,7 @@ public class PathsInGraph {
 					for(int i=0;i<paths.length;i++){
 						tempPaths[i] = paths[i];
 					}
-					if(paths.length >= ginstance.max_no_analysis_paths){
+					if(paths.length >= instance.max_no_analysis_paths){
 						//do nothing
 					}
 					else{
@@ -508,19 +507,19 @@ public class PathsInGraph {
 				}				
 			}
 			else{
-				if(paths.length >= ginstance.max_no_analysis_paths){
+				if(paths.length >= instance.max_no_analysis_paths){
 					//do nothing
 				}
 				else{
-					paths = extractPaths(g,nextNode,paths, tempPath, tempk, instance, ginstance);
+					paths = extractPaths(g,nextNode,paths, tempPath, tempk, instance);
 				}	
 				
 			}
 		}
 		Arrays.sort(paths);
 		
-		if(ginstance.networkType == NetworkType.SEQUENTIAL){
-			paths = additionalSequencePaths(ginstance,paths);
+		if(instance.networkType == NetworkType.SEQUENTIAL){
+			paths = additionalSequencePaths(instance,paths);
 		}
 		
 		return paths;

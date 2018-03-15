@@ -1,10 +1,15 @@
 package gla.prisoft.shared;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+
+import edu.uci.ics.jung.graph.UndirectedGraph;
+import gla.server.kernel.util.SatSerializer;
+import gla.server.kernel.util.ServerKNetworkGraph;
 
 public class ConfigInstance implements Serializable{
 	
@@ -111,11 +116,7 @@ public class ConfigInstance implements Serializable{
 	public String roleTypeHtml = "";
 	public String roleTypeRaw = "";
 	
-	public String sessionid;
-	public boolean busy;
 	public String busymessage = "sorry still processing...";
-
-	public boolean learningMaxSubs = false;	
 	
 	public int k = 5;
 	public int old_k;
@@ -126,6 +127,43 @@ public class ConfigInstance implements Serializable{
 	public HashMap<String, Double> maxPathSats;	
 	
 	public String desiredCommonKnowledgeDesc;
+	
+	public String sessionid;
+	
+	//server specific variables
+	public boolean busy;
+	public SatSerializer satSerializer;
+	public boolean learningMaxSubs = false;	
+	public UndirectedGraph<KNode, KLink> g;
+	public ArrayList<String> pathAgentNames;
+	public Agent [] agents;
+	public ServerKNetworkGraph kgraph;
+	
+	public String assertionRolesStorePath;
+	
+	public double expectedSelfUncertaintyLevel_su;
+	public double expectedSelfUncertaintyLevel_s;
+	public double expectedSelfUncertaintyLevel_r;
+	
+	public double currentSelfUncertaintyLevel_su;
+	public double currentSelfUncertaintyLevel_s;
+	public double currentSelfUncertaintyLevel_r;
+	
+	public boolean subjectdone2;
+	
+	public String [] validAgents;
+
+	//assertions related
+	public String agentName;
+	public Agent agent;
+	
+	public int a_counter;
+		
+	public File beliefUncertaintyLevelFile;
+	public File satTrainingMeanStoreFile;
+	public File satAnalysisMeanStoreFile;
+	public File viableProtocolRatioAnalysisMeanStoreFile;
+	
 
 //	//server specific variables
 //	public ServerSatSerializer serverSatSerializer;

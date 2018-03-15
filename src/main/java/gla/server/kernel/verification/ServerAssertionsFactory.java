@@ -20,22 +20,21 @@ import gla.prisoft.shared.KnowledgeBase;
 import gla.server.PSatAPI;
 import gla.server.kernel.knowledge.ServerMemoryFactory;
 import gla.server.kernel.knowledge.worlds.*;
-import gla.server.kernel.util.ServerAgentFactory;
+import gla.server.kernel.util.AgentFactory;
 import gla.server.session.Config;
-import gla.server.session.ServerConfigInstance;
 
 public class ServerAssertionsFactory implements Serializable{
 	private static final long serialVersionUID = 1L;
 			
 
-	public ServerAssertionsFactory(String agentName, ServerConfigInstance sinstance){
+	public ServerAssertionsFactory(String agentName, ConfigInstance sinstance){
 		sinstance.agentName = agentName;
 	}
 	
-	public static boolean init(ServerConfigInstance sinstance){
+	public static boolean init(ConfigInstance sinstance){
 		boolean done =false;
 		if(!(sinstance.agentName == null)){
-			sinstance.agent = ServerAgentFactory.getAgent(sinstance.agentName, sinstance);
+			sinstance.agent = AgentFactory.getAgent(sinstance.agentName, sinstance);
 			done = true;
 		}
 		return done;
@@ -50,15 +49,15 @@ public class ServerAssertionsFactory implements Serializable{
 //		agent = ServerAgentFactory.getAgent(agentName, sessionid);
 //	}
 	
-	public static World[] retrieveRolePicks(String agentName, ServerConfigInstance sinstance,ConfigInstance instance){
+	public static World[] retrieveRolePicks(String agentName, ConfigInstance instance){
 		
 		World []rolepicks = new World[0];
-		String folderName2 = sinstance.assertionRolesStorePath;
+		String folderName2 = instance.assertionRolesStorePath;
 		
 		try {
 			File folder2 = new File(folderName2);
 			if(folder2.isDirectory()){
-				Agent self = ServerAgentFactory.getAgent(agentName, sinstance);
+				Agent self = AgentFactory.getAgent(agentName, instance);
 				Agent agent1 = new Agent("a1");
 				Agent agent2 = new Agent("a2");
 						
@@ -189,7 +188,7 @@ public class ServerAssertionsFactory implements Serializable{
 		return rolepicks;
 	}
 	
-	public Properties[] displayAssertionsStore(String agentName, String partialPath, ServerConfigInstance sinstance,ConfigInstance instance){
+	public Properties[] displayAssertionsStore(String agentName, String partialPath, ConfigInstance instance){
 
 		Properties [] properties = new Properties[0];
 		
@@ -197,23 +196,23 @@ public class ServerAssertionsFactory implements Serializable{
 			instance = PSatAPI.instance;
 		}
 		
-		sinstance.a_counter = 1;
+		instance.a_counter = 1;
 		
 		String folderName2 = "";
 		if(!instance.is_role_run){
-			Agent a = ServerAgentFactory.getAgent(agentName, sinstance);
+			Agent a = AgentFactory.getAgent(agentName, instance);
 			if(!a.containedInMemoryStores(instance.sourceAgentName)){
-				ServerMemoryFactory.newMemoryStore(a.getAgentName(), sinstance, instance);
+				ServerMemoryFactory.newMemoryStore(a.getAgentName(), instance, instance);
 			}
-			folderName2 = PSatAPI.datastore_file_path+"/"+sinstance.sessionid+"/assertions/"+agentName+"/"+partialPath;
+			folderName2 = PSatAPI.datastore_file_path+"/"+instance.sessionid+"/assertions/"+agentName+"/"+partialPath;
 		}
 		else{
-			folderName2 = sinstance.assertionRolesStorePath;
+			folderName2 = instance.assertionRolesStorePath;
 		}
 		try {
 			File folder2 = new File(folderName2);
 			if(folder2.isDirectory()){
-				Agent self = ServerAgentFactory.getAgent(agentName, sinstance);
+				Agent self = AgentFactory.getAgent(agentName, instance);
 				Agent agent1 = new Agent("a1");
 				Agent agent2 = new Agent("a2");
 				String roleType ="";

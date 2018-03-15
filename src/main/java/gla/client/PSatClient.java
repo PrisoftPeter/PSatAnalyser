@@ -1,265 +1,118 @@
 package gla.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.UUID;
 
 import gla.prisoft.shared.Agent;
 import gla.prisoft.shared.ConfigInstance;
 import gla.prisoft.shared.KNode;
 import gla.server.PSatAPI;
+import gla.server.kernel.behaviour.InformationFlows;
+import gla.server.kernel.behaviour.protocol.ProtocolFactory;
+import gla.server.kernel.knowledge.ServerMemoryFactory;
 import gla.server.kernel.knowledge.worlds.World;
+import gla.server.kernel.util.AgentFactory;
+import gla.server.kernel.util.PathsInGraph;
+import gla.server.kernel.util.SatSerializer;
+import gla.server.kernel.verification.ServerAssertionsFactory;
+import gla.server.session.Config;
 import gla.client.session.ClientServerBroker;
+import gla.client.session.ServerConfigInstance;
 
 public class PSatClient {
-	
-	public static ConfigInstance ninstance;
+	static String sendersSessionId = Display.hostname;
+
 	public static ConfigInstance netGenNewSession(){
-		ninstance = null;
-		ClientServerBroker.messageEvent("PSatClient.netGenNewSession()","",  null, null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netGenNewSessionDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-      				//Display.updateLogPage("Wait Time: Message Server not Responding-netGenNewSession()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netGenNewSessionDone = false;
+				
+		String tsessionid = UUID.randomUUID().toString();
+		ConfigInstance tinstance = new ConfigInstance();
+		ProtocolFactory.initProtocolSuite(tinstance);
 		
-        return ninstance;
+		tinstance.sessionid = tsessionid;
+		tinstance.satSerializer = new SatSerializer();
+	
+		Config.serialiseServerConfigInstance(tinstance);
+		
+		return tinstance;
 	}
 	
-	public static ConfigInstance rinstance;
 	public static ConfigInstance netGetSession(String sessionid){
-		rinstance = null;
-		ClientServerBroker.messageEvent("PSatClient.netGetSession()", sessionid, null, null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netGetSessionDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-      				//Display.updateLogPage("Wait Time: Message Server not Responding-netGetSession()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netGetSessionDone = false;
-		
-        return rinstance;
+		ConfigInstance tinstance = Config.deserialiseConfigInstance(sessionid);																		
+		if(tinstance != null){
+			Display.hostname = tinstance.sessionid;
+		}
+		return tinstance;
 	}
 	
-	public static String[] pathagentnames;
 	public static String[] netGetPathAgentNames(){
-		pathagentnames = null;
-		ClientServerBroker.messageEvent("PSatClient.getpathagentnames()","", null,null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netGetPathAgentNamesDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-getpathagentnames()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netGetPathAgentNamesDone = false;
+		ConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
+
+		ArrayList<String> pathAgentNames = sinstance.pathAgentNames;
+		String[] pan = new String[pathAgentNames.size()];
+		pathAgentNames.toArray(pan);						
 		
-        return pathagentnames;
+		return pan;		
 	}
 	
-	public static boolean netWriteAgent;
 	public static boolean netWriteAgent(Agent agent){
-		netWriteAgent = false;
-		ClientServerBroker.messageEvent("PSatClient.netWriteAgent()",null,null,agent);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netWriteAgentDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netWriteAgent()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netWriteAgentDone = false;
 		
-		return netWriteAgent;	
+		ConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
+		boolean done = AgentFactory.writeAgent(agent, sinstance);	
+		
+		return done;
 	}
 	
-	public static Agent agent;
 	public static Agent netGetAgent(String agentname){
-		agent = null;
-		ClientServerBroker.messageEvent("PSatClient.netGetAgent()", agentname, null, null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netGetAgentDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netGetAgent()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netGetAgentDone = false;
+		ConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
 		
+		Agent agent = AgentFactory.getAgent(agentname,sinstance);
 		return agent;	
 	}
 	
-	public static String[] agentNames;
 	public static String [] netGetAgentNames(){
-		agentNames = null;
-		ClientServerBroker.messageEvent("PSatClient.netGetAgentNames()", "", null, null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netGetAgentNamesDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netGetAgentNames()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netGetAgentNamesDone = false;
-		
-		return agentNames;
+		ConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
+		String [] agentnames = AgentFactory.getAgentNames(sinstance);
+								
+		return agentnames;		
 	}
 	
-	public static String [] allpossibleagentnames; 
 	public static String [] netGetAllPossibleAgentNames(){
-		allpossibleagentnames = null;
+		String[] names = AgentFactory.getAllPossibleNames();
 		
-		ClientServerBroker.messageEvent("PSatClient.getAllPossibleNames()", "", null,null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netGetAllPossibleNamesDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-getAllPossibleNames()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netGetAllPossibleNamesDone = false;
-		return allpossibleagentnames;
+		return names;
 	}
 	
-	public static World picks [];
 	public static World [] netRetrieveRolePicks(){
-		picks = null;
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);						
+		String selfAgentName = instance.selfAgentName;
 		
-		ClientServerBroker.messageEvent("PSatClient.retrieveRolePicks()", "", null, null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netRetrieveRolePicksDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-retrieveRolePicks()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netRetrieveRolePicksDone = false;
+		World[] picks  =ServerAssertionsFactory.retrieveRolePicks(selfAgentName, instance);
 		return picks;
 	}
 	
-//	public static boolean createanalysisvaibleprotocolratiostore = false;
-//	public static boolean netCreateAnalysisVaibleProtocolRatioStore(){
-//		createanalysisvaibleprotocolratiostore = false;
-//		ClientServerBroker.messageEvent("PSatClient.netCreateAnalysisVaibleProtocolRatioStore()","", null,null);
-//    	int waittime= 0;
-//  		while(!ClientServerBroker.netCreateAnalysisVaibleProtocolRatioStoreDone){
-//  			try {
-//  				Thread.sleep(1000);
-//  				if(waittime >ClientServerBroker.MAXWAITTIME){
-////      				Display.updateLogPage("Wait Time: Message Server not Responding-netCreateAnalysisVaibleProtocolRatioStore()", true);
-//      			}
-//  				waittime = waittime+1;
-//  			} catch (InterruptedException e) {
-//  				e.printStackTrace();
-//  			}			
-//  		}
-//  		ClientServerBroker.netCreateAnalysisVaibleProtocolRatioStoreDone = false;
-//		return createanalysisvaibleprotocolratiostore;
-//	}
 	
-	public static boolean pathsAnalysed = false;
 	public static boolean netAnalysePaths(){
-		pathsAnalysed = false;
-		ClientServerBroker.messageEvent("PSatClient.netAnalysePaths()","", null,null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netAnalysePathsDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netAnalysePaths()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netAnalysePathsDone = false;
-		return pathsAnalysed; 
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
+		
+		boolean fin = new InformationFlows().run(instance.selectedPath,instance);
+		return fin;		
 	}
 	
-	public static boolean agentsAutoGenerated = false;
 	public static boolean netAutoGenAgents(){
-		agentsAutoGenerated = false;
-		
-		ClientServerBroker.messageEvent("PSatClient.netAutoGenAgents()","", null,null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netAutoGenAgentsDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netAutoGenAgents()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netAutoGenAgentsDone = false;
-		return agentsAutoGenerated; 
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
+		boolean fin = AgentFactory.autoGenAgents(instance);
+
+		if(fin){
+			Config.serialiseServerConfigInstance(instance);						
+		}
+		return fin;
 	}
 	
-	public static boolean sequenceRegenerated = false;
-	public static boolean netRegenerateSequence(String path){
-		sequenceRegenerated = false;
-		
-		ClientServerBroker.messageEvent("PSatClient.netRegenerateSequence()",path, null,null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netRegenerateSequenceDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netAutoGenAgents()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netRegenerateSequenceDone = false;
-		return sequenceRegenerated; 
+	public static void netRegenerateSequence(String path){
+		ConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
+		sinstance.kgraph.createNewSequence(sinstance, path);
 		
 	}
 	
@@ -271,297 +124,80 @@ public class PSatClient {
 		ClientServerBroker.messageEvent("PSatClient.netSerialiseConfigInstance()",null,null,PSatAPI.instance);
 	}
 		
-	public static ConfigInstance dinstance = null;
-	public static boolean netDeserialiseProcessPossibleWorldsPathToFile(String sessionid){
-		dinstance = null;
-		if(sessionid == null){
-			return false;
-		}
+	public static void netDeserialiseProcessPossibleWorldsPathToFile(String sessionid){
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
+		Config.deserialiseProcessPossibleWorldsPathToFile(instance);
+		Config.serialiseConfigInstance(instance.sessionid, instance);
 		
-		ClientServerBroker.messageEvent("PSatClient.netDeserialiseProcessPossibleWorldsPathToFile()","", null,null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netDeserialiseProcessPossibleWorldsPathToFileDone){
-  			try {
-  				if(dinstance != null){
-  					PSatAPI.instance = dinstance;
-  					return true;
-  				}
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netDeserialiseProcessPossibleWorldsPathToFile()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netDeserialiseProcessPossibleWorldsPathToFileDone = false;
-		return false;
 	}
 	
-	public static boolean seralisedContentEmptied = false;
 	public static boolean netEmptySerialisedContent(){
-		seralisedContentEmptied = false;
-		
-		ClientServerBroker.messageEvent("PSatClient.netEmptySerialisedContent()","", null,null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netEmptySerialisedContentDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netEmptySerialisedContent()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netEmptySerialisedContentDone = false;
-		return seralisedContentEmptied;       
+		boolean fin = Config.emptySerialisedContent(sendersSessionId);
+
+		return fin;     
 	}
 	
-	public static String listPathsData [];		
 	public static String [] netFindKNearestneighbours(){
-		listPathsData = null;
-
-		ClientServerBroker.messageEvent("PSatClient.netFindKNearestneighbours()", "", null, null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netFindKNearestneighboursDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netFindKNearestneighbours()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netFindKNearestneighboursDone = false;
-		return listPathsData;		
-	}
-	
-	public static Properties properties;		
-	public static Properties netFindSequenceSourceandTarget(){
-		properties = null;
-
-		ClientServerBroker.messageEvent("PSatClient.netFindSequenceSourceandTarget()", "", null, null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netFindSequenceSourceandTargetDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netFindKNearestneighbours()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netFindSequenceSourceandTargetDone = false;
-		return properties;		
-	}
-	
-	public static String[] paths;
-	public static String [] netGetPaths(){
-		paths = null;
 		
-		ClientServerBroker.messageEvent("PSatClient.netGetPaths()", "", null,null);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netGetPathsDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netGetPaths()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netGetPathsDone = false;
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
+
+		String [] listPathsData = new PathsInGraph().findKNearestNeighbours(instance);
+		return listPathsData;
+			
+	}
+	
+	public static Properties netFindSequenceSourceandTarget(){
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
+		Properties properties = new PathsInGraph().getSequenceSourceandTarget(instance);
+		
+		return properties;	
+	}
+	
+	public static String [] netGetPaths(){
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
+
+		String [] listPathsData = PathsInGraph.getPaths(instance);						
+		String[] paths = listPathsData;
+		
 		return paths;	
 	}
 	
-//	public static boolean protolSuiteInitexecuted;
-//	public static boolean netInitProtocolSuite(){
-//		protolSuiteInitexecuted = false;
-//		
-//		ClientServerBroker.triggerPSatHostEvent("PSatClient.netInitProtocolSuite()","");
-//    	int waittime= 0;
-//  		while(!ClientServerBroker.netInitProtocolSuiteDone){
-//  			try {
-//  				Thread.sleep(1000);
-//  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding", true);
-//      			}
-//  			} catch (InterruptedException e) {
-//  				e.printStackTrace();
-//  			}			
-//  		}
-//  		ClientServerBroker.netInitProtocolSuiteDone = false;
-//		return protolSuiteInitexecuted;  
-//	}
 	
-//	public static boolean evaluatedProtocolAdded;	
-//	public static boolean netAddToEvaluatedProtocols(String pdesc){
-//		evaluatedProtocolAdded = false;
-//		
-//		ClientServerBroker.triggerPSatHostEvent("PSatClient.netAddToEvaluatedProtocols()",null, pdesc);
-//    	int waittime= 0;
-//  		while(!ClientServerBroker.netAddToEvaluatedProtocolsDone){
-//  			try {
-//  				Thread.sleep(1000);
-//  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netAddToEvaluatedProtocols()", true);
-//      			}
-//  				waittime = waittime+1;
-//  			} catch (InterruptedException e) {
-//  				e.printStackTrace();
-//  			}			
-//  		}
-//  		ClientServerBroker.netAddToEvaluatedProtocolsDone = false;
-//		
-//  		return evaluatedProtocolAdded;        
-//	}
-	
-	public static boolean edgesmutated;	
-	public static boolean netMutateEdges(KNode source, KNode target, String mutationType){
-		edgesmutated = false;
-		HashMap<String, Object> hm = new HashMap<String, Object>();
-		hm.put("source", source);
-		hm.put("target", target);
-		
-		Properties properties = new Properties();
-		properties.setProperty("mutationType", mutationType);
-		
-		ClientServerBroker.messageEvent("PSatClient.netMutateEdges()","",properties, hm);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netMutateEdgesDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netMutateEdges()", true);
-      				break;
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netMutateEdgesDone = false;
-		
-  		return edgesmutated;        
+	public static void netMutateEdges(KNode source, KNode target, String mutationType){
+		ConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
+		sinstance.kgraph.mutateEdges(source, target, sinstance,mutationType);
+		       
 	}
 	
-//	public static boolean evaluatedProtocolRemoved;
-//	public static boolean netRemoveFromEvaluatedProtocols(String pdesc){
-//		evaluatedProtocolRemoved = false;
-//
-//		ClientServerBroker.triggerPSatHostEvent("PSatClient.netRemoveFromEvaluatedProtocols()",null, pdesc);
-//    	int waittime= 0;
-//  		while(!ClientServerBroker.netRemoveFromEvaluatedProtocolsDone){
-//  			try {
-//  				Thread.sleep(1000);
-//  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netRemoveFromEvaluatedProtocols()", true);
-//      			}
-//  				waittime = waittime+1;
-//  			} catch (InterruptedException e) {
-//  				e.printStackTrace();
-//  			}			
-//  		}
-//  		ClientServerBroker.netRemoveFromEvaluatedProtocolsDone = false;
-//		
-//  		return evaluatedProtocolRemoved;      
-//	}
-	
-	public static Properties [] listassertns;
 	public static Properties [] netDisplayAssertionsStore(String agentName, String partialPath){
-		listassertns = null;
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 		
-		Properties input = new Properties();
-		input.setProperty("agentName", agentName);
-		input.setProperty("partialPath", partialPath);
-		
-		ClientServerBroker.messageEvent("PSatClient.netDisplayAssertionsStore()",null, null, input);
-    	int waittime= 0;
-  		while(!ClientServerBroker.netDisplayAssertionsStoreDone){
-  			try {
-  				Thread.sleep(1000);
-  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//      				Display.updateLogPage("Wait Time: Message Server not Responding-netDisplayAssertionsStore()", true);
-      			}
-  				waittime = waittime+1;
-  			} catch (InterruptedException e) {
-  				e.printStackTrace();
-  			}			
-  		}
-  		ClientServerBroker.netDisplayAssertionsStoreDone = false;
-		
-  		return listassertns;
+		Properties [] ppties = new ServerAssertionsFactory(agentName, instance).displayAssertionsStore(agentName, partialPath,instance);
+		return ppties;
 	}
 	
-	public static boolean newMemoryStoreCreated_single;
-//	public static boolean netNewMemoryStore(String agentname){
 	public static void netNewMemoryStore(final String agentname){
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
 
-		Thread queryThreadx = new Thread() {
-			public void run() {
-				newMemoryStoreCreated_single = false;
-				
-				ClientServerBroker.messageEvent("PSatClient.netNewMemoryStoreSingle()",null, null,agentname);
-		    	int waittime= 0;
-		  		while(!ClientServerBroker.netNewMemoryStoreDoneSingleDone){
-		  			try {
-		  				Thread.sleep(1000);
-		  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//		      				Display.updateLogPage("Wait Time: Message Server not Responding-netNewMemoryStoreSingle()", true);
-		      			}
-		  				waittime = waittime+1;
-		  			} catch (InterruptedException e) {
-		  				e.printStackTrace();
-		  			}			
-		  		}
-		  		ClientServerBroker.netNewMemoryStoreDoneSingleDone = false;
-				
-//		  		return newMemoryStoreCreated_single;
-			}
-		};
-		queryThreadx.start();
+		boolean done = ServerMemoryFactory.newMemoryStore(agentname,instance);
 		
+		if(done){
+			Config.serialiseServerConfigInstance(instance);						
+		}
 	}
 	
-//	public static boolean newMemoryStoreCreated_multiple;
-//	public static boolean netNewMemoryStore(){
-	public static void netNewMemoryStore(){
 
-		Thread queryThreadx = new Thread() {
-			public void run() {
-				ClientServerBroker.messageEvent("PSatClient.netNewMemoryStoreMultiple()","", null, null);
-//		    	int waittime= 0;
-//		  		while(!ClientServerBroker.netNewMemoryStoreDoneMultipleDone){
-//		  			try {
-//		  				Thread.sleep(1000);
-//		  				if(waittime >ClientServerBroker.MAXWAITTIME){
-//		      				Display.updateLogPage("Wait Time: Message Server not Responding-netNewMemoryStoreMultiple()", true);
-//		      			}
-//		  				waittime = waittime+1;
-//		  			} catch (InterruptedException e) {
-//		  				e.printStackTrace();
-//		  			}			
-//		  		}
-//		  		ClientServerBroker.netNewMemoryStoreDoneMultipleDone = false;
-			}
-		};
-		queryThreadx.start();
+	public static void netNewMemoryStore(){
+		ConfigInstance instance = Config.deserialiseConfigInstance(sendersSessionId);
+
+		boolean done = ServerMemoryFactory.newMemoryStore(instance);
 		
-//		newMemoryStoreCreated_multiple = false;
-		
-		
-		
-//  		return newMemoryStoreCreated_multiple;
+		if(done){
+			Config.serialiseServerConfigInstance(instance);
+		}
 	}
+	
+	
 	
 	public static String [] assertionstorepaths;
 	public static String [] netGetAssertionsStorePaths(String agentName){

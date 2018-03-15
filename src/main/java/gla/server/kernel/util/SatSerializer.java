@@ -17,7 +17,7 @@ import gla.server.kernel.verification.FlowResult;
 import gla.server.kernel.verification.ViabilitySpectrum;
 import gla.server.session.ServerConfigInstance;
 
-public class ServerSatSerializer implements Serializable{
+public class SatSerializer implements Serializable{
 	private static final long serialVersionUID = 7596273423902691695L;
 	
 	//	private File satTrainingStoreFile;

@@ -135,9 +135,9 @@ public class Config {
 		return true;
 	}
 	
-	public static ServerConfigInstance deserialiseServerConfigInstance(String sessionid){
+	public static ConfigInstance deserialiseServerConfigInstance(String sessionid){
 		String fileName2 = PSatAPI.datastore_file_path+"/"+sessionid+"/config/serverConfigInstance.ser";
-		ServerConfigInstance instance = null;
+		ConfigInstance instance = null;
 		
 		try {
 			File file = new File(fileName2);
@@ -145,7 +145,7 @@ public class Config {
 			if(file.exists()){
 				FileInputStream fileIn = new FileInputStream(file);
 				ObjectInputStream in = new ObjectInputStream(fileIn);
-				instance = (ServerConfigInstance) in.readObject();
+				instance = (ConfigInstance) in.readObject();
 				in.close();
 				fileIn.close();			
 			}
@@ -163,17 +163,14 @@ public class Config {
 		return instance;
 	}
 	
-	public static boolean serialiseServerConfigInstance(String sessionid, ServerConfigInstance instance){
+	public static boolean serialiseServerConfigInstance(ConfigInstance instance){
 		if(PSatAPI.datastore_file_path ==null){
 			return false;
 		}
-		if(instance.sessionid == null){
-			instance.sessionid = sessionid;
-		}
 		String folderName1 = PSatAPI.datastore_file_path;
-		String folderName2 = PSatAPI.datastore_file_path+"/"+sessionid;
-		String folderName3 = PSatAPI.datastore_file_path+"/"+sessionid+"/config";
-		String fileName2 = PSatAPI.datastore_file_path+"/"+sessionid+"/config/serverConfigInstance.ser";	
+		String folderName2 = PSatAPI.datastore_file_path+"/"+instance.sessionid;
+		String folderName3 = PSatAPI.datastore_file_path+"/"+instance.sessionid+"/config";
+		String fileName2 = PSatAPI.datastore_file_path+"/"+instance.sessionid+"/config/serverConfigInstance.ser";	
 		
 		try{			
 			File folder1 = new File(folderName1);
