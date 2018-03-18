@@ -134,7 +134,6 @@ public class Display extends JFrame {
 
 	private static JButton loadButton;
 	private static DropDownButton dropDownLoadButton;
-	private static boolean forcenewsession;
 
 	public static boolean goalchange;
 	public static boolean opgset;
@@ -147,10 +146,13 @@ public class Display extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-
+		launch();		
+	}
+	
+	private static void launch() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {					
+				try {
 					window = new Display(false);
 					window.setVisible(true);
 					window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+PSatAPI.instance.sessionid+")");								
@@ -264,36 +266,40 @@ public class Display extends JFrame {
 					Display.updateLogPage("...", true);
 					return;
 				}
-				reinitialise();
-				Display.graphloaded = false;
-
 				window.setVisible(false);
-				PSatAPI.instance.kgraph = null;
-				loadingsession = true;
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							forcenewsession = true;
-							window = new Display(false);
-							window.setVisible(true);
-							window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+PSatAPI.instance.sessionid+")");								
-							Display.updatePathsList();
-							loadingsession = false;
-
-							if(PSatAPI.instance.g != null && PSatAPI.instance.g.getVertexCount()>0){
-								loadButton.setEnabled(false);
-								dropDownLoadButton.setEnabled(false);
-							}
-							else{
-								loadButton.setEnabled(true);
-								dropDownLoadButton.setEnabled(true);
-							}
-
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
+				PSatAPI.instance =null;
+				PSatAPI.forcenewsession = true;
+				launch();
+//				reinitialise();
+//				Display.graphloaded = false;
+//
+//				window.setVisible(false);
+//				PSatAPI.instance.kgraph = null;
+//				loadingsession = true;
+//				EventQueue.invokeLater(new Runnable() {
+//					public void run() {
+//						try {
+//							forcenewsession = true;
+//							window = new Display(false);
+//							window.setVisible(true);
+//							window.setTitle("PSat: Privacy requirements Satisfaction Analysis on Information-Flow Paths("+PSatAPI.instance.sessionid+")");								
+//							Display.updatePathsList();
+//							loadingsession = false;
+//
+//							if(PSatAPI.instance.g != null && PSatAPI.instance.g.getVertexCount()>0){
+//								loadButton.setEnabled(false);
+//								dropDownLoadButton.setEnabled(false);
+//							}
+//							else{
+//								loadButton.setEnabled(true);
+//								dropDownLoadButton.setEnabled(true);
+//							}
+//
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//					}
+//				});
 			}			
 		});		
 		pptiesPopupMenu.add(menuNewSession);
@@ -884,7 +890,7 @@ public class Display extends JFrame {
 			}
 
 			if(PSatAPI.instance == null || PSatAPI.instance.sessionid == null){//if(PSatAPI.instance.sessionid == null){
-				if(forcenewsession){
+				if(PSatAPI.forcenewsession){
 					PSatAPI.netGenNewSession();
 					sessions.add(PSatAPI.instance.sessionid);
 					Config.serialiseSessionIds(sessions);
@@ -892,7 +898,7 @@ public class Display extends JFrame {
 					loadButton.setEnabled(true);
 					dropDownLoadButton.setEnabled(true);
 
-					forcenewsession = false;
+					PSatAPI.forcenewsession = false;
 				}
 				else{
 					JLabel opensession_l = new JLabel("open existing session:");

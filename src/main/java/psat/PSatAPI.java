@@ -32,6 +32,7 @@ public class PSatAPI {
 	public static boolean isnextpath;
 	public static boolean roleAssertionsPrinted;
 	public static HashMap<World, ArrayList<World>> higherOrderKs = new HashMap<World, ArrayList<World>>();
+	public static boolean forcenewsession;
 	
 	static String sendersSessionId = Display.hostname;
 
