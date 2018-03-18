@@ -86,8 +86,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 
 public class Display extends JFrame {
@@ -101,7 +106,9 @@ public class Display extends JFrame {
 	public static JTabbedPane logProTabbedPane;
 	//	public static JTabbedPaneWithoutTabs reqTabbedPane;	
 
-	private static JTextPane logTextPane;
+//	private static JTextPane logTextPane;
+	public RSyntaxTextArea logTextPane;
+	
 	private static JPanel netPanel;
 	public static JPanel prPanel;
 	private static JPanel protocolPanel;
@@ -1081,52 +1088,17 @@ public class Display extends JFrame {
 	}
 
 	JPopupMenu clearpop;
+	public String selectedLine= null;
 	public JComponent createLogPage(){
 		logPanel = new JPanel(new BorderLayout());
-
-		logTextPane = new JTextPane();
-		logTextPane.setContentType("text/html");
-		EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
-		logTextPane.setBorder(eb);
-		logTextPane.setMargin(new Insets(5, 5, 5, 5));
-		logTextPane.setFont(new Font("Monospaced",Font.PLAIN,9));
-
-		clearpop = new JPopupMenu();
-		JMenuItem clearmi = new JMenuItem("Clear");
-		clearmi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				clearLogPane(logTextPane);
-			}
-
-		}); 
-		clearpop.add(clearmi);
-		PopupMenuListener pml = new PopupMenuListener();
-		logTextPane.addMouseListener(pml);
-
-		JScrollPane scroll = new JScrollPane(logTextPane,
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		scroll.setViewportView(logTextPane);
+		
+		logTextPane = new RSyntaxTextArea(20, 60);
+		logTextPane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+		logTextPane.setCodeFoldingEnabled(true);
+		RTextScrollPane sp = new RTextScrollPane(logTextPane);
 		logTextPane.setEditable(false);
 
-
-		HTMLDocument doc1 = (HTMLDocument)logTextPane.getDocument();		
-		HTMLEditorKit editorKit1 = (HTMLEditorKit)logTextPane.getEditorKit();
-
-		Font font = new Font("Verdana", Font.PLAIN, 9);
-		String bodyRule = "body { font-family: " + font.getFamily() + "; font-size: " + font.getSize() + "pt; }";
-		doc1.getStyleSheet().addRule(bodyRule);
-
-		try {
-			editorKit1.insertHTML(doc1, doc1.getLength(),"", 0, 0, null);
-		} 
-		catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}				
-		logPanel.add(scroll,BorderLayout.CENTER);	
+		logPanel.add(sp,BorderLayout.CENTER);	
 
 		return logPanel;
 	}
@@ -1151,30 +1123,13 @@ public class Display extends JFrame {
 		tp.setText("");
 	}
 
-	public static void appendToPane(JTextPane tp, String msg, boolean isError) {
+	public void appendToPane( String msg, boolean isError) {
 		if(isError){
-			msg = "<html><font color='red'>"+msg+"</font></html>";
+			msg = msg+"[error]";
 		}
-		else{
-			msg = "<html>"+msg+"</html>";
-		}
-		HTMLDocument doc = (HTMLDocument)tp.getDocument();
-		HTMLEditorKit editorKit = (HTMLEditorKit)tp.getEditorKit();
-
-		try {
-			editorKit.insertHTML(doc, doc.getLength(), msg, 0, 0, null);				
-		}
-		catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
-
-		int len = tp.getDocument().getLength();
-		tp.setCaretPosition(len);
-		//tp.setCharacterAttributes(aset, false);
-		tp.replaceSelection(msg);
+		
+		logTextPane.append(msg+"\n");
+		
 	}
 
 	public static void updateLogPage(final String text, final boolean isError){
@@ -1188,10 +1143,10 @@ public class Display extends JFrame {
 				logProTabbedPane.setSelectedIndex(0);
 
 				if(isError){
-					appendToPane(logTextPane, text, isError);
+					window.appendToPane(text, isError);
 				}
 				else{
-					appendToPane(logTextPane, text,isError);
+					window.appendToPane(text,isError);
 				}	
 
 				try {

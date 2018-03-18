@@ -199,9 +199,7 @@ public class PSatAPI {
 	}
 	
 	public static String[] netGetPathAgentNames(){
-		ConfigInstance sinstance = Config.deserialiseServerConfigInstance(sendersSessionId);
-
-		ArrayList<String> pathAgentNames = sinstance.pathAgentNames;
+		ArrayList<String> pathAgentNames = PSatAPI.instance.pathAgentNames;
 		String[] pan = new String[pathAgentNames.size()];
 		pathAgentNames.toArray(pan);						
 		
