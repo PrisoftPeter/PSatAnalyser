@@ -10,7 +10,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 
 import javax.swing.BoxLayout;
@@ -22,6 +22,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -82,13 +83,10 @@ import psat.util.AssertionsFactory;
 import psat.util.Config;
 import psat.util.NetworkType;
 
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -107,9 +105,9 @@ public class Display extends JFrame {
 	//	public static JTabbedPaneWithoutTabs reqTabbedPane;	
 
 //	private static JTextPane logTextPane;
-	public RSyntaxTextArea logTextPane;
 	
 	private static JPanel netPanel;
+	private static JPanel netMemoryPanel;
 	public static JPanel prPanel;
 	private static JPanel protocolPanel;
 
@@ -230,6 +228,7 @@ public class Display extends JFrame {
 		createFrameToolBar();
 		createFramePathsList();
 		createFrameNetworkPage();
+		createFrameNetMemoryPage();
 		createFrameLogProTabPages();
 		//		createFrameReqPages();
 	}
@@ -709,15 +708,12 @@ public class Display extends JFrame {
 
 
 	public void runSatAnalysis(){
-
-		final ImageIcon stopNormalIcon = new ImageIcon(getClass().getResource("/stopnormal.png"));
-		startTrainMaxAnalysisButton.setIcon(stopNormalIcon);
-
-		PSatAPI.netSerialiseConfigInstance();
-
 		Thread queryThread = new Thread() {
-			public void run() {					
-				//				PSatAPI.instance.noPaths = PSatAPI.instance.selectedAgentPaths.size();
+			public void run() {		
+//				PSatAPI.netSerialiseConfigInstance();
+				final ImageIcon stopNormalIcon = new ImageIcon(getClass().getResource("/stopnormal.png"));
+				startTrainMaxAnalysisButton.setIcon(stopNormalIcon);
+
 				PSatAPI.instance.isTraining = true;
 				PSatAPI.roleAssertionsPrinted = false;
 				PSatAPI.instance.currentPrivacyGoal = new HashMap<String, Double>();
@@ -727,9 +723,7 @@ public class Display extends JFrame {
 
 				PSatAPI.netSerialiseConfigInstance();
 
-				//				startMaxAnalysisButton.setEnabled(false); 
 				if(iframeDecisionBarView !=null){
-					//					iframeDecisionBarView.remove(decisionviewpanel);
 					iframeDecisionBarView.setVisible(false);
 				}
 				if(feasibilityView == null){
@@ -744,7 +738,6 @@ public class Display extends JFrame {
 				}
 
 				PSatAPI.netAnalysePaths();
-
 			}
 		};
 		queryThread.start();
@@ -852,6 +845,29 @@ public class Display extends JFrame {
 		jdpDesktop.add(iframeNet);
 		try {
 			iframeNet.setSelected(true);
+		} catch (java.beans.PropertyVetoException e) {
+		}
+
+	}
+	
+	public static InternalFrame iframeMemory;
+	private void createFrameNetMemoryPage(){
+		if(iframeMemory !=null){
+			try {
+				iframeMemory.setClosed(true);
+			} catch (PropertyVetoException e) {
+				e.printStackTrace();
+			}
+		}
+		iframeMemory = new InternalFrame("NetMemory",600,390,true,false,true,true,15,14);
+
+		JComponent memoryPane = createNetMemoryPage();
+
+		iframeMemory.setContentPane(memoryPane);
+		iframeMemory.setVisible(true);
+		jdpDesktop.add(iframeMemory);
+		try {
+			iframeMemory.setSelected(true);
 		} catch (java.beans.PropertyVetoException e) {
 		}
 
@@ -1087,8 +1103,7 @@ public class Display extends JFrame {
 		});	
 	}
 
-	JPopupMenu clearpop;
-	public String selectedLine= null;
+	public RSyntaxTextArea logTextPane;
 	public JComponent createLogPage(){
 		logPanel = new JPanel(new BorderLayout());
 		
@@ -1142,17 +1157,24 @@ public class Display extends JFrame {
 
 				logProTabbedPane.setSelectedIndex(0);
 
-				if(isError){
-					window.appendToPane(text, isError);
+				if(text.contains("<html>")) {
+					appendNetMemoryText(text);
 				}
-				else{
-					window.appendToPane(text,isError);
-				}	
+				else {
 
-				try {
-					iframeLogProTabPages.setSelected(true);
-				} catch (java.beans.PropertyVetoException e) {
-				}
+					if(isError){
+						window.appendToPane(text, isError);
+					}
+					else{
+						window.appendToPane(text,isError);
+					}	
+
+					try {
+						iframeLogProTabPages.setSelected(true);
+					} 
+					catch (java.beans.PropertyVetoException e) {
+					}
+				}			
 			}
 		});	
 	}
@@ -1283,7 +1305,75 @@ public class Display extends JFrame {
 
 		return netPanel;
 	}
+	
+	private static void appendNetMemoryText(final String text) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					HTMLDocument doc=(HTMLDocument) netMemoryEditor.getStyledDocument();
 
+					// Insert the text
+					String text_t = text;
+					text_t = text_t.replace("<html>", "");
+					text_t = text_t.replace("</html>", "");
+					try {
+						doc.insertAfterEnd(doc.getCharacterElement(doc.getLength()),text_t+"<br>");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+					// Convert the new end location to view co-ordinates
+					Rectangle r = netMemoryEditor.modelToView(doc.getLength());
+
+					// Finally, scroll so that the new text is visible
+					if (r != null) {
+						netMemoryEditor.scrollRectToVisible(r);
+					}
+				} catch (BadLocationException e) {
+					Display.updateLogPage("Failed to print to NetMemory: "+text, true);
+				}			
+			}
+		});
+		
+	}
+	  
+	JPopupMenu clearpop;
+	static JTextPane netMemoryEditor;
+	public JComponent createNetMemoryPage(){
+		netMemoryPanel = new JPanel();
+		netMemoryPanel.setLayout(new BorderLayout());
+		netMemoryPanel.setBackground(Color.white);
+		
+		netMemoryEditor = new JTextPane();
+		netMemoryEditor.setSize(300,390);
+		netMemoryEditor.setContentType("text/html");
+		netMemoryEditor.setEditable(false);
+		netMemoryEditor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+		netMemoryEditor.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		
+		clearpop = new JPopupMenu();
+		JMenuItem clearmi = new JMenuItem("Clear");
+		clearmi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clearLogPane(netMemoryEditor);
+			}
+
+		}); 
+		clearpop.add(clearmi);
+		PopupMenuListener pml = new PopupMenuListener();
+		netMemoryEditor.addMouseListener(pml);
+
+		netMemoryPanel.add(new JScrollPane(netMemoryEditor));
+
+		try {
+			iframeMemory.setSelected(true);
+		} catch (java.beans.PropertyVetoException e) {
+		}
+		netMemoryPanel.repaint();
+
+		return netMemoryPanel;
+	}
+	
 	public static void updateNetworkPage(){
 
 		if(PSatAPI.instance.busy){
@@ -1299,7 +1389,8 @@ public class Display extends JFrame {
 				netPanel.repaint();
 
 				try {
-					iframeNet.setSelected(true);
+					if(iframeNet !=null)
+						iframeNet.setSelected(true);
 				} catch (java.beans.PropertyVetoException e) {
 				}
 
@@ -1418,26 +1509,15 @@ public class Display extends JFrame {
 			Display.updateLogPage("...", true);
 			return;
 		}
-		//		if(PSatAPI.instance.networkType == NetworkType.SEQUENTIAL){
-		//			xx
-		//		}
-		//		else
 		if(PSatAPI.instance.is_role_run){
 			PSatAPI.instance.listPathsData = PSatAPI.netFindKNearestneighbours();
-			//			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
-			//			for(String s:PSatAPI.instance.listPathsData){
-			//				PSatAPI.instance.selectedAgentPaths.add(s);
-			//			}
 		}
 		else{
 			PSatAPI.instance.listPathsData = PSatAPI.netGetPaths(); 
-			//			PSatAPI.instance.selectedAgentPaths = new ArrayList<String>();
-			//			for(String s:PSatAPI.instance.listPathsData){
-			//				PSatAPI.instance.selectedAgentPaths.add(s);
-			//			}
 		}	
 		if(PSatAPI.instance.listPathsData.length == 0){
-			Display.updateLogPage("no path matching setup distance of source from target(s)", true);
+			if(PSatAPI.instance.g !=null)
+				Display.updateLogPage("no path matching setup distance of source from target(s)", true);
 		}
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -1446,14 +1526,11 @@ public class Display extends JFrame {
 			public void run() {
 				activateRun(false);	
 				pathsListModel.removeAllElements();
-				//selectedAgentPaths = new ArrayList<String>();	
 
-				//        		ArrayList<String> al = new ArrayList<String>();
 				for (String path: PSatAPI.instance.listPathsData) {
 					pathsListModel.addElement(path);
-					//                	al.add(path);
 				}
-				//            	PSatAPI.instance.selectedAgentPaths = al;
+
 				PSatAPI.netSerialiseConfigInstance();
 
 				listbox.setBackground(Color.WHITE);
@@ -1635,685 +1712,6 @@ public class Display extends JFrame {
 		iframeConfigView.add(configpanel);		
 		iframeConfigView.setVisible(true);
 
-		//		JLabel label0 = new JLabel("Logs:");
-		//		label0.setForeground(new Color(54,133,47));
-		//		final JCheckBox ktransformCheckbox= new JCheckBox("Log object knowledge transformations");
-		//		if(PSatAPI.instance.log_knowledge_transformation){
-		//			ktransformCheckbox.setSelected(true);
-		//		}
-		//		else{
-		//			ktransformCheckbox.setSelected(false);
-		//		}
-		//		ktransformCheckbox.addActionListener(new ActionListener() {
-		//	          public void actionPerformed(ActionEvent arg0) {
-		//	        	if(ktransformCheckbox.isSelected()){
-		//	        		PSatAPI.instance.log_knowledge_transformation = true;
-		//	  	    	}	
-		//	  	    	else{
-		//	  	    		PSatAPI.instance.log_knowledge_transformation = false;
-		//	  	    	}
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//	          }          
-		//			});
-		//		
-		//	    
-		//	    final JCheckBox agentKStateCheckbox= new JCheckBox("Log object knowledge state");
-		//	    if(PSatAPI.instance.log_agent_knowledge_state){
-		//	    	agentKStateCheckbox.setSelected(true);
-		//	    }
-		//	    else{
-		//	    	agentKStateCheckbox.setSelected(false);
-		//	    }
-		//	    agentKStateCheckbox.addActionListener(new ActionListener() {
-		//	          public void actionPerformed(ActionEvent arg0) {
-		//	        	if(agentKStateCheckbox.isSelected()){
-		//	        		PSatAPI.instance.log_agent_knowledge_state = true;
-		//	  	    	}	
-		//	  	    	else{
-		//	  	    		PSatAPI.instance.log_agent_knowledge_state = false;
-		//	  	    	}
-		//    	    	PSatAPI.netSerialiseConfigInstance();
-		//
-		//	          }          
-		//			});
-		//	    
-		//	    
-		//	    JLabel label = new JLabel("Privacy Requirements:");
-		//	    label.setForeground(new Color(54,133,47));
-		//	    final JLabel labeltype = new JLabel("<html><font color='#708090'>Type</font></html>");
-		//
-		//	    JRadioButton instance_rb = new JRadioButton("instance-based");
-		//	    instance_rb.addActionListener(new ActionListener() {	    	 
-		//
-		//	    	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.is_role_run = false;
-		//	        	PSatAPI.instance.listPathsData = new String[0];
-		//				Display.pathsListModel.removeAllElements();
-		//				PSatAPI.instance.selectedAgentPaths = null;
-		//				Display.prPanel.removeAll();
-		//				PSatAPI.instance.sourceAgentName = null;
-		//				PSatAPI.instance.subjectName = null;
-		//				PSatAPI.instance.selfAgentName = null;
-		//				PSatAPI.instance.targetAgentName =null;
-		//				AssertionsFactory.clearAllAgentAssertions();
-		//				
-		//				PSatAPI.netSerialiseConfigInstance();
-		//				
-		//				Display.updatePathsList();
-		//				Display.updateNetworkNode();
-		//				
-		//    	    	PSatAPI.netSerialiseConfigInstance();
-		//    	    	Display.updateProgressComponent(100, "");
-		//	        }
-		//	    });
-		//        JRadioButton roles_rb = new JRadioButton("role-based");
-		//        roles_rb.addActionListener(new ActionListener() {	    	 
-		//
-		//	        public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.is_role_run = true;
-		//	        	PSatAPI.instance.listPathsData = new String[0];
-		//				Display.pathsListModel.removeAllElements();
-		//				PSatAPI.instance.selectedAgentPaths = null;
-		//				Display.prPanel.removeAll();
-		//				PSatAPI.instance.sourceAgentName = null;
-		//				PSatAPI.instance.subjectName = null;
-		//				PSatAPI.instance.selfAgentName = null;
-		//				PSatAPI.instance.targetAgentName =null;
-		//				AssertionsFactory.clearAllAgentAssertions();
-		//				
-		//				PSatAPI.netSerialiseConfigInstance();
-		//
-		//				Display.updatePathsList();
-		//				Display.updateNetworkNode();	
-		//				Display.updateProgressComponent(100, "");
-		//				
-		//	        }
-		//	    });
-		//        if(PSatAPI.instance.is_role_run){
-		//        	roles_rb.setSelected(true);
-		//        }
-		//        else{
-		//        	instance_rb.setSelected(true);
-		//        }
-		//        ButtonGroup analysis_g_rb = new ButtonGroup();
-		//        analysis_g_rb.add(instance_rb);
-		//        analysis_g_rb.add(roles_rb); 
-		//        
-		//        ///
-		//        final JLabel labelcollective = new JLabel("<html><font color='#708090'>Privacy aspects</font></html>");
-		//        final JRadioButton nonek_rb = new JRadioButton("<html>None</html>");        
-		//        final JRadioButton ck_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.CG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.CG)+"</html>");        
-		//        final JRadioButton egk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.EG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.EG)+"</html>");        
-		//        final JRadioButton sgk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.SG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.SG)+"</html>");        
-		//        final JRadioButton bpk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.BP)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.BP)+"</html>");        
-		//        final JRadioButton dgk_rb = new JRadioButton("<html>"+CollectiveMode.getModeDesc(CollectiveStrategy.DG)+"-"+CollectiveMode.getModeLimitHtmlDesc(CollectiveStrategy.DG)+"</html>");        
-		//
-		//        ///
-		//        
-		//        JLabel labelmode = new JLabel("<html><font color='#708090'>Mode</font></html>");
-		//	    label.setForeground(new Color(54,133,47));
-		//	    JRadioButton pick_rb = new JRadioButton("Pick belief/uncertainty elements");
-		//	    pick_rb.addActionListener(new ActionListener() {	    	 
-		//
-		//	    	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.isModePick = true;
-		//	        	PSatAPI.instance.isModeUncertainty = false;
-		//	        	PSatAPI.instance.isModeEntropy = false;
-		//	        	
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
-		//	        	nonek_rb.setSelected(true);
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//	        	
-		//	        	labelcollective.setEnabled(true);
-		//	        	nonek_rb.setEnabled(true);
-		//				ck_rb.setEnabled(true);
-		//	        	egk_rb.setEnabled(true);
-		//	        	sgk_rb.setEnabled(true);
-		//	        	bpk_rb.setEnabled(true);
-		//	        	dgk_rb.setEnabled(true);
-		//	        	
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//				
-		//	        }
-		//	    });
-		//        JRadioButton uncertainty_rb = new JRadioButton("Regulate belief/uncertainty levels");
-		//        
-		//        uncertainty_rb.addActionListener(new ActionListener() {	    	 
-		//
-		//        	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.isModePick = false;
-		//	        	PSatAPI.instance.isModeUncertainty = true;
-		//	        	PSatAPI.instance.isModeEntropy = false;
-		//	        	
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
-		//	        	nonek_rb.setSelected(true);
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//	        	
-		//	        	labelcollective.setEnabled(false);
-		//	        	nonek_rb.setEnabled(false);
-		//				ck_rb.setEnabled(false);
-		//	        	egk_rb.setEnabled(false);
-		//	        	sgk_rb.setEnabled(false);
-		//	        	bpk_rb.setEnabled(false);
-		//	        	dgk_rb.setEnabled(false);
-		//	        	
-		//				PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });
-		//        JRadioButton entropy_rb = new JRadioButton("Regulate entropy levels");
-		//        
-		//        entropy_rb.addActionListener(new ActionListener() {	    	 
-		//
-		//        	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.isModePick = false;
-		//	        	PSatAPI.instance.isModeUncertainty = false;
-		//	        	PSatAPI.instance.isModeEntropy = true;
-		//	        	
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
-		//	        	nonek_rb.setSelected(true);
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//	        	
-		//	        	labelcollective.setEnabled(false);
-		//	        	nonek_rb.setEnabled(false);
-		//				ck_rb.setEnabled(false);
-		//	        	egk_rb.setEnabled(false);
-		//	        	sgk_rb.setEnabled(false);
-		//	        	bpk_rb.setEnabled(false);
-		//	        	dgk_rb.setEnabled(false);
-		//	        	
-		//				PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });
-		//        
-		//        
-		//        if(PSatAPI.instance.isModePick){
-		//        	pick_rb.setSelected(true);
-		//        	uncertainty_rb.setSelected(false);
-		//        	entropy_rb.setSelected(false);
-		//        }
-		//        else if(PSatAPI.instance.isModeUncertainty){
-		//        	pick_rb.setSelected(false);
-		//        	uncertainty_rb.setSelected(true);
-		//        	entropy_rb.setSelected(false);
-		//        }
-		//        else if(PSatAPI.instance.isModeEntropy){
-		//        	pick_rb.setSelected(false);
-		//        	uncertainty_rb.setSelected(false);
-		//        	entropy_rb.setSelected(true);
-		//        }
-		//        else{
-		//        	pick_rb.setSelected(true);
-		//        	uncertainty_rb.setSelected(false);
-		//        	entropy_rb.setSelected(false);
-		//        }
-		//        ButtonGroup pick_g_rb = new ButtonGroup();
-		//        pick_g_rb.add(pick_rb);
-		//        pick_g_rb.add(uncertainty_rb);
-		//        pick_g_rb.add(entropy_rb);
-		//                
-		//        nonek_rb.addActionListener(new ActionListener() {	
-		//        	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.NONE;
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//				PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });        
-		//        ck_rb.addActionListener(new ActionListener() {	
-		//        	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.CG;
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//				PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });	
-		//        egk_rb.addActionListener(new ActionListener() {	
-		//        	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.EG;
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//				PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });
-		//        sgk_rb.addActionListener(new ActionListener() {	
-		//        	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.SG;
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//				PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });
-		//        bpk_rb.addActionListener(new ActionListener() {	
-		//        	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.BP;
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//				PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });
-		//        dgk_rb.addActionListener(new ActionListener() {	
-		//        	public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.collectiveStrategy = CollectiveStrategy.DG;
-		//	        	AssertionsFactory.clearAllAgentAssertions();
-		//				PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });
-		//        
-		//        if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.NONE){
-		//        	nonek_rb.setSelected(true);
-		//        	ck_rb.setSelected(false);
-		//        	egk_rb.setSelected(false);
-		//        	sgk_rb.setSelected(false);
-		//        	bpk_rb.setSelected(false);
-		//        	dgk_rb.setSelected(false);
-		//        }
-		//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.CG){
-		//        	nonek_rb.setSelected(false);
-		//        	ck_rb.setSelected(true);
-		//        	egk_rb.setSelected(false);
-		//        	sgk_rb.setSelected(false);
-		//        	bpk_rb.setSelected(false);
-		//        	dgk_rb.setSelected(false);
-		//        }
-		//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.EG){
-		//        	nonek_rb.setSelected(false);
-		//        	ck_rb.setSelected(false);
-		//        	egk_rb.setSelected(true);
-		//        	sgk_rb.setSelected(false);
-		//        	bpk_rb.setSelected(false);
-		//        	dgk_rb.setSelected(false);
-		//        }
-		//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.SG){
-		//        	nonek_rb.setSelected(false);
-		//        	ck_rb.setSelected(false);
-		//        	egk_rb.setSelected(false);
-		//        	sgk_rb.setSelected(true);
-		//        	bpk_rb.setSelected(false);
-		//        	dgk_rb.setSelected(false);
-		//        }
-		//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.BP){
-		//        	nonek_rb.setSelected(false);
-		//        	ck_rb.setSelected(false);
-		//        	egk_rb.setSelected(false);
-		//        	sgk_rb.setSelected(false);
-		//        	bpk_rb.setSelected(true);
-		//        	dgk_rb.setSelected(false);
-		//        }
-		//        else if(PSatAPI.instance.collectiveStrategy ==  CollectiveStrategy.DG){
-		//        	nonek_rb.setSelected(false);
-		//        	ck_rb.setSelected(false);
-		//        	egk_rb.setSelected(false);
-		//        	sgk_rb.setSelected(false);
-		//        	bpk_rb.setSelected(false);
-		//        	dgk_rb.setSelected(true);
-		//        }
-		//        else{
-		//        	nonek_rb.setSelected(true);
-		//        	ck_rb.setSelected(false);
-		//        	egk_rb.setSelected(false);
-		//        	sgk_rb.setSelected(false);
-		//        	bpk_rb.setSelected(false);
-		//        	dgk_rb.setSelected(false);
-		//        }
-		//        
-		//        ButtonGroup cok_rb = new ButtonGroup();
-		//        cok_rb.add(nonek_rb);
-		//        cok_rb.add(ck_rb);
-		//        cok_rb.add(egk_rb);
-		//        cok_rb.add(sgk_rb);
-		//        cok_rb.add(bpk_rb);
-		//        cok_rb.add(dgk_rb);
-		//        
-		//        if(entropy_rb.isSelected() || uncertainty_rb.isSelected()){
-		//        	nonek_rb.setSelected(true);        	
-		//        }
-		//        
-		//        if(!pick_rb.isSelected()){
-		//        	labelcollective.setEnabled(false);
-		//        	nonek_rb.setEnabled(false);
-		//        	ck_rb.setEnabled(false);
-		//        	egk_rb.setEnabled(false);
-		//        	sgk_rb.setEnabled(false);
-		//        	bpk_rb.setEnabled(false);
-		//        	dgk_rb.setEnabled(false);
-		//        }
-		//        
-		//        JSeparator sep = new JSeparator(SwingConstants.HORIZONTAL);
-		//        JSeparator sep2 = new JSeparator(SwingConstants.HORIZONTAL);
-		////        JSeparator sep3 = new JSeparator(SwingConstants.HORIZONTAL);
-		////        JSeparator sep4 = new JSeparator(SwingConstants.HORIZONTAL);
-		//        
-		//        JLabel label2 = new JLabel("Analysis:");
-		//        label2.setForeground(new Color(54,133,47));
-		//        
-		//	    Integer maxPathLengths[] = {1,2,3,4,5,6,7,8,9};
-		//	    final JComboBox<Integer> maxPathLength_cb = new JComboBox<Integer>(maxPathLengths);
-		//	    for(int i=0;i<maxPathLengths.length;i++){
-		//	    	if(maxPathLengths[i] == PSatAPI.instance.max_analysis_path_length){
-		//	    		maxPathLength_cb.setSelectedIndex(i);		
-		//	    	}
-		//	    }	    
-		//	    maxPathLength_cb.addItemListener(new ItemListener() {
-		//	        public void itemStateChanged(ItemEvent itemEvent) {
-		//	        	PSatAPI.instance.max_analysis_path_length = (Integer)maxPathLength_cb.getSelectedItem();
-		//	        	PSatAPI.instance.no_agents = PSatAPI.instance.max_analysis_path_length;//remove to distinguish bw no of agents and path length
-		//	        	PSatAPI.instance.k = PSatAPI.instance.max_analysis_path_length;//remove to distinguish bw no of agents and path length
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//	          }
-		//	        });
-		//	    
-		//	    Integer maxNo_path_Analysis[] = {2,3,5,10,20,30,40,50,50,70,80,90,100,120,140,160,200};
-		//	    final JComboBox<Integer> max_No_path_Analysis_cb = new JComboBox<Integer>(maxNo_path_Analysis);
-		//	    for(int i=0;i<maxNo_path_Analysis.length;i++){
-		//	    	if(maxNo_path_Analysis[i] == PSatAPI.instance.max_no_analysis_paths){
-		//	    		max_No_path_Analysis_cb.setSelectedIndex(i);		
-		//	    	}
-		//	    }
-		//	    max_No_path_Analysis_cb.addItemListener(new ItemListener() {
-		//	        public void itemStateChanged(ItemEvent itemEvent) {
-		//	        	PSatAPI.instance.max_no_analysis_paths = (Integer)max_No_path_Analysis_cb.getSelectedItem();
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//
-		//	          }
-		//	        });
-		//	    
-		//	    Double sat_tresholds[] = {0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0};
-		//	    final JComboBox<Double> satTreshold_cb = new JComboBox<Double>(sat_tresholds);
-		//	    for(int i=0;i<sat_tresholds.length;i++){
-		//	    	if(sat_tresholds[i] == PSatAPI.instance.sat_treshold){
-		//	    		satTreshold_cb.setSelectedIndex(i);		
-		//	    	}
-		//	    }	    
-		//	    satTreshold_cb.addItemListener(new ItemListener() {
-		//	        public void itemStateChanged(ItemEvent itemEvent) {
-		//	        	PSatAPI.instance.sat_treshold = (Double)satTreshold_cb.getSelectedItem();
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//
-		//	          }
-		//	        });
-		//	    
-		//	    final JCheckBox unlimitedps_cb= new JCheckBox("Complete path analysis");
-		//	    if(PSatAPI.instance.unlimitedPathSatAnalysis){
-		//	    	unlimitedps_cb.setSelected(true);
-		//	    	satTreshold_cb.setEnabled(false);
-		//	    }
-		//	    else{
-		//	    	unlimitedps_cb.setSelected(false);
-		//	    	satTreshold_cb.setEnabled(true);
-		//	    }
-		//	    unlimitedps_cb.addActionListener(new ActionListener() {
-		//	          public void actionPerformed(ActionEvent arg0) {
-		//	        	if(unlimitedps_cb.isSelected()){
-		//	        		PSatAPI.instance.unlimitedPathSatAnalysis = true;
-		//	        		satTreshold_cb.setEnabled(false);
-		//	  	    	}	
-		//	  	    	else{
-		//	  	    		PSatAPI.instance.unlimitedPathSatAnalysis = false;
-		//	  	    		satTreshold_cb.setEnabled(true);
-		//	  	    	}
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//	          }          
-		//			});
-		//	     	    
-		//	    
-		//	    JLabel labelStragegy = new JLabel("Uncertainities combination strategy");
-		//	    labelStragegy.setForeground(new Color(54,133,47));
-		//	    
-		//	    JRadioButton minimum_rb = new JRadioButton("minimum uncertainty value");
-		//	    minimum_rb.addActionListener(new ActionListener() {	    	 
-		//	        public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.combinationStrategy = CombinationStrategy.MINIMUM;
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });
-		//	    
-		//	    JRadioButton maximum_rb = new JRadioButton("maximum uncertainty value");
-		//	    maximum_rb.setSelected(true);
-		//        maximum_rb.addActionListener(new ActionListener() {	    	 
-		//	        public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.combinationStrategy = CombinationStrategy.MAXIMUM;
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//
-		//	        }
-		//	    });
-		//        
-		//        JRadioButton average_rb = new JRadioButton("average uncertainty value");        
-		//        average_rb.addActionListener(new ActionListener() {	    	 
-		//	        public void actionPerformed(ActionEvent event) {
-		//	        	PSatAPI.instance.combinationStrategy = CombinationStrategy.AVERAGE;
-		//	        	PSatAPI.netSerialiseConfigInstance();
-		//	        }
-		//	    });
-		//	    
-		//        ButtonGroup combination_g_rb = new ButtonGroup();
-		//        combination_g_rb.add(minimum_rb);
-		//        combination_g_rb.add(maximum_rb);
-		//        combination_g_rb.add(average_rb); 
-		//	        
-		//	    
-		//	    JLabel label01 = new JLabel("Network Mutation Mode:");
-		//	    label01.setForeground(new Color(54,133,47));
-		//		
-		//	    final JCheckBox networkMutationMode_cb= new JCheckBox("add/remove edges");
-		//	    if(PSatAPI.instance.networkMutationMode){
-		//	    	networkMutationMode_cb.setSelected(true);
-		//	    }
-		//	    else{
-		//	    	networkMutationMode_cb.setSelected(false);
-		//	    }
-		//	    networkMutationMode_cb.addActionListener(new ActionListener() {
-		//	          public void actionPerformed(ActionEvent arg0) {
-		//	        	if(networkMutationMode_cb.isSelected()){
-		//	        		PSatAPI.instance.networkMutationMode = true;	  	    		
-		//	  	    	}	
-		//	  	    	else{
-		//	  	    		PSatAPI.instance.networkMutationMode = false;
-		//	  	    	}
-		//        		PSatAPI.netSerialiseConfigInstance();
-		//
-		//	          }          
-		//		});
-		//	    
-		////	    JLabel noagents_l = new JLabel("# of objects:");
-		////	    final JTextField nagents_ft = new JTextField(10);
-		////	    if(instance != null){
-		////		    nagents_ft.setText(""+instance.no_agents);
-		////	    }
-		////	    else{
-		////	    	nagents_ft.setText("5");	
-		////	    }
-		////	    nagents_ft.addActionListener(new ActionListener(){
-		////			@Override
-		////			public void actionPerformed(ActionEvent e) {
-		////				String tinput = nagents_ft.getText();
-		////				if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-		////					Display.instance.no_agents = new Integer(tinput);	
-		////					PSatAPI.netSerialiseConfigInstance();
-		////				}
-		////				else{
-		////					System.err.println("#number expected");
-		////					return;
-		////				}
-		////			}
-		////	    	
-		////	    });
-		//	    
-		////	    JLabel tradeoff_l = new JLabel("Cost Tradeoff:");
-		////	    final JTextField tradeofftf = new JTextField(10);
-		////	    if(instance != null){
-		////	    	if(instance.costTradeoff == 0.01){
-		////	    		tradeofftf.setText("0");
-		////	    	}
-		////	    	else{
-		////		    	tradeofftf.setText(""+instance.costTradeoff);	    		
-		////	    	}
-		////	    }
-		////	    else{
-		////	    	tradeofftf.setText("1.0");	
-		////	    }
-		////	    tradeofftf.addActionListener(new ActionListener(){
-		////			@Override
-		////			public void actionPerformed(ActionEvent e) {
-		////				String tinput = tradeofftf.getText();
-		////				if ((tinput != null) && (tinput.length() > 0) && Display.isNumeric(tinput)) {
-		////					if(new Double(tinput) >1){
-		////						System.err.println("#number <=1 expected");
-		////					}
-		////					else{
-		////						if(new Double(tinput) <0.01){
-		////							Display.instance.costTradeoff = 0.01;
-		////						}
-		////						else{
-		////							Display.instance.costTradeoff = new Double(tinput);							
-		////						}
-		////						PSatAPI.netSerialiseConfigInstance();
-		////					}					
-		////				}
-		////				else{
-		////					System.err.println("#number <=1 expected");
-		////					return;
-		////				}
-		////			}	    	
-		////	    });
-		//	    
-		//	    JLabel decisioncategory_l = new JLabel("Decision Category Limit:");
-		//        
-		////	    String decisioncategories[] = {"cat6","cat5", "cat4", "cat3", "cat2", "cat1"};
-		//	    String decisioncategories[] = {"cat3[NO]", "cat2[MAYBE]", "cat1[YES]"};
-		//	    final JComboBox<String> decisioncategories_cb = new JComboBox<String>(decisioncategories);
-		//	    
-		////	    if(RecommendationPanel.limit ==1){
-		////	    	decisioncategories_cb.setSelectedIndex(5);
-		////        }
-		////        else if(RecommendationPanel.limit ==2){
-		////        	decisioncategories_cb.setSelectedIndex(4);
-		////        }
-		////        else if(RecommendationPanel.limit ==3){
-		////        	decisioncategories_cb.setSelectedIndex(3);
-		////        }
-		////        else if(RecommendationPanel.limit ==4){
-		////        	decisioncategories_cb.setSelectedIndex(2);
-		////        }
-		////        else if(RecommendationPanel.limit ==5){
-		////        	decisioncategories_cb.setSelectedIndex(1);
-		////        }
-		////        else if(RecommendationPanel.limit ==6){
-		////        	decisioncategories_cb.setSelectedIndex(0);
-		////        } 
-		//	    if(RecommendationPanel.limit ==1){
-		//	    	decisioncategories_cb.setSelectedIndex(2);
-		//        }
-		//        else if(RecommendationPanel.limit ==2){
-		//        	decisioncategories_cb.setSelectedIndex(1);
-		//        }
-		//        else if(RecommendationPanel.limit ==3){
-		//        	decisioncategories_cb.setSelectedIndex(0);
-		//        }
-		//	    decisioncategories_cb.addItemListener(new ItemListener() {
-		//	        public void itemStateChanged(ItemEvent itemEvent) {
-		//	        	String cat = (String)decisioncategories_cb.getSelectedItem();
-		//	        	if(cat.equals("cat1[YES]")){
-		//	        		RecommendationPanel.limit=1;
-		//	            }
-		//	            else if(cat.equals("cat2[MAYBE]")){
-		//	        		RecommendationPanel.limit=2;
-		//	            }
-		//	            else if(cat.equals("cat3[NO]")){
-		//	        		RecommendationPanel.limit=3;
-		//	            }
-		////	            else if(cat.equals("cat4")){
-		////	        		RecommendationPanel.limit=4;
-		////	            }
-		////	            else if(cat.equals("cat5")){
-		////	        		RecommendationPanel.limit=5;
-		////	            }
-		////	            else if(cat.equals("cat6")){
-		////	        		RecommendationPanel.limit=6;
-		////	            }
-		//	        }
-		//	    });
-		//	    
-		//	    
-		////	    Object[] message = {noagents_l,nagents_ft,label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
-		////	    					sep,label0, ktransformCheckbox, viabledpCheckbox,agentKStateCheckbox,entropyBeliefUncertaintyCheckbox,sep2,
-		////	    					"","", label2, "Max. length of path",maxPathLength_cb,
-		////	    					"Max. no of paths",max_No_path_Analysis_cb,"limited path analysis(set pathsat threshold)",satTreshold_cb, unlimitedps_cb,
-		////	    					sep3,label3,request_cb,consent_cb,notice_cb,label01, networkMutationMode_cb};
-		//	    
-		////	    Object[] message = {noagents_l,nagents_ft,label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
-		////				sep,label0, ktransformCheckbox, viabledpCheckbox,agentKStateCheckbox,entropyBeliefUncertaintyCheckbox,sep2,
-		////				"","", label2, "Max. length of path",maxPathLength_cb,
-		////				"Max. no of paths",max_No_path_Analysis_cb,"limited path analysis(set pathsat threshold)",satTreshold_cb, unlimitedps_cb,
-		////				sep4, labelStragegy,minimum_rb,maximum_rb,average_rb,sep3,label3,request_cb,consent_cb,notice_cb,label01, networkMutationMode_cb};	  
-		//	    
-		////	    Object[] message = {noagents_l,nagents_ft,label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,
-		////				sep,label0, ktransformCheckbox, viabledpCheckbox,agentKStateCheckbox,entropyBeliefUncertaintyCheckbox,sep2,
-		////				"","", label2, "Max. length of path",maxPathLength_cb,
-		////				"Max. no of paths",max_No_path_Analysis_cb,"limited path analysis(set pathsat threshold)",satTreshold_cb, unlimitedps_cb,
-		////				sep4, labelStragegy,minimum_rb,maximum_rb,average_rb,sep3,label01, networkMutationMode_cb};	
-		//	    
-		////	    Object[] message = {noagents_l,nagents_ft,label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
-		////				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
-		////				"","", label2, "Max. no objects on a path",maxPathLength_cb,
-		////				"Max. no of paths",max_No_path_Analysis_cb,"limited path analysis(set pathsat threshold)",satTreshold_cb, unlimitedps_cb,
-		////				sep4, labelStragegy,minimum_rb,maximum_rb,average_rb,sep3,tradeoff_l,tradeofftf,label01, networkMutationMode_cb};	
-		//	    	    
-		////	    Object[] message = {label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,ck_rb,uncertainty_rb,
-		////				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
-		////				"","", label2, "Max. # of objects on a path",maxPathLength_cb,tradeoff_l,tradeofftf};	
-		//	    Object[] message = {label, labeltype, roles_rb,instance_rb, labelmode,pick_rb,entropy_rb,uncertainty_rb,labelcollective,nonek_rb,ck_rb,egk_rb,sgk_rb,bpk_rb,dgk_rb,
-		//				sep,label0, ktransformCheckbox,agentKStateCheckbox,sep2,
-		//				"","", label2, "Max. # of objects on a path",maxPathLength_cb,decisioncategory_l,decisioncategories_cb};	
-		//	    
-		//	    JOptionPane.showOptionDialog(iframeNet,message,"PSat configuration.", JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
-		//	    
-		//	    
-		//	    
-		//	    cok_rb.add(ck_rb);
-		//        cok_rb.add(egk_rb);
-		//        cok_rb.add(sgk_rb);
-		//        cok_rb.add(bpk_rb);
-		//        cok_rb.add(dgk_rb);
-		//        
-		//	    
-		//	    
-		////	   int option= JOptionPane.showOptionDialog(iframeNet,message,"PSat configuration.", JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION, null, new Object[]{"cancel", "ok"}, null);
-		////	   if(option==0){
-		////		   
-		////	   }
-		////	   else{
-		////		   String no_agents_s = nagents_ft.getText();
-		////		   if ((no_agents_s != null) && (no_agents_s.length() > 0) && Display.isNumeric(no_agents_s)) {
-		////				Display.instance.no_agents = new Integer(no_agents_s);	
-		////				PSatAPI.netSerialiseConfigInstance();
-		////			}
-		////			else{
-		////				JOptionPane.showMessageDialog(iframeNet,
-		////					    "# of nodes",
-		////					    "Error",
-		////					    JOptionPane.ERROR_MESSAGE);
-		////			}
-		////		   
-		////		   String trafeoff_s = tradeofftf.getText();
-		////			if ((trafeoff_s != null) && (trafeoff_s.length() > 0) && Display.isNumeric(trafeoff_s)) {
-		////				if(new Double(trafeoff_s) >1){
-		////					JOptionPane.showMessageDialog(iframeNet,
-		////							"#number <=1 expected",
-		////						    "Error",
-		////						    JOptionPane.ERROR_MESSAGE);
-		////				}
-		////				else{
-		////					if(new Double(trafeoff_s) <=0.01){
-		////						Display.instance.costTradeoff = 0.01;
-		////					}
-		////					else{
-		////						Display.instance.costTradeoff = new Double(trafeoff_s);							
-		////					}
-		////					PSatAPI.netSerialiseConfigInstance();
-		////				}					
-		////			}
-		////			else{
-		////				JOptionPane.showMessageDialog(iframeNet,
-		////						"#number <=1 expected",
-		////					    "Error",
-		////					    JOptionPane.ERROR_MESSAGE);
-		////			}	
-		////	   }
 	}
 
 	public static boolean configPercentagePossibleWorldsAndNoAgentsRangeDisplay(){

@@ -33,7 +33,7 @@ public class AssertionsFactory implements Serializable{
 			PSatAPI.instance.agent = AgentFactory.getAgent(PSatAPI.instance.agentName);
 			done = true;
 		}
-		Config.serialiseServerConfigInstance();
+		Config.serialiseConfigInstance();
 
 		return done;
 	}

@@ -164,8 +164,8 @@ public class MemoryFactory {
 //				response_info = "@source="+instance.sourceAgentName+", target="+instance.targetAgentName+
 //						" and "+instance.listPathsData.length+" paths generated, then sat(pr) instance affects "+sinstance.validAgents.length+
 //						" objects and covers "+coverage+"% of network";
-				response_info = "@source="+PSatAPI.instance.sourceAgentName+", target="+PSatAPI.instance.targetAgentName+
-						" and "+PSatAPI.instance.listPathsData.length+" paths generated";
+				response_info = "@source="+PSatAPI.instance.sourceAgentName+", @target="+PSatAPI.instance.targetAgentName+
+						" and "+PSatAPI.instance.listPathsData.length+" path(s) generated";
 			}
 			Display.updateLogPage(response_info, false);
 			Display.updateProgressComponent(-1, "");
@@ -203,7 +203,7 @@ public class MemoryFactory {
 			}
 		}
 		PSatAPI.instance.busy = false;
-		Config.serialiseConfigInstance(PSatAPI.instance.sessionid);
+		Config.serialiseConfigInstance();
 		Display.updateProgressComponent(100, "");
 		PSatAPI.instance.busy = false;
 		
@@ -211,8 +211,8 @@ public class MemoryFactory {
 		return done;
 	}
 	
-	public static String [] getMemoryStorePaths(String agentName, String sessionid){
-		String folderName2 = PSatAPI.datastore_file_path+"/"+sessionid+"/memory/"+agentName;
+	public static String [] getMemoryStorePaths(String agentName){
+		String folderName2 = PSatAPI.datastore_file_path+"/"+PSatAPI.instance.sessionid+"/memory/"+agentName;
 		File folder2 = new File(folderName2);
 		String [] memoryStorePaths = new String[0];
 		if(folder2.listFiles() != null){
@@ -567,7 +567,7 @@ public class MemoryFactory {
 	}
 	
 	public static void dumpMemoryStoreOnDisplay(String agentName, double pathsat){
-		String [] partialPaths = getMemoryStorePaths(agentName, PSatAPI.instance.sessionid);
+		String [] partialPaths = getMemoryStorePaths(agentName);
 		
 		for(String partialPath: partialPaths){
 			String folderName2 = PSatAPI.datastore_file_path+"/"+PSatAPI.instance.sessionid+"/memory/"+agentName+"/"+partialPath;
@@ -589,8 +589,8 @@ public class MemoryFactory {
 //		Display.updateAssertionsPage(agentName, "privacy requirement Roles");
 	}
 	
-	public static String [] getAssertionsStorePaths(String agentName, String sessionid){
-		String folderName2 = PSatAPI.datastore_file_path+"/"+sessionid+"/assertions/"+agentName;
+	public static String [] getAssertionsStorePaths(String agentName){
+		String folderName2 = PSatAPI.datastore_file_path+"/"+PSatAPI.instance.sessionid+"/assertions/"+agentName;
 		File folder2 = new File(folderName2);
 		String [] memoryStorePaths = new String[0];
 		if(folder2.listFiles() != null){

@@ -34,8 +34,6 @@ public class PSatAPI {
 	public static HashMap<World, ArrayList<World>> higherOrderKs = new HashMap<World, ArrayList<World>>();
 	public static boolean forcenewsession;
 	
-	static String sendersSessionId = Display.hostname;
-
 	public static void logHighOrderImplications(){
 				
 		for (Map.Entry<World, ArrayList<World>> entry : higherOrderKs.entrySet()) {
@@ -186,7 +184,7 @@ public class PSatAPI {
 		instance.sessionid = tsessionid;
 		instance.satSerializer = new SatSerializer();
 	
-		Config.serialiseServerConfigInstance();
+		Config.serialiseConfigInstance();
 		
 	}
 	
@@ -245,7 +243,7 @@ public class PSatAPI {
 		boolean fin = AgentFactory.autoGenAgents();
 
 		if(fin){
-			Config.serialiseServerConfigInstance();						
+			Config.serialiseConfigInstance();						
 		}
 		return fin;
 	}
@@ -256,7 +254,7 @@ public class PSatAPI {
 	}
 	
 	public static void netSerialiseConfigInstance(){
-		Config.serialiseConfigInstance(instance.sessionid);
+		Config.serialiseConfigInstance();
 
 	}
 		
@@ -265,7 +263,7 @@ public class PSatAPI {
 	}
 	
 	public static boolean netEmptySerialisedContent(){
-		boolean fin = Config.emptySerialisedContent(sendersSessionId);
+		boolean fin = Config.emptySerialisedContent();
 
 		return fin;     
 	}
@@ -304,7 +302,7 @@ public class PSatAPI {
 		boolean done = MemoryFactory.newMemoryStore(agentname);
 		
 		if(done){
-			Config.serialiseServerConfigInstance();						
+			Config.serialiseConfigInstance();						
 		}
 	}
 	
@@ -313,27 +311,27 @@ public class PSatAPI {
 		boolean done = MemoryFactory.newMemoryStore();
 		
 		if(done){
-			Config.serialiseServerConfigInstance();
+			Config.serialiseConfigInstance();
 		}
 	}
 	
 	
 	
 	public static String [] netGetAssertionsStorePaths(String agentName){
-		String[] memorystorepaths = MemoryFactory.getAssertionsStorePaths(agentName, sendersSessionId);
+		String[] memorystorepaths = MemoryFactory.getAssertionsStorePaths(agentName);
 		return memorystorepaths;
 		
 	}
 	
 	public static String [] netGetMemoryStorePaths(String agentName){
-		String[] memorystorepaths = MemoryFactory.getMemoryStorePaths(agentName, sendersSessionId);
+		String[] memorystorepaths = MemoryFactory.getMemoryStorePaths(agentName);
 		return memorystorepaths;
 	}
 	
 	
 	public static boolean netAddAgent(Agent agent1){
 		boolean done=AgentFactory.addAgent(agent1);
-		Config.serialiseServerConfigInstance();
+		Config.serialiseConfigInstance();
 		
 		return done;    
 	}
@@ -343,7 +341,7 @@ public class PSatAPI {
 		boolean done = false;
 		if(PSatAPI.instance.kgraph == null){
 			done = AgentFactory.initGraph();
-			Config.serialiseServerConfigInstance();
+			Config.serialiseConfigInstance();
 		}													
 		
 		return done;		       
@@ -359,7 +357,7 @@ public class PSatAPI {
 	
 	public static boolean netPrivacyRequirementRoles(String agentname){
 		boolean done = MemoryFactory.privacyRequirementRoles(agentname);
-		Config.serialiseServerConfigInstance();
+		Config.serialiseConfigInstance();
 
 		if(!done){
 			Display.updateLogPage("PSatClient.netPrivacyRequirementRoles():failed", true);

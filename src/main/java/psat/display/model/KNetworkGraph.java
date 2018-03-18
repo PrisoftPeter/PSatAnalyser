@@ -742,7 +742,7 @@ public class KNetworkGraph implements Serializable{
 
 		}
 
-		Config.serialiseServerConfigInstance();
+		Config.serialiseConfigInstance();
 		writeGraphGML();
 	}
 
@@ -796,7 +796,7 @@ public class KNetworkGraph implements Serializable{
 			if(seq.length()>0){
 				PSatAPI.instance.selectedPath = seq;
 				MemoryFactory.seq=seq;
-				Config.serialiseConfigInstance(PSatAPI.instance.sessionid);
+				Config.serialiseConfigInstance();
 			}
 		}
 		writeGraphGML();
@@ -866,7 +866,7 @@ public class KNetworkGraph implements Serializable{
 
 		PSatAPI.instance.kgraph.createGraph();
 
-		Config.serialiseServerConfigInstance();			
+		Config.serialiseConfigInstance();			
 
 
 		for(KNode node:networkNodes){
@@ -1037,7 +1037,7 @@ public class KNetworkGraph implements Serializable{
 					for(int i=0;i<PSatAPI.instance.agents.length;i++){
 						AgentFactory.writeAgent(PSatAPI.instance.agents[i]);
 					}				
-					Config.serialiseServerConfigInstance();
+					Config.serialiseConfigInstance();
 
 
 				} catch (FileNotFoundException e) {
@@ -1653,7 +1653,7 @@ public class KNetworkGraph implements Serializable{
 						}
 						
 						PSatAPI.instance.g.removeEdge(klink);
-						Config.serialiseServerConfigInstance();
+						Config.serialiseConfigInstance();
 						
 						Display.repaintListbox();
 						
@@ -1688,7 +1688,7 @@ public class KNetworkGraph implements Serializable{
 					
 					PSatAPI.instance.g.addEdge(new EdgeFactory().create(), source, target);
 //					boolean successful = instance.g.addEdge(new EdgeFactory().create(), source, target);
-					Config.serialiseServerConfigInstance();
+					Config.serialiseConfigInstance();
 				}
 			}
 

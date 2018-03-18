@@ -18,7 +18,9 @@ import psat.behaviour.transactions.Notice2SuTransaction;
 import psat.behaviour.transactions.RequestTransaction;
 import psat.behaviour.transactions.Sent1Transaction;
 import psat.behaviour.transactions.Sent2Transaction;
+import psat.display.model.FeasibilityView;
 import psat.display.model.KNetworkGraph;
+import psat.display.model.LayeredBarChart;
 import psat.knowledge.MemoryFactory;
 import psat.knowledge.worlds.World;
 import psat.util.Agent;
@@ -28,7 +30,6 @@ import psat.util.AssertionRole;
 import psat.util.Attribute;
 import psat.util.CollectiveStrategy;
 import psat.util.CombinationStrategy;
-import psat.util.Config;
 import psat.util.ConfigInstance;
 import psat.util.PSatTableResult;
 import psat.util.RowType;
@@ -161,7 +162,10 @@ public class InformationFlows {
 			PSatAPI.instance.completness = 100;
 			Display.updateProgressComponent(new Double(PSatAPI.instance.completness).intValue(), ConfigInstance.df.format(PSatAPI.instance.completness)+"%");
 						
-
+			PSatAPI.instance.runningTraining = false;
+			LayeredBarChart lbc = new LayeredBarChart();
+			Display.window.createLayeredDecisionBarViewPage(lbc);
+			FeasibilityView.ptrs = new ArrayList<PSatTableResult>();
 		}
 		
 	}
@@ -260,10 +264,8 @@ public class InformationFlows {
 				String protocol[] = protocolDesc.split(",");
 				
 				for(int k=0;k<tempPathAgents.length-1;k++){
-					
-					ConfigInstance instancez = Config.deserialiseConfigInstance(sessionid);
-					
-					if(instancez.stop){
+										
+					if(PSatAPI.instance.stop){
 						break;
 					}
 					
@@ -307,8 +309,7 @@ public class InformationFlows {
 			localcount = localcount+1;
 		}
 		else{
-			ConfigInstance instancex = Config.deserialiseConfigInstance(sessionid);
-			if(instancex !=null && instancex.stop){
+			if(PSatAPI.instance !=null && PSatAPI.instance.stop){
 				return;
 			}
 			
@@ -316,9 +317,7 @@ public class InformationFlows {
 		}
 		
 		
-		PSatAPI.instance.runningTraining = true;
-		Config.serialiseConfigInstance(sessionid);
-		
+		PSatAPI.instance.runningTraining = true;	
 				
 		if(inputs.length != pathAgents.length){
 			String[] tinputs = new String[pathAgents.length];

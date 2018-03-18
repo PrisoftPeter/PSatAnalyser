@@ -34,21 +34,24 @@ public class PathsInGraph {
 		
 		KNode source = null;
 		KNode target = null;
-		Collection<KNode> vertices = PSatAPI.instance.g.getVertices();
-		
-		for(KNode vertice:vertices){
-			if(vertice !=null){
-				if(vertice.toString().equals(PSatAPI.instance.sourceAgentName)){
-					source = vertice;
-				}
-				else if(vertice.toString().equals(PSatAPI.instance.targetAgentName)){
-					target = vertice;
-				}
-				if(source != null && target != null){
-					break;
-				}	
-			}			
+		if(PSatAPI.instance.g !=null) {
+			Collection<KNode> vertices = PSatAPI.instance.g.getVertices();
+			
+			for(KNode vertice:vertices){
+				if(vertice !=null){
+					if(vertice.toString().equals(PSatAPI.instance.sourceAgentName)){
+						source = vertice;
+					}
+					else if(vertice.toString().equals(PSatAPI.instance.targetAgentName)){
+						target = vertice;
+					}
+					if(source != null && target != null){
+						break;
+					}	
+				}			
+			}	
 		}
+		
 		
 		DFS<Integer> alg = new DFS(PSatAPI.instance.g,source,target, PSatAPI.instance.max_analysis_path_length);
 		alg.Initialize();

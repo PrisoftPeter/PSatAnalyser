@@ -324,7 +324,7 @@ public class AgentFactory  implements Serializable{
 //		if(PSatAPI.instance.agent.getAgentName().equals(agent.getAgentName())){
 //			PSatAPI.instance.agent = agent;
 //		}
-		Config.serialiseServerConfigInstance();
+		Config.serialiseConfigInstance();
 		
 		boolean successful = false;
 		try{
