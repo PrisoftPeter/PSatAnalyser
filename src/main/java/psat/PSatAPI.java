@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
@@ -33,6 +34,7 @@ public class PSatAPI {
 	public static boolean roleAssertionsPrinted;
 	public static HashMap<World, ArrayList<World>> higherOrderKs = new HashMap<World, ArrayList<World>>();
 	public static boolean forcenewsession;
+	public static Agent currentAssertionOwner;
 	
 	public static void logHighOrderImplications(){
 				
@@ -384,5 +386,111 @@ public class PSatAPI {
 		double acc = GraphAnalyser.diameter(PSatAPI.instance.g);
 
 		return acc;     
+	}
+	
+	public static void addAssertionOwnership(String assertion){
+		HashSet<String> owners = null;
+
+		for (Map.Entry<String, HashSet<String>> entry : instance.assertionOwners.entrySet()) {
+		    String assertion_temp = entry.getKey();
+		    HashSet<String> owners_temp = entry.getValue();
+		    if(assertion_temp.equals(assertion)){
+		    	owners = owners_temp;
+		    	break;
+		    }
+		}
+		if(owners == null){
+			owners = new HashSet<String>();
+			owners.add(currentAssertionOwner.getAgentName());
+			instance.assertionOwners.put(assertion, owners);
+		}
+		else{
+			owners.add(currentAssertionOwner.getAgentName());
+			instance.assertionOwners.put(assertion, owners);
+
+		}
+	}
+	
+	public static void removeAssertionOwnership(String assertion){
+		HashSet<String> owners = null;
+		
+		for (Map.Entry<String, HashSet<String>> entry : instance.assertionOwners.entrySet()) {
+		    String assertion_temp = entry.getKey();
+		    HashSet<String> owners_temp = entry.getValue();
+		    if(assertion_temp.equals(assertion)){
+		    	
+		    	for(String owner:owners_temp){
+		    		if(owner.equals(currentAssertionOwner)){
+		    			owners = owners_temp;
+		    			break;
+		    		}
+		    	}
+		    }
+		}
+		if(owners != null){
+			owners.remove(currentAssertionOwner);
+			if(owners.size() ==0){
+				instance.assertionOwners.remove(assertion);
+			}
+			else{
+				instance.assertionOwners.put(assertion, owners);
+			}
+
+		}
+	}
+	
+	public static void removeAssertionOwnership(String assertion, String ownerName){
+		HashSet<String> owners = null;
+		
+		for (Map.Entry<String, HashSet<String>> entry : instance.assertionOwners.entrySet()) {
+		    String assertion_temp = entry.getKey();
+		    HashSet<String> owners_temp = entry.getValue();
+		    if(assertion_temp.equals(assertion)){
+		    	
+		    	for(String owner:owners_temp){
+		    		if(owner.equals(ownerName)){
+		    			owners = owners_temp;
+		    			break;
+		    		}
+		    	}
+		    }
+		}
+		if(owners != null){
+			owners.remove(ownerName);
+			if(owners.size() ==0){
+				instance.assertionOwners.remove(assertion);
+			}
+			else{
+				instance.assertionOwners.put(assertion, owners);
+			}
+
+		}
+	}
+	
+	public static void updateAssertionOwnersWithVerificationOutcome(String assertion, boolean outcome){
+		HashSet<String> owners = getAssertionOwners(assertion);
+		
+		for(String ownerName:owners){
+			Agent owner = AgentFactory.getAgent(ownerName);
+			owner.updateOwnedAssertion(assertion, outcome);
+		}
+	}
+	
+	public static HashSet<String> getAssertionOwners(String assertion){
+		HashSet<String> owners = null;
+		
+		for (Map.Entry<String, HashSet<String>> entry : instance.assertionOwners.entrySet()) {
+		    String assertion_temp = entry.getKey();
+		    HashSet<String> owners_temp = entry.getValue();
+		    if(assertion_temp.equals(assertion)){
+    			owners = owners_temp;
+    			break;
+		    }
+		}
+		return owners;
+	}
+	
+	public static void resetAssertionOwnership(){
+		instance.assertionOwners = new HashMap<String, HashSet<String>>();
 	}
 }

@@ -1583,6 +1583,7 @@ public class MemoryFactory {
 				for(World req:applicableReqs){		
 					boolean contained = m.contains(req.toString());
 					if(req !=null && contained){
+						PSatAPI.updateAssertionOwnersWithVerificationOutcome(req.toString(), contained);
 						f_in_p = f_in_p+1;				
 					}				
 				}

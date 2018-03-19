@@ -22,6 +22,7 @@ import psat.Display;
 import psat.PSatAPI;
 import psat.knowledge.MemoryFactory;
 import psat.util.Agent;
+import psat.util.AgentFactory;
 import psat.util.KNode;
 
 public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin implements MouseListener {
@@ -247,6 +248,20 @@ public class PopupGraphMousePlugin extends AbstractPopupGraphMousePlugin impleme
            			}           			
            		}
        			paMenu.add(instanceMenu); 
+
+       			ImageIcon assertionOwnerIcon = new ImageIcon(getClass().getResource("/instance.png"));
+       			JMenuItem assertionOwnerMenu = new JMenuItem("set as assertion owner",assertionOwnerIcon);       			
+       			assertionOwnerMenu.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						if(PSatAPI.instance.busy){
+							Display.updateLogPage("...", true);
+							return;
+						}
+						PSatAPI.currentAssertionOwner =  AgentFactory.getAgent(pickV.id);
+					}            		
+           		});
+       			paMenu.add(assertionOwnerMenu);
+       			
            		
 //           		JLabel l4 = new JLabel("Instances");
 //           		l4.setIcon(confIcon);

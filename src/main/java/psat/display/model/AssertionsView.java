@@ -33,6 +33,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.HashSet;
 import java.util.Vector;
 
 public class AssertionsView extends Container {
@@ -431,7 +432,7 @@ public class AssertionsView extends Container {
 			table.getTableHeader().setFont(new Font("Verdana", Font.BOLD, 10));
 			table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 			TableColumn column = null;
-			for (int n = 0; n < 5; n++) {
+			for (int n = 0; n < 6; n++) {
 				column = table.getColumnModel().getColumn(n);
 				if (n == 0) {
 					column.setMaxWidth(35);
@@ -448,6 +449,9 @@ public class AssertionsView extends Container {
 					column.setMaxWidth(60);
 				}
 				if (n == 4){
+					column.setMaxWidth(45);
+				}
+				if (n == 5){
 					column.setMinWidth(300);
 					//column.setMaxWidth(462);
 				}
@@ -528,39 +532,6 @@ public class AssertionsView extends Container {
 				slider_uncertainty.setValue(new Double(ul*100).intValue());
 			}
 			
-			// lpanel.add(slider_uncertainty); // 4 lpanel
-
-			// JLabel b_label = new JLabel("<html><body bgcolor='#E6E6FA'><font size='2'>Operands</font></body></html>");
-			// b_label.setBackground(Color.white);
-			// lpanel.add(b_label); // 5 lpanel
-			// lpanel.setBackground(Color.white);
-
-			// if(kl !=null){
-			// double beliefLevel = kl.getBeliefLevel();
-			// double bl = 0;
-			// bl = beliefLevel; 
-			// slider_certainty = new JSlider(JSlider.HORIZONTAL, 0, 100, new Double(bl).intValue());
-			// }
-			// else{
-			// slider_certainty = new JSlider(JSlider.HORIZONTAL, 0, 100, new Double(0).intValue());
-			// }
-			// slider_certainty.setMajorTickSpacing(50);
-			// slider_certainty.setPaintTicks(true);
-			// slider_certainty.setLabelTable( labelTable );
-			// slider_certainty.setPaintLabels(true);  
-			// slider_certainty.setBackground(Color.white);
-			// slider_certainty.setToolTipText("<html><font size='2'>belief control</font></html>");
-			// slider_certainty.addChangeListener(new javax.swing.event.ChangeListener(){
-			// public void stateChanged(javax.swing.event.ChangeEvent ce){
-			//
-			// JSlider source = (JSlider) ce.getSource();
-			// if (!source.getValueIsAdjusting()) {
-			// Display.updateProgressComponent(-1, "");
-			// updateUncertaintyBeliefLevels();
-			// Display.updateProgressComponent(100, "");
-			// }
-			// }
-			// });
 
 			JPanel oopanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			oopanel.setBackground(Color.white);
@@ -958,7 +929,7 @@ public class AssertionsView extends Container {
 		private static final long serialVersionUID = -4775356027813366490L;
 
 		public AssertionsTableModel() {
-			super(new String[]{"No", "", "<html>Assertion(<i>A<i/>)</html>","<html>Goal(<i>v<sub>A</sub><i/>)</html>","<html>Description</html>"}, 0);
+			super(new String[]{"No", "", "<html>Assertion(<i>A<i/>)</html>","#Owners", "<html>Goal(<i>v<sub>A</sub><i/>)</html>","<html>Description</html>"}, 0);
 		}
 
 		@SuppressWarnings("rawtypes")
@@ -983,9 +954,12 @@ public class AssertionsView extends Container {
 				clazz = String.class;
 				break;
 			case 3:
-				clazz = Double.class;
+				clazz = Integer.class;
 				break;
 			case 4:
+				clazz = Double.class;
+				break;
+			case 5:
 				clazz = String.class;
 			}
 			return clazz;
@@ -998,7 +972,7 @@ public class AssertionsView extends Container {
 	             return false;
 	           case 2:
 	        	   return false;
-	           case 4:
+	           case 3:
 	        	   return false;
 	           default: 
 	        	   return true;
@@ -1020,7 +994,7 @@ public class AssertionsView extends Container {
 				PSatAPI.instance.knowledgeBase = KnowledgeBase.RECIPIENT;
 			}
 			
-			if(aValue instanceof Double && column ==3){
+			if(aValue instanceof Double && column ==4){
 				double v = (double)aValue;
 				if(v >=0 && v <=1){
 					Vector rowData = (Vector)getDataVector().get(row);					
@@ -1049,7 +1023,7 @@ public class AssertionsView extends Container {
 					PSatAPI.netWriteAgent(agent);
 					agent = PSatAPI.netGetAgent(agentName);
 										
-					rowData.set(3, (double)aValue);
+					rowData.set(4, (double)aValue);
 					fireTableCellUpdated(row, column);
 				}
 				else{
@@ -1060,11 +1034,11 @@ public class AssertionsView extends Container {
 				boolean b = new Boolean(aValue.toString()).booleanValue();
 
 				Vector rowData = (Vector)getDataVector().get(row);
-				double goal_v =  (Double)rowData.get(3);
+				double goal_v =  (Double)rowData.get(4);
 				
-				if(!PSatAPI.instance.is_role_run){
-					String assertionDesc = (String)rowData.get(2);
-					
+				String assertionDesc = (String)rowData.get(2);
+
+				if(!PSatAPI.instance.is_role_run){					
 					if(assertionDesc.contains("(")){
 						String [] h3 = assertionDesc.split("\\(");
 						String [] h2 = h3[1].split("\\)");
@@ -1115,7 +1089,16 @@ public class AssertionsView extends Container {
 				PSatAPI.netAddAgent(agent);
 				PSatAPI.netWriteAgent(agent);
 				agent = PSatAPI.netGetAgent(agentName);
+				
+				HashSet<String> assertionOwners = PSatAPI.getAssertionOwners(assertionDesc);
+				int noAssertionOwnersNew = 0;
+				if(assertionOwners != null){
+					noAssertionOwnersNew = assertionOwners.size();
+				}		
+				
 				rowData.set(1, (Boolean)aValue);
+				rowData.set(3, (int)noAssertionOwnersNew);
+
 				fireTableCellUpdated(row, column);
 
 				if(PSatAPI.instance.k >0){

@@ -1,6 +1,10 @@
 package psat.util;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import psat.PSatAPI;
 
 public class Agent implements Serializable{
 	private static final long serialVersionUID = -1905130217368602591L;
@@ -12,6 +16,9 @@ public class Agent implements Serializable{
 	private String [] createdMemoryStores;
 
 	private AssertionInstance [] assertionInstances;
+	
+	private Map<AssertionInstance, Boolean> ownedAssertions;
+	
 	private double desiredEntropy;
 	private double desiredCommonKnowledge;
 	
@@ -23,6 +30,7 @@ public class Agent implements Serializable{
 		this.agentName = agentName;
 		this.globalPrivacyGoal_v = 1;
 		this.setDesiredEntropy(0.0);
+		ownedAssertions = new HashMap<AssertionInstance, Boolean>();
 		
 		setOtherKnownAgentNames(new String[0]);
 		setPersonalAttributes(new Attribute[0]);
@@ -32,6 +40,68 @@ public class Agent implements Serializable{
 		setCreatedMemoryStores(new String[0]);
 //		setSubjectSafeZones(new SafeZone[0]);
 		setKnowledgeLevels(new KnowledgeLevel[0]);
+	}
+	
+	public Map<AssertionInstance, Boolean> getOwnedAssertions(){
+		return ownedAssertions;
+	}
+	
+	public void addOwnedAssertion(AssertionInstance a){
+		ownedAssertions.put(a, false);
+	}
+	
+	public void updateOwnedAssertion(String req, boolean outcome){
+		boolean aexist = false;
+		AssertionInstance a = null;
+		for (Map.Entry<AssertionInstance, Boolean> entry : ownedAssertions.entrySet()) {
+		    AssertionInstance key = entry.getKey();
+		    //Boolean value = entry.getValue();
+		    if(key.getAssertion().equals(req)){
+		    	aexist = true;
+		    	a = key;
+		    	break;
+		    }
+		}
+		if(aexist){
+			ownedAssertions.put(a, outcome);
+		}
+	}
+	
+	public void removeOwnedAssertion(String req){
+		boolean aexist = false;
+		AssertionInstance a = null;
+		for (Map.Entry<AssertionInstance, Boolean> entry : ownedAssertions.entrySet()) {
+		    AssertionInstance key = entry.getKey();
+		    //Boolean value = entry.getValue();
+		    if(key.getAssertion().equals(req)){
+		    	aexist = true;
+		    	a = key;
+		    	break;
+		    }
+		}
+		if(aexist){
+			ownedAssertions.remove(a);
+		}
+	}
+	
+	public void clearOwnedAssertions(){
+		ownedAssertions.clear();
+	}
+	
+	public double getProportionOfOwnedAssertionsSatisfied(){
+		double noOfSatisfiedAssertions =0;
+		
+		for (Map.Entry<AssertionInstance, Boolean> entry : ownedAssertions.entrySet()) {
+		   //AssertionInstance key = entry.getKey();
+		   Boolean satisfied = entry.getValue();
+		   if(satisfied){
+			   noOfSatisfiedAssertions = noOfSatisfiedAssertions+1;  
+		   }
+		}
+		
+		double proportionOfOwnedAssertionsSatisfied = noOfSatisfiedAssertions / (double)ownedAssertions.size();
+		
+		return proportionOfOwnedAssertionsSatisfied;
 	}
 
 	public void setKnowledgeLevels(KnowledgeLevel[] knowledgeLevels) {
@@ -191,6 +261,10 @@ public class Agent implements Serializable{
 //	}
 	
 	public void resetAssertionInstances() {
+		for(AssertionInstance assertion:assertionInstances){
+			PSatAPI.removeAssertionOwnership(assertion.getAssertion(), agentName);//for conflict detection
+			removeOwnedAssertion(assertion.getAssertion());
+		}		
 		this.assertionInstances = new AssertionInstance[0];
 	}
 	
@@ -245,30 +319,14 @@ public class Agent implements Serializable{
 			}
 			temp[assertionInstances.length] = new AssertionInstance(world_text, goalv,cs);		
 			assertionInstances = temp;	
+
+			PSatAPI.addAssertionOwnership(world_text);//for conflict detection	
+			addOwnedAssertion(temp[assertionInstances.length-1]);
+
 		}		
 		assertionInstances = ArrayCleaner.clean(assertionInstances);
 	}
 	
-//	public void addAssertionRole(String world_text){
-//		ArrayCleaner.clean(assertionRoles);
-//		boolean exist = false;
-//		for(String w_s: assertionRoles){
-//			if(w_s.equals(world_text)){
-//				exist = true;
-//				break;
-//			}
-//		}
-//
-//		if(exist){
-//			return;
-//		}
-//		String [] temp = new String[assertionRoles.length+1];
-//		for(int i=0;i<assertionRoles.length;i++){
-//			temp[i] = assertionRoles[i];
-//		}
-//		temp[assertionRoles.length] = world_text;		
-//		assertionRoles = temp;	
-//	}
 
 	public void removeAssertionInstance(String world_text){
 		assertionInstances= ArrayCleaner.clean(assertionInstances);
@@ -290,111 +348,12 @@ public class Agent implements Serializable{
 				}				
 			}
 			assertionInstances = temp;
+			
+			PSatAPI.removeAssertionOwnership(world_text, agentName);//for conflict detection			
+			removeOwnedAssertion(world_text);
 		}
 	}
-	
-//	public void removeAssertionRole(String world_text){
-//		ArrayCleaner.clean(assertionRoles);
-//		boolean contained = false;
-//		for(String w_s: assertionRoles){
-//			if(w_s.equals(world_text)){
-//				contained = true;
-//				break;
-//			}
-//		}
-//
-//		if(contained){
-//			int j=0;
-//			String [] temp = new String[assertionRoles.length-1];
-//			for(int i=0;i<assertionRoles.length;i++){
-//				if(!assertionRoles[i].equals(world_text)){
-//					temp[j] = assertionRoles[i];
-//					j = j+1;
-//				}				
-//			}
-//			assertionRoles = temp;
-//		}
-//	}
-	
-//	public void setSubjectSafeZones(SafeZone [] subjectSafeZones) {
-//		this.subjectSafeZones = subjectSafeZones;
-//	}
-//	
-//	public SafeZone[] getSubjectSafeZones(){
-//		return subjectSafeZones;
-//	}
-//	
-//	public void addToSubjectSafeZones(SafeZone safezone){
-//		boolean exist = false;
-//		for(SafeZone sz: subjectSafeZones){
-//			if(safezone.subjectName.equals(sz.subjectName)){
-//				exist = true;
-//				break;
-//			}			
-//		}
-//
-//		int len = subjectSafeZones.length;
-//		if(exist){
-//			SafeZone []temp = new SafeZone[len];
-//			for(int i=0;i<len;i++){
-//				if(safezone.subjectName.equals(subjectSafeZones[i].subjectName)){
-//					temp[i]= safezone;
-//				}
-//				else{
-//					temp[i]= subjectSafeZones[i];	
-//				}
-//				
-//			}
-//			subjectSafeZones = temp;
-//		}
-//		else{
-//			SafeZone []temp = new SafeZone[len+1];
-//			for(int i=0;i<len;i++){
-//				temp[i]= subjectSafeZones[i];				
-//			}
-//			temp[len] = safezone;
-//			
-//			subjectSafeZones = temp;
-//		}
-//
-//	}
-//	
-//	public void removeFromSubjectSafeZones(String subjectName){
-//		boolean exist = false;
-//		for(SafeZone sz: subjectSafeZones){
-//			if(sz.subjectName.equals(subjectName)){
-//				exist = true;
-//				break;
-//			}			
-//		}
-//
-//		int len = subjectSafeZones.length;
-//		if(exist){
-//			SafeZone []temp = new SafeZone[len-1];
-//			int j=0;
-//			for(int i=0;i<len;i++){
-//				if(!subjectSafeZones[i].subjectName.equals(subjectName)){
-//					temp[j]= subjectSafeZones[i];
-//					j = j+1;
-//				}
-//			}
-//			subjectSafeZones = temp;
-//		}
-//	}
-//
-//	
-//	public SafeZone getSubjectSafeZone(String subjectName){
-//		SafeZone safezone = null;
-//		for(SafeZone sz: subjectSafeZones){
-//			if(sz.subjectName.equals(subjectName)){
-//				safezone = sz;
-//				break;
-//			}			
-//		}
-//		return safezone;
-//
-//	}
-	
+		
 	
 	public void setCreatedMemoryStores(String [] createdMemoryStores) {
 		this.createdMemoryStores = createdMemoryStores;

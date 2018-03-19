@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 import edu.uci.ics.jung.graph.UndirectedGraph;
@@ -163,6 +164,10 @@ public class ConfigInstance implements Serializable{
 	public File satAnalysisMeanStoreFile;
 	public File viableProtocolRatioAnalysisMeanStoreFile;
 	
+	
+	//assertions related for conflict analysis
+	public HashMap<String, HashSet<String>> assertionOwners = new HashMap<String, HashSet<String>>();
+
 
 //	//server specific variables
 //	public ServerSatSerializer serverSatSerializer;

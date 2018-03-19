@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Random;
 
@@ -133,7 +134,13 @@ public class AssertionsFactory implements Serializable{
 					}
 				}
 				
-				av.model.addRow(new Object[]{roleType,checked,genericFormula,goal_v,meaning});
+				HashSet<String> assertionOwners = PSatAPI.getAssertionOwners(genericFormula);
+				int noAssertionOwners = 0;
+				if(assertionOwners != null){
+					noAssertionOwners = assertionOwners.size();
+				}
+				
+				av.model.addRow(new Object[]{roleType,checked,genericFormula, noAssertionOwners, goal_v,meaning});
 				av.model.fireTableDataChanged();
 				Rectangle cellBounds = av.table.getCellRect(av.table.getRowCount() - 1, 0, true);
 				av.table.scrollRectToVisible(cellBounds);
@@ -180,8 +187,12 @@ public class AssertionsFactory implements Serializable{
 						checked = false;
 					}
 				}
-				
-				av.model.addRow(new Object[]{a_counter,checked,w, goal_v,meaning});
+				HashSet<String> assertionOwners = PSatAPI.getAssertionOwners(w.toString());
+				int noAssertionOwners = 0;
+				if(assertionOwners != null){
+					noAssertionOwners = assertionOwners.size();
+				}
+				av.model.addRow(new Object[]{a_counter,checked,w,noAssertionOwners, goal_v,meaning});
 				av.model.fireTableDataChanged();
 				Rectangle cellBounds = av.table.getCellRect(av.table.getRowCount() - 1, 0, true);
 				av.table.scrollRectToVisible(cellBounds);
