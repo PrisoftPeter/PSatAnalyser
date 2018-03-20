@@ -108,6 +108,7 @@ public class ProtocolView extends JPanel {
 //		scrollPane_1.setViewportView(viableKSTable);
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,panelaw1, panelaw2);
+		splitPane.setContinuousLayout(true);
 		add(splitPane, BorderLayout.CENTER);
 		
 	}

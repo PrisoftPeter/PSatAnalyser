@@ -1,11 +1,16 @@
 package psat.display.model;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,6 +20,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -56,6 +62,8 @@ public class AssertionsView extends Container {
 
 	private DecimalFormat df = new DecimalFormat("####0.00");
 
+	private JTextPane assertionOwnersEditor;
+	private JPanel assertionOwnersPanel;
 
 	/**
 	 * Create the panel.
@@ -67,7 +75,21 @@ public class AssertionsView extends Container {
 		setLayout(new BorderLayout(0, 0));
 		setBackground(Color.white);
 		agent = PSatAPI.netGetAgent(agentName);
+		
+		
+		JTabbedPane rightTabbedPane = new JTabbedPane();
+		JPanel splitleft = new JPanel();
+		JPanel splitright = new JPanel();
+		splitleft.setLayout(new BorderLayout(0,0));
+		splitright.setLayout(new BorderLayout(0,0));
 
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	    splitPane.setContinuousLayout(true);
+	    splitPane.setDividerLocation(700);
+	    splitPane.setLeftComponent(splitleft);
+//	    splitPane.setRightComponent(splitright);
+	    splitPane.setRightComponent(rightTabbedPane);
+	    
 		if(PSatAPI.instance.is_role_run){
 //			//set range of role
 //			Integer [] k = new Integer[Display.instance.max_analysis_path_length];
@@ -138,7 +160,7 @@ public class AssertionsView extends Container {
 		}
 		lpanel.setBackground(Color.white);
 
-		JLabel labelmode = new JLabel("KnowledgeBase: subject-su, sender-s, recipient-r");
+		JLabel labelmode = new JLabel("Principal: subject-su, sender-s, recipient-r");//KnowledgeBase
 		labelmode.setForeground(new Color(54,133,47));
 		labelmode.setBackground(Color.white);
 		if(!PSatAPI.instance.is_role_run && PSatAPI.instance.isModePick){
@@ -443,13 +465,13 @@ public class AssertionsView extends Container {
 				}
 				if (n == 2){
 					column.setMinWidth(192);
-					column.setMaxWidth(250);
+//					column.setMaxWidth(250);
 				}
 				if (n == 3){
 					column.setMaxWidth(60);
 				}
 				if (n == 4){
-					column.setMaxWidth(45);
+					column.setMaxWidth(60);
 				}
 				if (n == 5){
 					column.setMinWidth(300);
@@ -457,12 +479,12 @@ public class AssertionsView extends Container {
 				}
 			}
 
-			JScrollPane scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);			
+			JScrollPane scrollPane = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 //			JPanel tablePanel = new JPanel(new GridLayout());
 //			tablePanel.add(scrollPane);
 //			tablePanel.setBackground(Color.red);
 //			add(tablePanel);
-			add(scrollPane);
+			splitleft.add(scrollPane,BorderLayout.CENTER);
 
 		}
 		else if(PSatAPI.instance.isModeUncertainty){
@@ -769,23 +791,45 @@ public class AssertionsView extends Container {
 		else{
 			kblabel.setText(text);
 		}
+		
 
+//		if(PSatAPI.instance.isModeUncertainty || PSatAPI.instance.isModeEntropy){
+//			JLabel blank1 =new JLabel("      ");
+////			splitright.add(blank1);
+//		}
+		
+		assertionOwnersPanel = new JPanel();
+		assertionOwnersPanel.setLayout(new BorderLayout());
+		assertionOwnersPanel.setBackground(Color.white);
+		
+		assertionOwnersEditor = new JTextPane();
+		assertionOwnersEditor.setSize(300,390);
+		assertionOwnersEditor.setContentType("text/html");
+		assertionOwnersEditor.setEditable(false);
+		assertionOwnersEditor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+		assertionOwnersEditor.setFont(new Font("Segoe UI", Font.PLAIN, 11));		
+		assertionOwnersPanel.add(new JScrollPane(assertionOwnersEditor));
+		
+		rightTabbedPane.addTab("Privacy Requirement Owners", assertionOwnersPanel);
+
+		////
 		lpanel.add(kblabel);//lpanel 7
-		add(lpanel);
-
-		if(PSatAPI.instance.isModeUncertainty || PSatAPI.instance.isModeEntropy){
-			JLabel blank1 =new JLabel("       ");
-			add(blank1);
+		if(PSatAPI.instance.isModePick) {
+			rightTabbedPane.addTab("Principal Role Description", lpanel);
+		}
+		else {
+			splitleft.add(lpanel);			
 		}
 
-		//
-//		JLabel blank2 =new JLabel("        ");
-//		//
-//		add(blank2);
+
+		add(splitPane);
 
 		Display.updateProgressComponent(100, "");
 	}
 
+	public void updateAssertionOwnersEditor(String desc) {
+		//assertionOwnersEditor update.desc..
+	}
 
 
 	private void updateUncertaintyBeliefLevels(){

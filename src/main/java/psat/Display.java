@@ -1349,7 +1349,7 @@ public class Display extends JFrame {
 		netMemoryEditor.setContentType("text/html");
 		netMemoryEditor.setEditable(false);
 		netMemoryEditor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-		netMemoryEditor.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		netMemoryEditor.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		
 		clearpop = new JPopupMenu();
 		JMenuItem clearmi = new JMenuItem("Clear");
