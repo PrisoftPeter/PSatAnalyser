@@ -55,6 +55,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
@@ -1288,6 +1289,22 @@ public class Display extends JFrame {
 			});		 
 		}
 
+	}
+	
+	public void updateAssertionsOwnersEditor() {
+		ksView.clearAssertionOwnersEditor();
+		
+		ArrayList<String> aowners = PSatAPI.retrieveAssertionOwners();
+//		go through aowners and get his assertions as string
+//		
+//		for (Map.Entry<String, HashSet<String>> entry : instance.assertionOwners.entrySet()) {
+//		    String assertion_temp = entry.getKey();
+//		    HashSet<String> owners_temp = entry.getValue();
+//		    if(assertion_temp.equals(assertion)){
+//		    	owners = owners_temp;
+//		    	break;
+//		    }
+//		}
 	}
 
 

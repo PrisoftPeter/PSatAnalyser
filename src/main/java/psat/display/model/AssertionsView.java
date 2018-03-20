@@ -18,12 +18,16 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
 
 import psat.Display;
 import psat.PSatAPI;
@@ -38,6 +42,7 @@ import javax.swing.JScrollPane;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Vector;
@@ -64,6 +69,7 @@ public class AssertionsView extends Container {
 
 	private JTextPane assertionOwnersEditor;
 	private JPanel assertionOwnersPanel;
+	private JTabbedPane rightTabbedPane;
 
 	/**
 	 * Create the panel.
@@ -77,7 +83,7 @@ public class AssertionsView extends Container {
 		agent = PSatAPI.netGetAgent(agentName);
 		
 		
-		JTabbedPane rightTabbedPane = new JTabbedPane();
+		rightTabbedPane = new JTabbedPane();
 		JPanel splitleft = new JPanel();
 		JPanel splitright = new JPanel();
 		splitleft.setLayout(new BorderLayout(0,0));
@@ -821,14 +827,41 @@ public class AssertionsView extends Container {
 			splitleft.add(lpanel);			
 		}
 
+		rightTabbedPane.setSelectedIndex(rightTabbedPane.getTabCount()-1);
 
 		add(splitPane);
 
 		Display.updateProgressComponent(100, "");
 	}
 
-	public void updateAssertionOwnersEditor(String desc) {
-		//assertionOwnersEditor update.desc..
+	public void updateAssertionOwnersEditor(final String desc) {
+		rightTabbedPane.setSelectedIndex(0);
+
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					HTMLDocument doc=(HTMLDocument) assertionOwnersEditor.getStyledDocument();
+					
+					try {
+						doc.insertAfterEnd(doc.getCharacterElement(doc.getLength()),desc+"<br>");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+					Rectangle r = assertionOwnersEditor.modelToView(doc.getLength());
+
+					if (r != null) {
+						assertionOwnersEditor.scrollRectToVisible(r);
+					}
+				} catch (BadLocationException e) {
+					Display.updateLogPage("Failed to print to assertionOwnersEditor: "+desc, true);
+				}			
+			}
+		});
+	}
+	
+	public void clearAssertionOwnersEditor() {
+		Display.clearLogPane(assertionOwnersEditor);
 	}
 
 

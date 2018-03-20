@@ -411,6 +411,21 @@ public class PSatAPI {
 		}
 	}
 	
+	public static ArrayList<String> retrieveAssertionOwners() {
+		ArrayList<String> aowners = new ArrayList<String>();
+		
+		for (Map.Entry<String, HashSet<String>> entry : instance.assertionOwners.entrySet()) {
+		    //String assertion_temp = entry.getKey();
+		    HashSet<String> owners = entry.getValue();
+		    
+		    for(String owner:owners) {
+		    		aowners.add(owner);
+		    }
+		}
+		
+		return aowners;
+	}
+	
 	public static void removeAssertionOwnership(String assertion){
 		HashSet<String> owners = null;
 		
@@ -420,7 +435,7 @@ public class PSatAPI {
 		    if(assertion_temp.equals(assertion)){
 		    	
 		    	for(String owner:owners_temp){
-		    		if(owner.equals(currentAssertionOwner)){
+		    		if(owner.equals(currentAssertionOwner.getAgentName())){
 		    			owners = owners_temp;
 		    			break;
 		    		}
@@ -428,7 +443,7 @@ public class PSatAPI {
 		    }
 		}
 		if(owners != null){
-			owners.remove(currentAssertionOwner);
+			owners.remove(currentAssertionOwner.getAgentName());
 			if(owners.size() ==0){
 				instance.assertionOwners.remove(assertion);
 			}
@@ -493,4 +508,5 @@ public class PSatAPI {
 	public static void resetAssertionOwnership(){
 		instance.assertionOwners = new HashMap<String, HashSet<String>>();
 	}
+	
 }
